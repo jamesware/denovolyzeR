@@ -3,7 +3,8 @@ Title: Statistical analyses of de novo genetic variants
 Version: 0.1.0
 Authors@R: "James Ware <j.ware@imperial.ac.uk> [aut, cre]"
 Description: A package for the analysis of de novo genetic sequence variants
-Depends: R (>= 3.1.1)
+Depends:
+    R (>= 3.1.1)
 License: GPL-3
 LazyData: true
 Suggests:
