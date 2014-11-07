@@ -1,12 +1,8 @@
 Package: denovolyzeR
-Title: What the package does (one line)
-Version: 0.1
 Title: Statistical analyses of de novo genetic variants
 Version: 0.1.0
 Authors@R: "James Ware <j.ware@imperial.ac.uk> [aut, cre]"
-Description: The description of a package is usually long,
-    spanning multiple lines. The second and subsequent lines
-    should be indented, usually with four spaces.
+Description: A package for the analysis of de novo genetic sequence variants
 Depends: R (>= 3.1.1)
 License: GPL-3
 LazyData: true
