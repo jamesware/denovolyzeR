@@ -1,0 +1,102 @@
+---
+title: "rawdata_log"
+author: "James Ware"
+date: "6 November 2014"
+output: html_document
+---
+
+```{r initialise, collapse=TRUE}
+#This script requires that the script & relevant data are in the same folder, presumed to be denovolyzeR/data-raw
+library(dplyr)
+library(knitr)
+library(devtools)
+opts_chunk$set(collapse=TRUE)
+```
+
+## De novo probabilities
+```{r pDNM}
+#Previously published de novo probability table
+pDNM <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
+pDNM <- pDNM %>% 
+  rename(splice = css, hgncID = gene, refseqID = transcript) %>% 
+  select(-bp, -covered_bp, -rdt, -all)
+# antilog raw data
+pDNM[,3:7] <- 10^pDNM[,3:7]
+# summarise protein-altering and lof variants as defined below
+pDNM$lof <- apply(pDNM[,c("non","splice","frameshift")],MARGIN=1,FUN=sum,na.rm=T)
+pDNM$prot <- apply(pDNM[,c("mis","lof")],MARGIN=1,FUN=sum,na.rm=T)
+pDNM %>% head
+cat("pDNM:\n",
+  "Number rows:",nrow(pDNM),"\n",
+  "Number unique genes:",length(unique(pDNM$hgncID)),"\n"
+    )
+```
+
+Revisit classification of variant consequences. Currently:
+
+* ignore rdt
+* rename css -> splice
+* lof = non + splice + frameshift
+* prot = lof + mis
+* total = prot + syn
+
+## Autism demo data: *de novos*
+```{r, collapse=TRUE}
+# Autism (1,078 trios) de novo list from Nature Genetics publication.
+autismDeNovos <- read.table("./aut_dnm_3.5.13.txt")
+names(autismDeNovos) <- c("gene","dnmClass")
+cat("autism demo data:\n",
+  "Number variants:",nrow(autismDeNovos),"\n",
+  "Number unique genes:",length(unique(autismDeNovos$gene)),"\n",
+  "Tabulate by variant class:\n"
+    )
+table(autismDeNovos$dnmClass) %>% data.frame
+# truncate variant class names & filter unrecognised classes
+autismDeNovos$dnmClass[autismDeNovos$dnmClass %in% c("synonymous","missense","nonsense")] <- autismDeNovos$dnmClass[autismDeNovos$dnmClass %in% c("synonymous","missense","nonsense")] %>% substr(1,3)
+cat("removing unrecognised variant classes:\n")
+autismDeNovos %>% filter(!dnmClass %in% c("syn","mis","non","splice","frameshift"))
+
+autismDeNovos <- autismDeNovos %>% filter(dnmClass %in% c("syn","mis","non","splice","frameshift"))
+```
+Need to decide how to classify 
+
+* absent_stop (=rdt?)
+* inframe (ignore?  same probability as frameshift?)
+* splice_indel
+
+## Autism demo data: FMRP genelist
+```{r FMRP}
+# List of FMRP genes
+FMRPgenes <- read.table("./fmrp_list_edited.txt")
+names(FMRPgenes) <- "gene"
+FMRPgenes %>% head
+
+cat("FMRP genes:\n",
+  "Number genes:",length(FMRPgenes$gene),"\n",
+  "Number unique:",length(unique(FMRPgenes$gene)),"\n"
+    )
+```
+
+```{r write output}
+setwd("..")
+# Add data to data folder
+devtools::use_data(autismDeNovos,FMRPgenes, overwrite=T)
+# Add data to sysdata.R
+devtools::use_data(pDNM, internal = TRUE, overwrite=T)
+```
+
+
+
+```{r}
+#Unadjusted probabilities of mutation for all GENCODE transcripts. I can extract just the ones that I defined as canonical and send that file if you'd like. 
+#Note that these don't even have the divergence adjustment. I have that information as well.
+# pDNMgencode <-read.table("data-raw/all_transcripts_pmut_July16.txt",header=T)
+# pDNMgencode %>% tbl_df %>% head
+```
+
+
+
+
+
+
+
