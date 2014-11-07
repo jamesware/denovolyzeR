@@ -61,10 +61,9 @@ The total number of de novos is almost exactly as our model predicts.  However, 
 Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the `CalculateMultiHitBurdens()` function.
 
 ``` {r}
-tmp <- autismDeNovos %>% filter(dnmClass %in% c("syn","mis","lof"))
-denovolyzeMultiHits(dnm.genes=tmp$gene,
-                  dnm.classes=tmp$dnmClass,
-                  nsamples=1078) %>% data.frame
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                  dnm.classes=autismDeNovos$dnmClass,
+                  nsamples=1078)
 # denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
 #                   dnm.classes=autismDeNovos$dnmClass,
 #                   nsamples=1078)
