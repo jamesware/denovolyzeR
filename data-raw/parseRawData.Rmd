@@ -7,6 +7,7 @@ output: html_document
 
 ```{r initialise, collapse=TRUE}
 #This script requires that the script & relevant data are in the same folder, presumed to be denovolyzeR/data-raw
+library(reshape)
 library(dplyr)
 library(knitr)
 library(devtools)
@@ -17,19 +18,23 @@ opts_chunk$set(collapse=TRUE)
 ```{r pDNM}
 #Previously published de novo probability table
 pDNM <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
+#pDNM <- read.table("./data-raw/fixed_mut_prob_fs_adjdepdiv.txt",header=T)
 pDNM <- pDNM %>% 
-  rename(splice = css, hgncID = gene, refseqID = transcript) %>% 
+  dplyr::rename(splice = css, hgncID = gene, refseqID = transcript) %>% 
   select(-bp, -covered_bp, -rdt, -all)
 # antilog raw data
 pDNM[,3:7] <- 10^pDNM[,3:7]
+pDNM$splice[is.na(pDNM$splice)] <- 0
 # summarise protein-altering and lof variants as defined below
 pDNM$lof <- apply(pDNM[,c("non","splice","frameshift")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM$prot <- apply(pDNM[,c("mis","lof")],MARGIN=1,FUN=sum,na.rm=T)
+pDNM$all <- apply(pDNM[,c("syn","prot")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM %>% head
 cat("pDNM:\n",
   "Number rows:",nrow(pDNM),"\n",
   "Number unique genes:",length(unique(pDNM$hgncID)),"\n"
     )
+pDNM <- melt(pDNM,id.vars=c("refseqID","hgncID"),variable_name="class")
 ```
 
 Revisit classification of variant consequences. Currently:
@@ -63,6 +68,9 @@ Need to decide how to classify
 * absent_stop (=rdt?)
 * inframe (ignore?  same probability as frameshift?)
 * splice_indel
+
+Note also: a number of genes in the autism *de novo* list do not have matching identifiers in the pDNM table:  
+`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(pDNM$hgncID)]`
 
 ## Autism demo data: FMRP genelist
 ```{r FMRP}

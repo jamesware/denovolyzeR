@@ -13,7 +13,7 @@
 #' @param expectedDNMs Select whether expected number of multihits is determined
 #'   by expected total de novos, or actual total
 #' @param gene.id Gene identifier used. Currently only hgnc.id
-#'
+#' @param include.class variant classes to tabulate in output.  Valid classes = "syn","mis","non","splice","frameshift","lof","prot","all".
 #' @return Returns a data.frame
 #'
 #' @keywords keywords
@@ -25,7 +25,12 @@
 #' dnm.classes=caseDeNovos$VariantClass,
 #' nsamples=1227)
 
-denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,nperms=100,include.gene="all",expectedDNMs="actual",gene.id="hgncID") {
+denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
+                                nperms=100,
+                                include.gene="all",
+                                include.class=c("syn","mis","lof","prot","all"),
+                                expectedDNMs="actual",
+                                gene.id="hgncID") {
   # 2 options: the simulation draws N DNMs from the gene list.  N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).  The former is more conservative.  Kaitlin used the latter.
   # Set expectedDNMs="actual" or "expected
 
@@ -43,8 +48,8 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,nperms=100,includ
     dnm.genes <- dnm.genes[dnm.genes %in% include.gene]
   }
 
-  doPermute <- function(class){
-    nextvars <- dnm.genes[dnm.classes %in% c(class)]
+  doPermute <- function(class,classgroup=class){
+    nextvars <- dnm.genes[dnm.classes %in% classgroup]
     if(expectedDNMs == "actual") {
       x=length(nextvars)
     } else if(expectedDNMs == "expected") {
@@ -52,14 +57,37 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,nperms=100,includ
     }
     y=length(unique(nextvars[duplicated(nextvars)]))
     output <- PermuteMultiHits(x,y,nperms=nperms,class=class,include.gene=include.gene)
-    rownames(output) <- class
+    #rownames(output) <- class
     return(output)
   }
 
- output <- list()
-  for (dnmClass in unique(dnm.classes)){
-    output[[dnmClass]] <- doPermute(dnmClass)
+  ### Calculate probabilities for classes represented in data
+  output <- list()
+ myclasses=c("syn","mis","non","splice","frameshift","lof")
+  myclasses <- myclasses[myclasses %in% dnm.classes]
+ for (class in myclasses){
+    output[[class]] <- doPermute(class)
     }
 
-  return(output)
+ ### Calculate probabilities for "aggregate classes"
+ ### LOF (if variants are annotated with increased granularity), protein-altering, and total
+
+ if(!"lof" %in% myclasses){
+   output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift"))
+   }
+ output[["prot"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","mis"))
+ output[["all"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","mis","syn"))
+
+  output <- output[names(output) %in% include.class]
+  return(t(data.frame(output)))
 }
+
+
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078)
+
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
+                    nsamples=1078)
