@@ -193,7 +193,8 @@ devtools::use_data(autismDeNovos,FMRPgenes, overwrite=T)
 ## Saving autismDeNovos, FMRPgenes to data/autismDeNovos.rda, data/FMRPgenes.rda
 # Add data to sysdata.R
 devtools::use_data(pDNM, internal = TRUE, overwrite=T)
-## Saving pDNM to R/sysdata.rda</code></pre>
+## Saving pDNM to R/sysdata.rda
+setwd(&quot;./data-raw&quot;)</code></pre>
 <pre class="r"><code>#Unadjusted probabilities of mutation for all GENCODE transcripts. I can extract just the ones that I defined as canonical and send that file if you'd like. 
 #Note that these don't even have the divergence adjustment. I have that information as well.
 # pDNMgencode &lt;-read.table(&quot;data-raw/all_transcripts_pmut_July16.txt&quot;,header=T)

@@ -83,6 +83,7 @@ setwd("..")
 devtools::use_data(autismDeNovos,FMRPgenes, overwrite=T)
 # Add data to sysdata.R
 devtools::use_data(pDNM, internal = TRUE, overwrite=T)
+setwd("./data-raw")
 ```
 
 
