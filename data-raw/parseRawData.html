@@ -59,9 +59,14 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 
 
 <pre class="r"><code>#This script requires that the script &amp; relevant data are in the same folder, presumed to be denovolyzeR/data-raw
+library(reshape)
 library(dplyr)
 ## 
 ## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:reshape':
+## 
+##     rename
 ## 
 ## The following object is masked from 'package:stats':
 ## 
@@ -77,36 +82,40 @@ opts_chunk$set(collapse=TRUE)</code></pre>
 <h2>De novo probabilities</h2>
 <pre class="r"><code>#Previously published de novo probability table
 pDNM &lt;- read.table(&quot;./fixed_mut_prob_fs_adjdepdiv.txt&quot;,header=T)
+#pDNM &lt;- read.table(&quot;./data-raw/fixed_mut_prob_fs_adjdepdiv.txt&quot;,header=T)
 pDNM &lt;- pDNM %&gt;% 
-  rename(splice = css, hgncID = gene, refseqID = transcript) %&gt;% 
+  dplyr::rename(splice = css, hgncID = gene, refseqID = transcript) %&gt;% 
   select(-bp, -covered_bp, -rdt, -all)
 # antilog raw data
 pDNM[,3:7] &lt;- 10^pDNM[,3:7]
+pDNM$splice[is.na(pDNM$splice)] &lt;- 0
 # summarise protein-altering and lof variants as defined below
 pDNM$lof &lt;- apply(pDNM[,c(&quot;non&quot;,&quot;splice&quot;,&quot;frameshift&quot;)],MARGIN=1,FUN=sum,na.rm=T)
 pDNM$prot &lt;- apply(pDNM[,c(&quot;mis&quot;,&quot;lof&quot;)],MARGIN=1,FUN=sum,na.rm=T)
+pDNM$all &lt;- apply(pDNM[,c(&quot;syn&quot;,&quot;prot&quot;)],MARGIN=1,FUN=sum,na.rm=T)
 pDNM %&gt;% head
 ##       refseqID  hgncID       syn       mis       non    splice frameshift
 ## 1    NM_017582  UBE2Q1 5.428e-06 1.045e-05 6.339e-07 5.360e-07  8.038e-07
 ## 2    NM_014372   RNF11 2.307e-06 4.840e-06 2.491e-07 8.482e-08  2.945e-07
 ## 3    NM_014455  RNF115 3.154e-06 8.340e-06 4.578e-07 3.562e-07  5.796e-07
 ## 4    NM_001357    DHX9 1.206e-05 3.431e-05 2.987e-06 1.135e-06  2.415e-06
-## 5 NM_001101376 FAM183A 1.572e-06 4.055e-06 2.868e-07        NA  2.565e-07
+## 5 NM_001101376 FAM183A 1.572e-06 4.055e-06 2.868e-07 0.000e+00  2.565e-07
 ## 6 NM_001042549    NSL1 2.643e-06 6.239e-06 4.069e-07 1.772e-07  4.067e-07
-##         lof      prot
-## 1 1.974e-06 1.242e-05
-## 2 6.284e-07 5.468e-06
-## 3 1.394e-06 9.734e-06
-## 4 6.537e-06 4.085e-05
-## 5 5.434e-07 4.598e-06
-## 6 9.908e-07 7.229e-06
+##         lof      prot       all
+## 1 1.974e-06 1.242e-05 1.785e-05
+## 2 6.284e-07 5.468e-06 7.775e-06
+## 3 1.394e-06 9.734e-06 1.289e-05
+## 4 6.537e-06 4.085e-05 5.291e-05
+## 5 5.434e-07 4.598e-06 6.170e-06
+## 6 9.908e-07 7.229e-06 9.872e-06
 cat(&quot;pDNM:\n&quot;,
   &quot;Number rows:&quot;,nrow(pDNM),&quot;\n&quot;,
   &quot;Number unique genes:&quot;,length(unique(pDNM$hgncID)),&quot;\n&quot;
     )
 ## pDNM:
 ##  Number rows: 18271 
-##  Number unique genes: 18271</code></pre>
+##  Number unique genes: 18271
+pDNM &lt;- melt(pDNM,id.vars=c(&quot;refseqID&quot;,&quot;hgncID&quot;),variable_name=&quot;class&quot;)</code></pre>
 <p>Revisit classification of variant consequences. Currently:</p>
 <ul>
 <li>ignore rdt</li>
@@ -165,6 +174,7 @@ autismDeNovos &lt;- autismDeNovos %&gt;% filter(dnmClass %in% c(&quot;syn&quot;,
 <li>inframe (ignore? same probability as frameshift?)</li>
 <li>splice_indel</li>
 </ul>
+<p>Note also: a number of genes in the autism <em>de novo</em> list do not have matching identifiers in the pDNM table:<br />CCDC165, CRLF2, C1orf125, MOBKL3, KIAA1949, C12orf41, C1orf175, KIAA1757, ZNF860, OCTM4, HISPPD1, LVRN, HMGXB3, PECI, C6orf69, SFRS18, EMID2, CDH28, UNQ9391, KIAA0649, DNMT2, WDFY4, RBM20, MUC5AC, MUC5AC, MUC5AC, C14orf138, C19orf15, ZNF404, RAD21L1, EFCAB8, AK123261, GTPBP6, KIAA1797, KIAA0889, RFX8, PSMG4, ERV3, C9orf68, C9orf30, TREH, C12orf72, C14orf4, STARD9, PKD1L3, CACNA1A, EFCAB8, TTC28, RFX8, LASS6, FREM3, C9orf144B, GREB1L</p>
 </div>
 <div id="autism-demo-data-fmrp-genelist" class="section level2">
 <h2>Autism demo data: FMRP genelist</h2>

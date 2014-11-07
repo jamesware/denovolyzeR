@@ -1,58 +1,138 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "denovolyzeR intro"
+author: "James Ware"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{denovostats_intro}
   %\VignetteEngine{knitr::rmarkdown}
   %\usepackage[utf8]{inputenc}
 ---
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+## Statistics for *de novo* variant analysis
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+#### Introduction
 
-## Vignette Info
+This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.nature.com/doifinder/10.1038/ng.3050).
 
-Note the various macros within the `vignette` setion of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+There are three core functions that recapitulate the analyses described in this paper.
 
-## Styles
+1. What is the overall burden of *de novo* variation?  Are there more *de novos* than expected?
+  As well as looking at the total burden of *de novos*, results are returned for different classes of variant: loss-of-function (lof), missense (mis) and synonymous (syn).
+2. Do *de novo* variants cluster in specific genes?  Are there more genes containing multiple *de novos* than expected?
+3. Are there any individual genes that contain multiple *de novos*?  Is there any significant enrichment compared with expectation?
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+## Installation
+``` {r}
+# Install the package if you haven't already.
+# OPTION 1 - download binary, and install:
+# install.packages("LOCAL/PATH/TO/denovolyzeR.tgz",repos=NULL)  
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+# OPTION 2 - install from source.  Either download and install, or use devtools:
+# devtools::install_github("jamesware/denovolyzeR")
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+## Example analysis
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+We start with a table of de novo variants. An example dataset is provided:
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+``` {r}
+library(denovolyzeR)
+# have a look at the example data:
+dim(autismDeNovos)
+head(autismDeNovos)
 ```
 
-Also a quote using `>`:
+#### Overall *de novo* burden
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+First we want to know whether there are more de novos than expected, using the `tbc()` function. These variants were obtained by sequencing 1,078 cases, so we use `nsamples=1078`.
+
+
+``` {r}
+denovolyzeByClass(dnm.genes=autismDeNovos$gene,
+                  dnm.classes=autismDeNovos$dnmClass,
+                  nsamples=1078)
+```
+
+The total number of de novos is almost exactly as our model predicts.  However, we see a statistically significant excess of LOF variants in this population.
+
+#### Genes containing multiple *de novos* 
+
+Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the `CalculateMultiHitBurdens()` function.
+
+``` {r}
+tmp <- autismDeNovos %>% filter(dnmClass %in% c("syn","mis","lof"))
+denovolyzeMultiHits(dnm.genes=tmp$gene,
+                  dnm.classes=tmp$dnmClass,
+                  nsamples=1078) %>% data.frame
+# denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+#                   dnm.classes=autismDeNovos$dnmClass,
+#                   nsamples=1078)
+```
+
+ObsGenes = the number of genes in our dataset with >1 *de novo* variant  
+TotalObsDNM = the total number of *de novo* variants in each class  
+AvgExpGenes = the expected number of genes containing >1 *de novo*: an average obtained by permutation  
+MaxExpGenes = the maximum number of genes containin >1 *de novo* in `nperms` permutations (default `nperms=100`)  
+Empirical.P = an empirical p value  
+Note that the number of observed genes with >1 protein-altering variant does **not** equal the number of genes with >1 lof + number of genes with >1 missense, as genes containing 1 lof + 1 missense will only be counted as "multihits" in the combined analysis.
+
+Here it looks like there may be an excess of genes with >1 lof variant, and with >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
+
+``` {r}
+CalculateMultiHitBurdens(dnm.genes=autismDeNovos$gene,
+                         dnm.classes=autismDeNovos$dnmClass,
+                         nsamples=1078,
+                         nperms=1000)
+```
+
+There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above caseDeNovos contains 141 lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
+``` {r}
+sum(caseDeNovos$VariantClass=="lof")
+```
+
+This is a conservative approach, addressing the question: "given the number of variants in our dataset, do we see more genes with >1 variant than expected?"
+
+An alternative approach simply asksgwhether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `expectedDNMs="expected"`.
+
+``` {r}
+CalculateMultiHitBurdens(dnm.genes=caseDeNovos$GeneID,
+                         dnm.classes=caseDeNovos$VariantClass,
+                         nsamples=1227,
+                         nperms=1000,
+                         expectedDNMs="expected")
+```
+
+#### Individual genes containing multiple *de novos* 
+
+We see 5 genes containing >1 *de novo* variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
+
+First we look at genes containing multiple lof *de novos*
+
+``` {r}
+head(
+denovolyzeByGene(dnm.genes=autismDeNovos$gene,
+                 dnm.classes=autismDeNovos$dnmClass,
+                 nsamples=1078)
+  )
+```
+
+Several genes meet statistical significance after correcting for multiple testing, including MLL2, a gene already implicated in congenital heart disease.
+
+- **TO DO** 
+- Add bonferroni correction
+- debug function so that it only return genes with obs>1
+- remove line numbers from return
+
+If we consider all protein-altering variants:
+
+``` {r}
+head(
+AssessMultiHitsByGene(dnm.genes=caseDeNovos$GeneID,
+                      dnm.classes=caseDeNovos$VariantClass,
+                      nsamples=1227,
+                      class="prot")
+  )
+```
+
+we see that another known congenital heart disease gene emerges: PTPN11, which is implicated in Noonan syndrome.
