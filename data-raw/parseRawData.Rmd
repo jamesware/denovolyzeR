@@ -78,12 +78,12 @@ Note also: a number of genes in the autism *de novo* list do not have matching i
 ```{r FMRP}
 # List of FMRP genes
 FMRPgenes <- read.table("./fmrp_list_edited.txt")
-names(FMRPgenes) <- "gene"
+FMRPgenes <- FMRPgenes$V1
 FMRPgenes %>% head
 
 cat("FMRP genes:\n",
-  "Number genes:",length(FMRPgenes$gene),"\n",
-  "Number unique:",length(unique(FMRPgenes$gene)),"\n"
+  "Number genes:",length(FMRPgenes),"\n",
+  "Number unique:",length(unique(FMRPgenes)),"\n"
     )
 ```
 
