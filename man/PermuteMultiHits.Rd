@@ -25,4 +25,7 @@ Returns a named vector of 5 values
 \description{
 An internal function called by denovolyzeMultiHits
 }
+\seealso{
+\code{\link{denovolyzeMultiHits}}
+}
 

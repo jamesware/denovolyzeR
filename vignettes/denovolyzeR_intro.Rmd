@@ -116,8 +116,39 @@ denovolyzeByGene(dnm.genes=autismDeNovos$gene,
 
 Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$hgncID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$hgncID))),2)`
 
+#### Geneset analysis
+
+The analyses presented so far have been exome-wide.  It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of *de novo* variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing).  All of the above funtions can be targeted to a subset of genes using the `include.gene` argument.
+
+The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
+
+```{r geneset}
+length(FMRPgenes); head(FMRPgenes)
+
+denovolyzeByClass(dnm.genes=autismDeNovos$gene,
+                  dnm.classes=autismDeNovos$dnmClass,
+                  nsamples=1078,
+                  include.gene=FMRPgenes)
+
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078,
+                    nperms=1000,
+                    include.gene=FMRPgenes)
+```
+
 ## Other functions
 
-**To add:**
-`denovolyze()`
-`viewDeNovoProbs()`
+`viewDeNovoProbs` provides access to the underlying *de novo* probability tables used to calculate expected *de novo* burdens throughout this package:
+
+```{r viewDeNovoProbs}
+head(
+  viewDeNovoProbs()
+  )
+
+head(
+  viewDeNovoProbs(long=FALSE)
+  )
+```
+
+Most of the core functionality of this package is contained in the `denovolyze` function.  The `denovolyzeByClass` and `denovolyzeByGene` functions used in this vignette are convenience functions that set defaults appropriate to the most common usages of this function.  Full details of additional options and default behaviours are available using `?denovolyze`.
