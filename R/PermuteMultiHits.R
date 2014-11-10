@@ -9,6 +9,8 @@
 #' @param gene.id Gene identifier used. Currently only hgnc.id
 #' @param include Genes to include in analysis. "all" or a vector of gene names
 #'
+#' @seealso \code{\link{denovolyzeMultiHits}}
+#'
 #' @return Returns a named vector of 5 values
 #'
 
