@@ -124,6 +124,7 @@ pDNM &lt;- melt(pDNM,id.vars=c(&quot;refseqID&quot;,&quot;hgncID&quot;),variable
 <li>prot = lof + mis</li>
 <li>total = prot + syn</li>
 </ul>
+<p>clarify whether these have no splice boundaries (hence p=0, or could not be calculated (in which case p might best be mean(p_all)</p>
 </div>
 <div id="autism-demo-data-de-novos" class="section level2">
 <h2>Autism demo data: <em>de novos</em></h2>
@@ -180,19 +181,13 @@ autismDeNovos &lt;- autismDeNovos %&gt;% filter(dnmClass %in% c(&quot;syn&quot;,
 <h2>Autism demo data: FMRP genelist</h2>
 <pre class="r"><code># List of FMRP genes
 FMRPgenes &lt;- read.table(&quot;./fmrp_list_edited.txt&quot;)
-names(FMRPgenes) &lt;- &quot;gene&quot;
+FMRPgenes &lt;- FMRPgenes$V1
 FMRPgenes %&gt;% head
-##    gene
-## 1   BSN
-## 2 KIF1A
-## 3 MAP1A
-## 4   APC
-## 5 MAP1B
-## 6 AGAP2
+## [1] &quot;BSN&quot;   &quot;KIF1A&quot; &quot;MAP1A&quot; &quot;APC&quot;   &quot;MAP1B&quot; &quot;AGAP2&quot;
 
 cat(&quot;FMRP genes:\n&quot;,
-  &quot;Number genes:&quot;,length(FMRPgenes$gene),&quot;\n&quot;,
-  &quot;Number unique:&quot;,length(unique(FMRPgenes$gene)),&quot;\n&quot;
+  &quot;Number genes:&quot;,length(FMRPgenes),&quot;\n&quot;,
+  &quot;Number unique:&quot;,length(unique(FMRPgenes)),&quot;\n&quot;
     )
 ## FMRP genes:
 ##  Number genes: 842 
