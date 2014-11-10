@@ -29,6 +29,15 @@
 #' @import dplyr
 #'
 #' @examples
+#'
+#' ### denovolyze
+#'
+#' denovolyze(dnm.genes=autismDeNovos$gene,
+#'            dnm.classes=autismDeNovos$dnmClass,
+#'            nsamples=1078)
+#'
+#' ### denovolyzeByClass
+#'
 #' denovolyzeByClass(dnm.genes=autismDeNovos$gene,
 #'                   dnm.classes=autismDeNovos$dnmClass,
 #'                   nsamples=1078)
@@ -43,7 +52,8 @@
 #'            include.gene="all"
 #'            )
 #'
-#' ##
+#' ### denovolyzeByGene
+#'
 #' denovolyzeByGene(dnm.genes=autismDeNovos$gene,
 #'                  dnm.classes=autismDeNovos$dnmClass,
 #'                  nsamples=1078)
@@ -168,11 +178,25 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   return(output)
 }
 
-# ## for testing line by line
-# library("reshape")
-# library("dplyr")
-# load(file = "./R/sysdata.rda")
-# dnm.genes=autismDeNovos$gene;dnm.classes=autismDeNovos$dnmClass;nsamples=1078
-# group.by="class";include.gene="all"
-# include.class=c("lof","prot")
-# gene.id="hgncID";signif.p=3;round.expected=1
+#' @describeIn denovolyze denovolyzeByClass
+
+denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
+                              group.by="class",
+                              include.gene="all",
+                              include.class=c("syn","mis","lof","prot","all"),
+                              gene.id="hgncID",
+                              signif.p=3,round.expected=1){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
+}
+
+#' @describeIn denovolyze denovolyzeByGene
+
+denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
+group.by="gene",
+include.gene="all",
+include.class=c("lof","prot"),
+gene.id="hgncID",
+signif.p=3,round.expected=1){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
+}
+
