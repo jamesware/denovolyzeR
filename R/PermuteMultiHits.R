@@ -1,6 +1,6 @@
 #' Permutes x variants across a genelist, and counts genes with multiple hits
 #'
-#' An internal function called by CalculateMultiHitBurdens
+#' An internal function called by denovolyzeMultiHits
 #'
 #' @param x Total number of de novo variants observed in dataset
 #' @param y Number of genes with >1 de novo variant (of class "class") in the population
@@ -11,10 +11,11 @@
 #'
 #' @return Returns a named vector of 5 values
 #'
-#' @example
-#' PermuteMultiHits(150,6,class="mis")
 
-PermuteMultiHits <- function(x,y,nperms=100,class="lof", gene.id="hgncID", include.gene="all") {
+PermuteMultiHits <- function(x,y,nperms=100,
+                             class="lof",
+                             gene.id="hgncID",
+                             include.gene="all") {
 
   #x = total number of DNM observed
   #y = no of genes with >1 DNM in class of interest
@@ -42,7 +43,5 @@ PermuteMultiHits <- function(x,y,nperms=100,class="lof", gene.id="hgncID", inclu
   output <-c(y,mean(mycounts),max(mycounts),empirical.p,x)
   names(output) <- c("ObsGenes","AvgExpGenes","MaxExpGenes","Empirical.P","TotalObsDNM")
   return(output)
+
 }
-
-
-#PermuteMultiHits(150,6,class="splice")

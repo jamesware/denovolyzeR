@@ -13,7 +13,8 @@
 #' @param expectedDNMs Select whether expected number of multihits is determined
 #'   by expected total de novos, or actual total
 #' @param gene.id Gene identifier used. Currently only hgnc.id
-#' @param include.class variant classes to tabulate in output.  Valid classes = "syn","mis","non","splice","frameshift","lof","prot","all".
+#' @param include.class variant classes to tabulate in output.  Valid classes =
+#'   "syn","mis","non","splice","frameshift","lof","prot","all".
 #' @return Returns a data.frame
 #'
 #' @keywords keywords
@@ -21,9 +22,12 @@
 #' @export
 #'
 #' @examples
-#' CalculateMultiHitBurdens(dnm.genes=caseDeNovos$GeneID,
-#' dnm.classes=caseDeNovos$VariantClass,
-#' nsamples=1227)
+#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,nsamples=1078)
+#'
+#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),nsamples=1078)
+
+
+
 
 denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 nperms=100,
@@ -75,19 +79,9 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
  if(!"lof" %in% myclasses){
    output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift"))
    }
- output[["prot"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","mis"))
- output[["all"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","mis","syn"))
+ output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","mis"))
+ output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","mis","syn"))
 
   output <- output[names(output) %in% include.class]
   return(t(data.frame(output)))
 }
-
-
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
-                    nsamples=1078)
-
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
-                    include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
-                    nsamples=1078)

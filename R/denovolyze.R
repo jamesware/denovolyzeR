@@ -1,12 +1,13 @@
-#' Calculates statistics for overall burden of \emph{de novo} variation in
-#' sample
+#' Evaluates burden of \emph{de novo} variation against expectation
 #'
-#' Determines whether the population carry more \emph{de novo} variants than
-#' expected.  Returns results for the total number of variants, and also broken
-#' down by class (synonymous, missense, loss of function, and protein-altering
-#' (=lof + mis) ).
+#' Determines whether the test population carry more \emph{de novo} variants
+#' than expected. Variants may be grouped by variant class (e.g. are there more
+#' LOF variants than expected, across the whole dataset?), or by gene (are there
+#' more variants of a given class in SCN2A?).
 #'
-#' See vignette (denovostats_intro) for more information.
+#' Analyses can be restricted to a subset of genes, and/or a subset of variant classes
+#'
+#' See vignette (denovolyeR intro) for more information.
 #'
 #' @param dnm.genes A vector of genes containing de novo variants.
 #' @param dnm.classes A vector of classes of de novo variants.  Supported
@@ -166,26 +167,6 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   class(output) <- "data.frame"
   return(output)
 }
-
-
-denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
-                              group.by="class",
-                              include.gene="all",
-                              include.class=c("syn","mis","lof","prot","all"),
-                              gene.id="hgncID",
-                              signif.p=3,round.expected=1){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
-}
-
-denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
-                             group.by="gene",
-                             include.gene="all",
-                             include.class=c("lof","prot"),
-                             gene.id="hgncID",
-                             signif.p=3,round.expected=1){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
-}
-
 
 # ## for testing line by line
 # library("reshape")
