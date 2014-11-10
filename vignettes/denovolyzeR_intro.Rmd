@@ -15,12 +15,12 @@ vignette: >
 
 This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.nature.com/doifinder/10.1038/ng.3050).
 
-There are three core functions that recapitulate the analyses described in this paper.
+This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses dectribed in this paper.
 
-1. What is the overall burden of *de novo* variation?  Are there more *de novos* than expected?
-  As well as looking at the total burden of *de novos*, results are returned for different classes of variant: loss-of-function (lof), missense (mis) and synonymous (syn).
-2. Do *de novo* variants cluster in specific genes?  Are there more genes containing multiple *de novos* than expected?
-3. Are there any individual genes that contain multiple *de novos*?  Is there any significant enrichment compared with expectation?
+1. What is the overall burden of *de novo* variation in the study cohort: are there more *de novos* than expected?
+  As well as looking at the total burden of *de novos*, results are returned for different classes of variant, such as loss-of-function (lof), missense (mis) and synonymous (syn).
+2. Do *de novo* variants cluster in specific genes: are there more genes containing multiple *de novos* than expected?
+3. Are there any individual genes that contain more *de novos* than expected?
 
 ## Installation
 ``` {r}
@@ -45,7 +45,7 @@ head(autismDeNovos)
 
 #### Overall *de novo* burden
 
-First we want to know whether there are more de novos than expected, using the `tbc()` function. These variants were obtained by sequencing 1,078 cases, so we use `nsamples=1078`.
+First we want to know whether there are more de novos than expected, using the `denovolyzeByClass()` function. These variants were obtained by sequencing 1,078 cases, so we use `nsamples=1078`.
 
 
 ``` {r}
@@ -58,15 +58,13 @@ The total number of de novos is almost exactly as our model predicts.  However, 
 
 #### Genes containing multiple *de novos* 
 
-Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the `CalculateMultiHitBurdens()` function.
+Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the `denovolyzeMultiHits()` function.
 
 ``` {r}
 denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$dnmClass,
-                  nsamples=1078)
-# denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-#                   dnm.classes=autismDeNovos$dnmClass,
-#                   nsamples=1078)
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078)
+
 ```
 
 ObsGenes = the number of genes in our dataset with >1 *de novo* variant  
@@ -76,37 +74,37 @@ MaxExpGenes = the maximum number of genes containin >1 *de novo* in `nperms` per
 Empirical.P = an empirical p value  
 Note that the number of observed genes with >1 protein-altering variant does **not** equal the number of genes with >1 lof + number of genes with >1 missense, as genes containing 1 lof + 1 missense will only be counted as "multihits" in the combined analysis.
 
-Here it looks like there may be an excess of genes with >1 lof variant, and with >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
+Here it looks like there may be an excess of genes with >1 lof variant, >1 missense, and >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
 
 ``` {r}
-CalculateMultiHitBurdens(dnm.genes=autismDeNovos$gene,
-                         dnm.classes=autismDeNovos$dnmClass,
-                         nsamples=1078,
-                         nperms=1000)
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078,
+                    nperms=1000)
 ```
 
-There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above caseDeNovos contains 141 lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
+There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains `r sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))` lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
 ``` {r}
-sum(caseDeNovos$VariantClass=="lof")
+sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))
 ```
 
 This is a conservative approach, addressing the question: "given the number of variants in our dataset, do we see more genes with >1 variant than expected?"
 
-An alternative approach simply asksgwhether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `expectedDNMs="expected"`.
+An alternative approach simply asks whether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `expectedDNMs="expected"`.
 
 ``` {r}
-CalculateMultiHitBurdens(dnm.genes=caseDeNovos$GeneID,
-                         dnm.classes=caseDeNovos$VariantClass,
-                         nsamples=1227,
-                         nperms=1000,
-                         expectedDNMs="expected")
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078,
+                    nperms=1000,
+                    expectedDNMs="expected")
 ```
 
-#### Individual genes containing multiple *de novos* 
+#### Do any individual genes contain more *de novos* than expected
 
-We see 5 genes containing >1 *de novo* variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
+We see 6 genes containing >1 *de novo* lof variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
 
-First we look at genes containing multiple lof *de novos*
+By default this function compares the number of LOF variants against expectation for each gene, and then the total number of protein-altering variants (LOF + missense).  It can also be configured to return other classes if relevant.
 
 ``` {r}
 head(
@@ -116,22 +114,10 @@ denovolyzeByGene(dnm.genes=autismDeNovos$gene,
   )
 ```
 
-Several genes meet statistical significance after correcting for multiple testing, including MLL2, a gene already implicated in congenital heart disease.
+Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$hgncID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$hgncID))),2)`
 
-- **TO DO** 
-- Add bonferroni correction
-- debug function so that it only return genes with obs>1
-- remove line numbers from return
+## Other functions
 
-If we consider all protein-altering variants:
-
-``` {r}
-head(
-AssessMultiHitsByGene(dnm.genes=caseDeNovos$GeneID,
-                      dnm.classes=caseDeNovos$VariantClass,
-                      nsamples=1227,
-                      class="prot")
-  )
-```
-
-we see that another known congenital heart disease gene emerges: PTPN11, which is implicated in Noonan syndrome.
+**To add:**
+`denovolyze()`
+`viewDeNovoProbs()`
