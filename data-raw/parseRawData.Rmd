@@ -45,6 +45,8 @@ Revisit classification of variant consequences. Currently:
 * prot = lof + mis
 * total = prot + syn
 
+clarify whether these have no splice boundaries (hence p=0, or could not be calculated (in which case p might best be mean(p_all)
+
 ## Autism demo data: *de novos*
 ```{r, collapse=TRUE}
 # Autism (1,078 trios) de novo list from Nature Genetics publication.
