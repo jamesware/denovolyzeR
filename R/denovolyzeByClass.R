@@ -18,6 +18,9 @@
 #' @param round.expected Number of decimal places used to round expected burdens
 #'   in output.
 #'
+#' @seealso \code{\link{denovolyze}}
+#' @seealso \code{\link{denovolyzeByGene}}
+#'
 #' @return Returns a data frame
 #'
 #' @export

@@ -24,6 +24,9 @@
 #'
 #' @return Returns a data frame
 #'
+#' @seealso \code{\link{denovolyze}}
+#' @seealso \code{\link{denovolyzeByClass}}
+#'
 #' @export
 #'
 #' @examples
