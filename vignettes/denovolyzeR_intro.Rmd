@@ -147,7 +147,7 @@ head(
   )
 
 head(
-  viewDeNovoProbs(long=FALSE)
+  viewDeNovoProbs(format="long")
   )
 ```
 
