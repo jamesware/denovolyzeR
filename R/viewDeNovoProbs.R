@@ -4,10 +4,12 @@
 #'
 #' @export
 
-viewDeNovoProbs <- function(long=TRUE){
-  if(long){
+viewDeNovoProbs <- function(format="wide"){
+  if(format=="long"){
     return(pDNM)
-  } else {
-    return(cast(pDNM, refseqID + hgncID ~ class))
+  } else if (format=="wide") {
+    return(
+      reshape::cast(pDNM, refseqID + hgncID ~ class)
+      )
   }
 }
