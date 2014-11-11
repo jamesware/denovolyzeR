@@ -23,7 +23,7 @@
 #'
 #' @return Returns a data frame
 #'
-#' @export
+#' @export denovolyze denovolyzeByClass denovolyzeByGene
 #'
 #' @import reshape
 #' @import dplyr
