@@ -15,5 +15,5 @@ Suggests:
     knitr
 VignetteBuilder: knitr
 Maintainer: "James Ware" <j.ware@imperial.ac.uk>
-URL: http://github.com/jamesware/denovolyzeR
+URL: http://jamesware.github.io/denovolyzeR
 BugReports: http://github.com/jamesware/denovolyzeR/issues
