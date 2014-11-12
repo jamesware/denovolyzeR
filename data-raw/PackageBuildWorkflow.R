@@ -48,24 +48,5 @@ devtools::use_data(x, internal = TRUE)
 
 ###
 # Citation file:  add inst/CITATION
-# e.g.
-# citHeader("To cite denovolyzeR in publications use:")
-#
-# citEntry(entry = "Article",
-#          title        = "Analysing de novo variants with  {denovolyseR}",
-#          author       = personList(as.person("James Ware"),
-#                                    as.person("Kaitlin Samocha")),
-#          journal      = "Unspecified Journal",
-#          year         = "2014",
-#          volume       = "1",
-#          number       = "1",
-#          pages        = "1--2",
-#          url          = "http://link.to.journal",
-#
-#          textVersion  =
-#            paste("James Ware, Kaitlin Samocha (2014).",
-#                  "Analysing de novo variants with denovolyzeR",
-#                  "etc etc, 40(3), 1-25.",
-#                  "URL http://link.to.journal")
-# )
-#
+
+## Cmd + Shift + E : checks package (R CMD CHECK)

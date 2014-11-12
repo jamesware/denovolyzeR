@@ -86,6 +86,10 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   # no NA
   # match length
 
+  # this line defines variables in order to pass R CMD check
+  # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
+  gene <- value <- enrichment <- Row.names <- ends_with <- NULL
+
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
   if(toupper(include.gene[1])=="ALL" & length(include.gene==1)){include.gene <- toupper(pDNM$gene)}
