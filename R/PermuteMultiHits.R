@@ -7,7 +7,7 @@
 #' @param nperms Number permutations
 #' @param class In c("lof","mis","syn","prot")
 #' @param gene.id Gene identifier used. Currently only hgnc.id
-#' @param include Genes to include in analysis. "all" or a vector of gene names
+#' @param include.gene Genes to include in analysis. "all" or a vector of gene names
 #'
 #' @seealso \code{\link{denovolyzeMultiHits}}
 #'
