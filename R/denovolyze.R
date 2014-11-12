@@ -25,8 +25,10 @@
 #'
 #' @export denovolyze denovolyzeByClass denovolyzeByGene
 #'
-#' @import reshape
 #' @import dplyr
+#' @importFrom reshape melt
+#' @importFrom reshape cast
+#' @importFrom reshape recast
 #'
 #' @examples
 #'

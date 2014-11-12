@@ -17,6 +17,8 @@ classes are "syn", "mis", "lof", "prot"}
 
 \item{nperms}{Number of permutations}
 
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names}
+
 \item{include.class}{variant classes to tabulate in output.  Valid classes =
 "syn","mis","non","splice","frameshift","lof","prot","all".}
 
@@ -24,8 +26,6 @@ classes are "syn", "mis", "lof", "prot"}
 by expected total de novos, or actual total}
 
 \item{gene.id}{Gene identifier used. Currently only hgnc.id}
-
-\item{include}{Genes to include in analysis. "all" or a vector of gene names}
 }
 \value{
 Returns a data.frame
@@ -37,9 +37,14 @@ Are there more genes containing >1 \emph{de novos} than expected?
 See vignette (denovostats_intro) for more information.
 }
 \examples{
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,nsamples=1078)
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    nsamples=1078)
 
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),nsamples=1078)
+denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+                    dnm.classes=autismDeNovos$dnmClass,
+                    include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
+                    nsamples=1078)
 }
 \keyword{keywords}
 

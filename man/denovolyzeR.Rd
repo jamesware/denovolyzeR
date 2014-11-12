@@ -8,7 +8,7 @@
 A package for the analysis of \emph{de novo} sequencing variants
 }
 \author{
-James Ware
+James Ware \email{j.ware@imperial.ac.uk}
 }
 \references{
 \url{http://github.com/jamesware/denovolyzeR}

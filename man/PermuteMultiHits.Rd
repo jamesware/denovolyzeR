@@ -17,7 +17,7 @@ PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "hgncID",
 
 \item{gene.id}{Gene identifier used. Currently only hgnc.id}
 
-\item{include}{Genes to include in analysis. "all" or a vector of gene names}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names}
 }
 \value{
 Returns a named vector of 5 values
