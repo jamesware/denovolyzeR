@@ -8,14 +8,14 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <title>denovolyzeR by jamesware</title>
+    <title>Denovolyzer by jamesware</title>
   </head>
 
   <body>
 
     <header>
       <div class="container">
-        <h1>denovolyzeR</h1>
+        <h1>Denovolyzer</h1>
         <h2>An R package for statistical analyses of de novo genetic variants</h2>
 
         <section id="downloads">
@@ -35,6 +35,19 @@
 <p>This repository is the home of <strong>denovolyzeR</strong>, an <code>R</code> implementation of a statistical framework for the anlaysis of <em>de novo</em> genetic variants.</p>
 
 <p>The statistical framework is published in <a href="http://www.nature.com/doifinder/10.1038/ng.3050">Nature Genetics</a></p>
+
+<p>To install from GitHub using devtools:</p>
+
+<pre><code>## Check whether devtools is installed
+"devtools" %in% installed.packages()
+
+## install devtools if required
+install.packages("devtools")
+
+## install denovolyzeR
+library(devtools)
+install_github("jamesware/denovolyzeR")
+</code></pre>
       </section>
     </div>
 
