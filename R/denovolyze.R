@@ -78,17 +78,20 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
                        gene.id="hgncID",signif.p=3,round.expected=1){
 
-
-
-  ## tests not yet implemented
-  # check gene names unique in include list
-  # match case
-  # no NA
-  # match length
-
   # this line defines variables in order to pass R CMD check
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
   gene <- value <- enrichment <- Row.names <- ends_with <- NULL
+
+  # check inputs
+  parseInput(dnm.genes,
+  dnm.classes,
+  nsamples,
+  group.by,
+  include.gene,
+  include.class,
+  gene.id,
+  signif.p,
+  round.expected)
 
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
