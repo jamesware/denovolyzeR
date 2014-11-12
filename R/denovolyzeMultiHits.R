@@ -9,7 +9,7 @@
 #'   classes are "syn", "mis", "lof", "prot"
 #' @param nsamples Number of individuals considered in de novo analysis#' @param
 #'   nperms Number of permutations
-#' @param include Genes to include in analysis. "all" or a vector of gene names
+#' @param include.gene Genes to include in analysis. "all" or a vector of gene names
 #' @param expectedDNMs Select whether expected number of multihits is determined
 #'   by expected total de novos, or actual total
 #' @param gene.id Gene identifier used. Currently only hgnc.id
@@ -22,9 +22,14 @@
 #' @export
 #'
 #' @examples
-#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,nsamples=1078)
+#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+#'                     dnm.classes=autismDeNovos$dnmClass,
+#'                     nsamples=1078)
 #'
-#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,dnm.classes=autismDeNovos$dnmClass,include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),nsamples=1078)
+#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
+#'                     dnm.classes=autismDeNovos$dnmClass,
+#'                     include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
+#'                     nsamples=1078)
 
 
 
@@ -35,7 +40,9 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 include.class=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
                                 gene.id="hgncID") {
-  # 2 options: the simulation draws N DNMs from the gene list.  N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).  The former is more conservative.  Kaitlin used the latter.
+  # 2 options: the simulation draws N DNMs from the gene list.
+  # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
+  # The former is more conservative.  Samocha et al used the latter.
   # Set expectedDNMs="actual" or "expected
 
   # Use specified gene ID
@@ -47,7 +54,9 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   if(include.gene[1]!="ALL"){
     pDNM <- pDNM[pDNM$gene %in% include.gene,]
     excludedgenes <- sum(!dnm.genes %in% include.gene)
-    if(excludedgenes > 0) {warning("De novo list includes ",excludedgenes," genes not specified for inclusion. These will not be analysed.")}
+    if(excludedgenes > 0) {
+      warning("De novo list includes ",excludedgenes," genes not specified for inclusion. These will not be analysed.")
+    }
     dnm.classes <- dnm.classes[dnm.genes %in% include.gene]
     dnm.genes <- dnm.genes[dnm.genes %in% include.gene]
   }
