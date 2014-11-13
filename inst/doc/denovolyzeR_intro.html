@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="James Ware" />
+
+<meta name="date" content="2014-11-10" />
+
+<title>denovolyzeR intro</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+<div id="header">
+<h1 class="title">denovolyzeR intro</h1>
+<h4 class="author"><em>James Ware</em></h4>
+<h4 class="date"><em>2014-11-10</em></h4>
+</div>
+
+
+<div id="statistics-for-de-novo-variant-analysis" class="section level2">
+<h2>Statistics for <em>de novo</em> variant analysis</h2>
+<div id="introduction" class="section level4">
+<h4>Introduction</h4>
+<p>This package provides functions to analyse <em>de novo</em> genetic variants using the statistical framework described in <a href="http://www.nature.com/doifinder/10.1038/ng.3050">Samocha <em>et al</em> (2014) Nature Genetics 10.1038/ng.3050</a>.</p>
+<p>This vignette demonstrates the usage of the <code>denovolyzeR</code> package to recapitulate the analyses dectribed in this paper.</p>
+<ol style="list-style-type: decimal">
+<li>What is the overall burden of <em>de novo</em> variation in the study cohort: are there more <em>de novos</em> than expected? As well as looking at the total burden of <em>de novos</em>, results are returned for different classes of variant, such as loss-of-function (lof), missense (mis) and synonymous (syn).</li>
+<li>Do <em>de novo</em> variants cluster in specific genes: are there more genes containing multiple <em>de novos</em> than expected?</li>
+<li>Are there any individual genes that contain more <em>de novos</em> than expected?</li>
+</ol>
+</div>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Install the package if you haven't already.</span>
+<span class="co"># OPTION 1 - download binary, and install:</span>
+<span class="co"># install.packages(&quot;LOCAL/PATH/TO/denovolyzeR.tgz&quot;,repos=NULL)  </span>
+
+<span class="co"># OPTION 2 - install from source.  Either download and install, or use devtools:</span>
+<span class="co"># devtools::install_github(&quot;jamesware/denovolyzeR&quot;)</span></code></pre>
+</div>
+<div id="example-analysis" class="section level2">
+<h2>Example analysis</h2>
+<p>We start with a table of de novo variants. An example dataset is provided:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(denovolyzeR)
+<span class="co"># have a look at the example data:</span>
+<span class="kw">dim</span>(autismDeNovos)</code></pre>
+<pre><code>## [1] 1096    2</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(autismDeNovos)</code></pre>
+<pre><code>##      gene dnmClass
+## 1   NOC2L      mis
+## 2 ADPRHL2      mis
+## 3   SGIP1      mis
+## 4   HMCN1      syn
+## 5   KCNT2      mis
+## 6   MARK1      syn</code></pre>
+<div id="overall-de-novo-burden" class="section level4">
+<h4>Overall <em>de novo</em> burden</h4>
+<p>First we want to know whether there are more de novos than expected, using the <code>denovolyzeByClass()</code> function. These variants were obtained by sequencing 1,078 cases, so we use <code>nsamples=1078</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeByClass</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                  <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                  <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
+<pre><code>##   class observed expected enrichment  p.value
+## 1   syn      251    295.8      0.848 9.97e-01
+## 2   mis      652    668.6      0.975 7.45e-01
+## 3   lof      140     92.4      1.520 2.45e-06
+## 4  prot      792    761.0      1.040 1.35e-01
+## 5   all     1043   1056.9      0.987 6.70e-01</code></pre>
+<p>The total number of de novos is almost exactly as our model predicts. However, we see a statistically significant excess of LOF variants in this population.</p>
+</div>
+<div id="genes-containing-multiple-de-novos" class="section level4">
+<h4>Genes containing multiple <em>de novos</em></h4>
+<p>Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the <code>denovolyzeMultiHits()</code> function.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                    <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
+<pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
+## syn         4        3.86           9        0.56         269
+## mis        33       22.17          34        0.02         684
+## lof         6        0.92           4        0.00         143
+## prot       48       31.80          44        0.00         827
+## all        74       53.02          77        0.01        1096</code></pre>
+<p>ObsGenes = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />TotalObsDNM = the total number of <em>de novo</em> variants in each class<br />AvgExpGenes = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />MaxExpGenes = the maximum number of genes containin &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />Empirical.P = an empirical p value<br />Note that the number of observed genes with &gt;1 protein-altering variant does <strong>not</strong> equal the number of genes with &gt;1 lof + number of genes with &gt;1 missense, as genes containing 1 lof + 1 missense will only be counted as “multihits” in the combined analysis.</p>
+<p>Here it looks like there may be an excess of genes with &gt;1 lof variant, &gt;1 missense, and &gt;1 protein-altering variant. We will want to increase the number if permutations here to get a handle on our level of significance.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                    <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">nsamples=</span><span class="dv">1078</span>,
+                    <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre>
+<pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
+## syn         4       3.766          11       0.518         269
+## mis        33      22.341          37       0.018         684
+## lof         6       1.065           5       0.000         143
+## prot       48      31.619          47       0.000         827
+## all        74      54.084          77       0.001        1096</code></pre>
+<p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 143 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>expectedDNMs=&quot;actual&quot;</code></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$dnmClass %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
+<pre><code>## [1] 143</code></pre>
+<p>This is a conservative approach, addressing the question: “given the number of variants in our dataset, do we see more genes with &gt;1 variant than expected?”</p>
+<p>An alternative approach simply asks whether there are more genes with &gt;1 variant than our de novo model predicts. This is accessed by setting <code>expectedDNMs=&quot;expected&quot;</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                    <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">nsamples=</span><span class="dv">1078</span>,
+                    <span class="dt">nperms=</span><span class="dv">1000</span>,
+                    <span class="dt">expectedDNMs=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
+<pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
+## syn         4       4.532          13       0.688       295.8
+## mis        33      21.497          37       0.008       668.6
+## lof         6       0.441           3       0.000        92.4
+## prot       48      27.170          41       0.000       761.0
+## all        74      50.426          75       0.001      1056.9</code></pre>
+</div>
+<div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
+<h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
+<p>We see 6 genes containing &gt;1 <em>de novo</em> lof variant. This is more than expected, but are any of these genes individually significant? We can <code>denovolyzeByGene()</code> to find out.</p>
+<p>By default this function compares the number of LOF variants against expectation for each gene, and then the total number of protein-altering variants (LOF + missense). It can also be configured to return other classes if relevant.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
+<span class="kw">denovolyzeByGene</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                 <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                 <span class="dt">nsamples=</span><span class="dv">1078</span>)
+  )</code></pre>
+<pre><code>##          lof.observed lof.expected lof.p.value prot.observed prot.expected
+## DYRK1A              3            0    6.15e-08             3           0.1
+## SCN2A               3            0    9.20e-07             5           0.1
+## CHD8                3            0    1.76e-06             4           0.2
+## KATNAL2             2            0    1.19e-05             2           0.0
+## SUV420H1            1            0    7.97e-03             3           0.1
+## POGZ                2            0    8.93e-05             2           0.1
+##          prot.p.value
+## DYRK1A       2.87e-05
+## SCN2A        3.15e-07
+## CHD8         3.20e-05
+## KATNAL2      6.08e-04
+## SUV420H1     3.48e-05
+## POGZ         4.82e-03</code></pre>
+<p>Several genes meet statistical significance after correcting for multiple testing. Default options apply two tests across 18271 genes, so a Bonferroni corrected p-value threshold at <span class="math">\(\alpha\)</span> = 0.05 would be 1.4 × 10<sup>-6</sup></p>
+</div>
+<div id="geneset-analysis" class="section level4">
+<h4>Geneset analysis</h4>
+<p>The analyses presented so far have been exome-wide. It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of <em>de novo</em> variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing). All of the above funtions can be targeted to a subset of genes using the <code>include.gene</code> argument.</p>
+<p>The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP). Is this geneset enriched for <em>de novos</em>, and recurrent <em>de novos</em>, in our autism trios?</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(FMRPgenes); <span class="kw">head</span>(FMRPgenes)</code></pre>
+<pre><code>## [1] 842</code></pre>
+<pre><code>## [1] &quot;BSN&quot;   &quot;KIF1A&quot; &quot;MAP1A&quot; &quot;APC&quot;   &quot;MAP1B&quot; &quot;AGAP2&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeByClass</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                  <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                  <span class="dt">nsamples=</span><span class="dv">1078</span>,
+                  <span class="dt">include.gene=</span>FMRPgenes)</code></pre>
+<pre><code>##   class observed expected enrichment  p.value
+## 1   syn       30     33.0      0.909 7.22e-01
+## 2   mis       80     73.7      1.090 2.46e-01
+## 3   lof       34      9.5      3.560 6.80e-10
+## 4  prot      114     83.2      1.370 7.90e-04
+## 5   all      144    116.2      1.240 7.04e-03</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
+                    <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">nsamples=</span><span class="dv">1078</span>,
+                    <span class="dt">nperms=</span><span class="dv">1000</span>,
+                    <span class="dt">include.gene=</span>FMRPgenes)</code></pre>
+<pre><code>## Warning: De novo list includes 952 genes not specified for inclusion.
+## These will not be analysed.</code></pre>
+<pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
+## syn         0       0.747           4       1.000          30
+## mis         8       4.853          12       0.082          80
+## lof         3       0.956           5       0.064          34
+## prot       15       9.530          18       0.032         114
+## all        21      14.347          24       0.027         144</code></pre>
+</div>
+</div>
+<div id="other-functions" class="section level2">
+<h2>Other functions</h2>
+<p><code>viewDeNovoProbs</code> provides access to the underlying <em>de novo</em> probability tables used to calculate expected <em>de novo</em> burdens throughout this package:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
+  <span class="kw">viewDeNovoProbs</span>()
+  )</code></pre>
+<pre><code>##    refseqID hgncID       syn       mis       non    splice frameshift
+## 1 NM_000014    A2M 1.710e-05 3.926e-05 2.177e-06 0.000e+00  2.803e-06
+## 2 NM_000015   NAT2 2.959e-06 7.115e-06 4.046e-07 1.549e-08  5.530e-07
+## 3 NM_000017  ACADS 8.253e-06 1.602e-05 4.166e-07 5.150e-07  7.848e-07
+## 4 NM_000018 ACADVL 9.098e-06 2.072e-05 7.686e-07 8.106e-07  1.247e-06
+## 5 NM_000019  ACAT1 3.757e-06 9.755e-06 4.341e-07 4.645e-07  8.133e-07
+## 6 NM_000020 ACVRL1 8.892e-06 1.874e-05 7.361e-07 3.604e-07  9.577e-07
+##         lof      prot       all
+## 1 4.980e-06 4.424e-05 6.134e-05
+## 2 9.731e-07 8.088e-06 1.105e-05
+## 3 1.716e-06 1.774e-05 2.599e-05
+## 4 2.826e-06 2.355e-05 3.265e-05
+## 5 1.712e-06 1.147e-05 1.522e-05
+## 6 2.054e-06 2.080e-05 2.969e-05</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
+  <span class="kw">viewDeNovoProbs</span>(<span class="dt">format=</span><span class="st">&quot;long&quot;</span>)
+  )</code></pre>
+<pre><code>##       refseqID  hgncID class     value
+## 1    NM_017582  UBE2Q1   syn 5.428e-06
+## 2    NM_014372   RNF11   syn 2.307e-06
+## 3    NM_014455  RNF115   syn 3.154e-06
+## 4    NM_001357    DHX9   syn 1.206e-05
+## 5 NM_001101376 FAM183A   syn 1.572e-06
+## 6 NM_001042549    NSL1   syn 2.643e-06</code></pre>
+<p>Most of the core functionality of this package is contained in the <code>denovolyze</code> function. The <code>denovolyzeByClass</code> and <code>denovolyzeByGene</code> functions used in this vignette are convenience functions that set defaults appropriate to the most common usages of this function. Full details of additional options and default behaviours are available using <code>?denovolyze</code>.</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
