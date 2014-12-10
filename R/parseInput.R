@@ -2,7 +2,7 @@
 #'
 #' An internal function to check inputs
 #'
-#' @return logical, with or without error message
+#' @return tbc   , with or without error message
 #'
 
 parseInput <- function(dnm.genes=dnm.genes,
