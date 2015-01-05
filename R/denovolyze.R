@@ -20,6 +20,8 @@
 #' @param signif.p Number of sig figs used to round p values in output.
 #' @param round.expected Number of decimal places used to round expected burdens
 #'   in output.
+#' @param pDNM Probability table. A user-defined table of probabilities can be
+#'   provided here, to replace the probability table included in the package.
 #'
 #' @return Returns a data frame
 #'
@@ -76,7 +78,8 @@
 denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        group.by="class",include.gene="all",
                        include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
-                       gene.id="hgncID",signif.p=3,round.expected=1){
+                       gene.id="hgncID",signif.p=3,round.expected=1,
+                       pDNM=denovolyzeR:::pDNM){
 
   # this line defines variables in order to pass R CMD check
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
@@ -194,18 +197,20 @@ denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
                               include.gene="all",
                               include.class=c("syn","mis","lof","prot","all"),
                               gene.id="hgncID",
-                              signif.p=3,round.expected=1){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
+                              signif.p=3,round.expected=1,
+                              pDNM=denovolyzeR:::pDNM){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
 }
 
 #' @describeIn denovolyze denovolyzeByGene
 
 denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
-group.by="gene",
-include.gene="all",
-include.class=c("lof","prot"),
-gene.id="hgncID",
-signif.p=3,round.expected=1){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected)
+                             group.by="gene",
+                             include.gene="all",
+                             include.class=c("lof","prot"),
+                             gene.id="hgncID",
+                             signif.p=3,round.expected=1,
+                             pDNM=denovolyzeR:::pDNM){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
 }
 
