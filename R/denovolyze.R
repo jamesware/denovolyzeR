@@ -11,7 +11,8 @@
 #'
 #' @param dnm.genes A vector of genes containing de novo variants.
 #' @param dnm.classes A vector of classes of de novo variants.  Supported
-#'   classes are "syn", "mis", "non", "splice", "frameshift" and "lof".
+#'   classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
+#'   "stoploss","startloss","splice", "frameshift" and "lof".
 #' @param nsamples Number of individuals considered in de novo analysis.
 #' @param group.by Results can be tabulated by gene, or by variant class
 #' @param include.class Which variant classes are tabulated in output
@@ -77,7 +78,9 @@
 
 denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        group.by="class",include.gene="all",
-                       include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
+                       include.class=c("syn","mis","mis_cons","mis_dam","mis_oth",
+                                       "non","stoploss","startgain",
+                                       "splice","frameshift","lof","prot","all"),
                        gene.id="hgncID",signif.p=3,round.expected=1,
                        pDNM=denovolyzeR:::pDNM){
 
@@ -108,8 +111,9 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
   # annotate lof & prot variant classes
   input <- data.frame(gene=dnm.genes,class=dnm.classes)
-  input$class.1[input$class %in% c("splice","frameshift","non")] <- "lof"
-  input$class.2[input$class %in% c("splice","frameshift","non","lof","mis")] <- "prot"
+  input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
+  input$class.2[input$class %in% c("splice","frameshift","non","stoploss","startloss",
+                                   "lof","mis","mis_cons","mis_dam","mis_oth")] <- "prot"
   input$class.3 <- "all"
   input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
 
@@ -122,7 +126,9 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
       summarise(
         observed = n()
       )
-  observed$class <- factor(observed$class, levels=c(c("syn","mis","non","splice","frameshift","lof","prot","all")))
+  observed$class <- factor(observed$class, levels=c(c("syn","mis","mis_cons","mis_dam","mis_oth",
+                                                      "non","stoploss","startloss",
+                                                      "splice","frameshift","lof","prot","all")))
   observed <- observed[order(observed$class),]
 
   expected <- pDNM %>%
