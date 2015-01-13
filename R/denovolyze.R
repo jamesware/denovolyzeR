@@ -78,7 +78,7 @@
 
 denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        group.by="class",include.gene="all",
-                       include.class=c("syn","mis","mis_cons","mis_dam","mis_oth",
+                       include.class=c("syn","mis","mis_filter","mis_other","mis",
                                        "non","stoploss","startgain",
                                        "splice","frameshift","lof","prot","all"),
                        gene.id="hgncID",signif.p=3,round.expected=1,
@@ -112,9 +112,11 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   # annotate lof & prot variant classes
   input <- data.frame(gene=dnm.genes,class=dnm.classes)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
-  input$class.2[input$class %in% c("splice","frameshift","non","stoploss","startloss",
-                                   "lof","mis","mis_cons","mis_dam","mis_oth")] <- "prot"
-  input$class.3 <- "all"
+  input$class[input$class =="mis"] <- "mis_other"
+  input$class.2[input$class %in% c("mis_other","mis_filter")] <- "mis"
+  input$class.3[input$class %in% c("splice","frameshift","non","stoploss","startloss",
+                                   "lof","mis_other","mis_filter")] <- "prot"
+  input$class.4 <- "all"
   input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
 
   # tabulate observed & expected numbers, either by gene or by class
@@ -126,7 +128,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
       summarise(
         observed = n()
       )
-  observed$class <- factor(observed$class, levels=c(c("syn","mis","mis_cons","mis_dam","mis_oth",
+  observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis_other","mis",
                                                       "non","stoploss","startloss",
                                                       "splice","frameshift","lof","prot","all")))
   observed <- observed[order(observed$class),]
