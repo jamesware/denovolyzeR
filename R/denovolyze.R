@@ -80,7 +80,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        group.by="class",include.gene="all",
                        include.class=c("syn","mis","mis_filter","mis_other","mis",
                                        "non","stoploss","startgain",
-                                       "splice","frameshift","lof","prot","all"),
+                                       "splice","frameshift","lof","prot","all", "lof_mis_filter"),
                        gene.id="hgncID",signif.p=3,round.expected=1,
                        pDNM=denovolyzeR:::pDNM){
 
@@ -109,6 +109,12 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   dnm.genes <- toupper(as.character(dnm.genes))
   include.class <- tolower(as.character(include.class))
 
+  #if a missense filter is used, automatically add a category of lof + missense filter
+  #addendum: Not making this automatic for now. Must specify in calling the function.
+#   if ("mis_filter" %in% include.class & !"lof_mis_filter" %in% include.class) {
+#     include.class <- append(include.class, "lof_mis_filter")
+#   }
+
   # annotate lof & prot variant classes
   input <- data.frame(gene=dnm.genes,class=dnm.classes)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
@@ -117,6 +123,9 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   input$class.3[input$class %in% c("splice","frameshift","non","stoploss","startloss",
                                    "lof","mis_other","mis_filter")] <- "prot"
   input$class.4 <- "all"
+  #be careful if the class column already has lof. this code would count it twice.
+  input$class.5[input$class %in% c(c("splice","frameshift","non","stoploss","startloss",
+                                     "lof","mis_filter"),"mis_filter")] <- "lof_mis_filter"
   input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
 
   # tabulate observed & expected numbers, either by gene or by class
@@ -130,7 +139,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
       )
   observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis_other","mis",
                                                       "non","stoploss","startloss",
-                                                      "splice","frameshift","lof","prot","all")))
+                                                      "splice","frameshift","lof","prot","all", "lof_mis_filter")))
   observed <- observed[order(observed$class),]
 
   expected <- pDNM %>%
