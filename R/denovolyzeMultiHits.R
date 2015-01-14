@@ -37,7 +37,7 @@
 denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 nperms=100,
                                 include.gene="all",
-                                include.class=c("syn","mis","lof","prot","all"),
+                                include.class=c("syn","mis","lof","prot","prot_dam","all"),
                                 expectedDNMs="actual",
                                 gene.id="hgncID") {
   # 2 options: the simulation draws N DNMs from the gene list.
@@ -89,6 +89,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
    output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift"))
    }
  output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","mis"))
+ output[["prot_dam"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","mis_filter"))
  output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","mis","syn"))
 
   output <- output[names(output) %in% include.class]
