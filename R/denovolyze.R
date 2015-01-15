@@ -76,11 +76,12 @@
 
 
 
+
 denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        group.by="class",include.gene="all",
                        include.class=c("syn","mis","mis_filter","mis_other","mis",
                                        "non","stoploss","startgain",
-                                       "splice","frameshift","lof","prot","all", "lof_mis_filter"),
+                                       "splice","frameshift","lof","prot","all", "prot_dam"),
                        gene.id="hgncID",signif.p=3,round.expected=1,
                        pDNM=denovolyzeR:::pDNM){
 
@@ -90,14 +91,14 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
   # check inputs
   parseInput(dnm.genes,
-  dnm.classes,
-  nsamples,
-  group.by,
-  include.gene,
-  include.class,
-  gene.id,
-  signif.p,
-  round.expected)
+                           dnm.classes,
+                           nsamples,
+                           group.by,
+                           include.gene,
+                           include.class,
+                           gene.id,
+                           signif.p,
+                           round.expected)
 
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
@@ -111,21 +112,22 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
   #if a missense filter is used, automatically add a category of lof + missense filter
   #addendum: Not making this automatic for now. Must specify in calling the function.
-#   if ("mis_filter" %in% include.class & !"lof_mis_filter" %in% include.class) {
-#     include.class <- append(include.class, "lof_mis_filter")
-#   }
+  #   if ("mis_filter" %in% include.class & !"prot_dam" %in% include.class) {
+  #     include.class <- append(include.class, "prot_dam")
+  #   }
 
   # annotate lof & prot variant classes
   input <- data.frame(gene=dnm.genes,class=dnm.classes)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
   input$class[input$class =="mis"] <- "mis_other"
-  input$class.2[input$class %in% c("mis_other","mis_filter")] <- "mis"
+  input$class.2[input$class %in% c("mis_other","mis_svm","mis_dam","mis_cons")] <- "mis"
   input$class.3[input$class %in% c("splice","frameshift","non","stoploss","startloss",
-                                   "lof","mis_other","mis_filter")] <- "prot"
+                                   "lof",
+                                   "mis_other","mis_svm","mis_dam","mis_cons")] <- "prot"
   input$class.4 <- "all"
   #be careful if the class column already has lof. this code would count it twice.
   input$class.5[input$class %in% c("splice","frameshift","non","stoploss","startloss",
-                                     "lof","mis_filter")] <- "lof_mis_filter"
+                                   "lof","mis_svm","mis_dam","mis_cons")] <- "prot_dam"
   input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
 
   # tabulate observed & expected numbers, either by gene or by class
@@ -137,24 +139,23 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
       summarise(
         observed = n()
       )
-  observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis_other","mis",
-                                                      "non","stoploss","startloss",
-                                                      "splice","frameshift","lof","prot","all", "lof_mis_filter")))
-  observed <- observed[order(observed$class),]
+    observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis_other","mis",
+                                                        "non","stoploss","startloss",
+                                                        "splice","frameshift","lof","prot","all", "prot_dam")))
+    observed <- observed[order(observed$class),]
 
-  expected <- pDNM %>%
-    filter(gene %in% include.gene, class %in% include.class) %>%
-    group_by(class) %>%
-    summarise(
-      expected = 2*sum(value, na.rm=T)*nsamples
-    )
+    expected <- pDNM %>%
+      filter(gene %in% include.gene, class %in% include.class) %>%
+      group_by(class) %>%
+      summarise(
+        expected = 2*sum(value, na.rm=T)*nsamples
+      )
 
-  output <- left_join(observed,expected,by=c("class"))
+    output <- left_join(observed,expected,by=c("class"))
 
   } else if(group.by=="gene"){
 
-    observed <-
-      input %>%
+    observed <- input %>%
       filter(gene %in% include.gene, class %in% include.class) %>%
       group_by(gene,class) %>%
       summarise(
@@ -181,10 +182,15 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   if(group.by=="gene"){
 
-    output <-
-      output %>%
+    output <- output %>%
       select(-enrichment) %>%
       recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
+
+    classNotRepresented <- include.class[!include.class %in% dimnames(output)$class]
+    if (length(classNotRepresented)!=0){
+      warning(paste(classNotRepresented,"is not found in data"))
+      include.class[include.class %in% unique(output$class)]
+    }
 
     output2 <- list()
     for (i in seq(along=include.class)){
@@ -200,6 +206,17 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
     }
 
     my.index <- output3 %>% select(ends_with("p.value")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+
+    if(gene.id!="hgncID"){
+      output3 <- pDNM[,c("gene","gene.symbol")] %>%
+        unique %>%
+        merge(.,
+              output3,
+              by.x="gene",
+              by.y="row.names",
+              all=T)
+    }
+
     output <- output3[my.index,]
   }
 
@@ -230,4 +247,5 @@ denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
                              pDNM=denovolyzeR:::pDNM){
   denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
 }
+
 
