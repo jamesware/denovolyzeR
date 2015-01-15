@@ -27,11 +27,6 @@
 #'                     dnm.classes=autismDeNovos$dnmClass,
 #'                     nsamples=1078)
 #'
-#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-#'                     dnm.classes=autismDeNovos$dnmClass,
-#'                     include.class=c("syn","mis","non","splice","frameshift","lof","prot","prot_dam","all"),
-#'                     nsamples=1078)
-
 
 
 
@@ -41,15 +36,20 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 include.class=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
                                 gene.id="hgncID",
-                                pDNM=denovolyzeR:::pDNM
-) {
+                                pDNM=NULL,
+                                mis_filter=NULL) {
+
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
   # The former is more conservative.  Samocha et al used the latter.
   # Set expectedDNMs="actual" or "expected
 
+  if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
+  if(is.null(mis_filter)){mis_filter <- "mis_svm"}
+
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
+  names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"
   pDNM$gene <- toupper(as.character(pDNM$gene))
   include.gene <- toupper(as.character(include.gene))
 
@@ -72,32 +72,31 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
       x=2*sum(pDNM$value[pDNM$class==class])*nsamples
     }
     y=length(unique(nextvars[duplicated(nextvars)]))
-    output <- denovolyzeR:::PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,pDNM=pDNM)
+    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,pDNM=pDNM)
     #rownames(output) <- class
     return(output)
   }
 
-  ### Calculate probabilities for classes represented in data
+  ### Calculate probabilities for non-overlapping classes represented in data
   output <- list()
-  myclasses=c("syn","mis","mis_dam","mis_cons","mis_svm","startloss",
-              "stoploss","non","splice","frameshift","lof")
+  myclasses=c("syn","mis_filter","startloss",
+              "stoploss","non","splice","frameshift")
   myclasses <- myclasses[myclasses %in% dnm.classes]
   for (class in myclasses){
     output[[class]] <- doPermute(class)
   }
 
   ### Calculate probabilities for "aggregate classes"
-  ### LOF (if variants are annotated with increased granularity), protein-altering, and total
+  output[["mis"]] <- doPermute(class="mis",classgroup=c("mis","mis_filter"))
 
-  if(!"lof" %in% myclasses){
-    output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","startloss","stoploss"))
-  }
-  output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss",
-                                                          "mis","mis_other","mis_dam","mis_cons","mis_svm"))
-  output[["prot_dam"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss",
-                                                              "mis_dam","mis_cons","mis_svm"))
-  output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss",
-                                                        "mis_dam","mis_cons","mis_svm","syn"))
+  output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","startloss","stoploss","lof"))
+
+  output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
+                                                          "mis","mis_filter"))
+  output[["prot_dam"]] <- doPermute(class="prot_dam",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
+                                                              "mis_filter"))
+  output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
+                                                        "mis","mis_filter","syn"))
 
   output <- output[names(output) %in% include.class]
   return(t(data.frame(output)))
