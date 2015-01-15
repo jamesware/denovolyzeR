@@ -17,7 +17,8 @@
 PermuteMultiHits <- function(x,y,nperms=100,
                              class="lof",
                              gene.id="hgncID",
-                             include.gene="all") {
+                             include.gene="all",
+                             pDNM=denovolyzer:::pDNM) {
 
   #x = total number of DNM observed
   #y = no of genes with >1 DNM in class of interest
