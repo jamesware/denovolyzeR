@@ -83,7 +83,8 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                                        "non","stoploss","startgain",
                                        "splice","frameshift","lof","prot","all", "prot_dam"),
                        gene.id="hgncID",signif.p=3,round.expected=1,
-                       pDNM=denovolyzeR:::pDNM){
+                       pDNM=NULL,
+                       mis_filter=NULL) {
 
   # this line defines variables in order to pass R CMD check
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
@@ -100,6 +101,11 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                            signif.p,
                            round.expected)
 
+  # By default, pDNM uses internal prob table.  if "mis_filter" is supplied, it is interpreted as damaging metaSVM score.
+  if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
+  # use specified missense filter
+  if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
+  
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
   if(toupper(include.gene[1])=="ALL" & length(include.gene==1)){include.gene <- toupper(pDNM$gene)}
@@ -110,25 +116,21 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   dnm.genes <- toupper(as.character(dnm.genes))
   include.class <- tolower(as.character(include.class))
 
-  #if a missense filter is used, automatically add a category of lof + missense filter
-  #addendum: Not making this automatic for now. Must specify in calling the function.
-  #   if ("mis_filter" %in% include.class & !"prot_dam" %in% include.class) {
-  #     include.class <- append(include.class, "prot_dam")
-  #   }
-
   # annotate lof & prot variant classes
   input <- data.frame(gene=dnm.genes,class=dnm.classes)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
-  input$class[input$class =="mis"] <- "mis_other"
-  input$class.2[input$class %in% c("mis_other","mis_svm","mis_dam","mis_cons")] <- "mis"
+  input$class[input$class =="mis"] <- "mis_notFilter"
+  input$class.2[input$class %in% c("mis_notFilter","mis_filter")] <- "mis"
   input$class.3[input$class %in% c("splice","frameshift","non","stoploss","startloss",
                                    "lof",
-                                   "mis_other","mis_svm","mis_dam","mis_cons")] <- "prot"
-  input$class.4 <- "all"
-  #be careful if the class column already has lof. this code would count it twice.
-  input$class.5[input$class %in% c("splice","frameshift","non","stoploss","startloss",
-                                   "lof","mis_svm","mis_dam","mis_cons")] <- "prot_dam"
-  input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
+                                   "mis_notFilter","mis_filter")] <- "prot"
+  input$class.4[input$class %in% c("splice","frameshift","non","stoploss","startloss",
+                                   "lof","mis_filter")] <- "prot_dam"
+  input$class.5 <- "all"
+  input <- melt(input,id.vars="gene") %>%
+    select(gene, class = value)  %>%
+    filter(!is.na(class)) %>%
+    filter(class!="mis_notFilter")
 
   # tabulate observed & expected numbers, either by gene or by class
   if(group.by=="class"){
@@ -139,9 +141,9 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
       summarise(
         observed = n()
       )
-    observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis_other","mis",
+    observed$class <- factor(observed$class, levels=c(c("syn","mis_filter","mis",
                                                         "non","stoploss","startloss",
-                                                        "splice","frameshift","lof","prot","all", "prot_dam")))
+                                                        "splice","frameshift","lof","prot","prot_dam","all")))
     observed <- observed[order(observed$class),]
 
     expected <- pDNM %>%

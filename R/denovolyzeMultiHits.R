@@ -45,11 +45,10 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   # Set expectedDNMs="actual" or "expected
 
   if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
-  if(is.null(mis_filter)){mis_filter <- "mis_svm"}
+  if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
 
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
-  names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"
   pDNM$gene <- toupper(as.character(pDNM$gene))
   include.gene <- toupper(as.character(include.gene))
 
