@@ -124,8 +124,8 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                                    "lof","mis_other","mis_filter")] <- "prot"
   input$class.4 <- "all"
   #be careful if the class column already has lof. this code would count it twice.
-  input$class.5[input$class %in% c(c("splice","frameshift","non","stoploss","startloss",
-                                     "lof","mis_filter"),"mis_filter")] <- "lof_mis_filter"
+  input$class.5[input$class %in% c("splice","frameshift","non","stoploss","startloss",
+                                     "lof","mis_filter")] <- "lof_mis_filter"
   input <- melt(input,id.vars="gene") %>% select(gene, class = value)  %>% filter(!is.na(class))
 
   # tabulate observed & expected numbers, either by gene or by class
