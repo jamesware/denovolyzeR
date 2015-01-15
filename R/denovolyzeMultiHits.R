@@ -9,7 +9,8 @@
 #'   classes are "syn", "mis", "lof", "prot"
 #' @param nsamples Number of individuals considered in de novo analysis#' @param
 #'   nperms Number of permutations
-#' @param include.gene Genes to include in analysis. "all" or a vector of gene names
+#' @param include.gene Genes to include in analysis. "all" or a vector of gene
+#'   names
 #' @param expectedDNMs Select whether expected number of multihits is determined
 #'   by expected total de novos, or actual total
 #' @param gene.id Gene identifier used. Currently only hgnc.id
@@ -28,7 +29,7 @@
 #'
 #' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
 #'                     dnm.classes=autismDeNovos$dnmClass,
-#'                     include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
+#'                     include.class=c("syn","mis","non","splice","frameshift","lof","prot","prot_dam","all"),
 #'                     nsamples=1078)
 
 
@@ -37,9 +38,11 @@
 denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 nperms=100,
                                 include.gene="all",
-                                include.class=c("syn","mis","lof","prot","prot_dam","all"),
+                                include.class=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
-                                gene.id="hgncID") {
+                                gene.id="hgncID",
+                                pDNM=denovolyzeR:::pDNM
+) {
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
   # The former is more conservative.  Samocha et al used the latter.
@@ -69,28 +72,32 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
       x=2*sum(pDNM$value[pDNM$class==class])*nsamples
     }
     y=length(unique(nextvars[duplicated(nextvars)]))
-    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,include.gene=include.gene)
+    output <- denovolyzeR:::PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,pDNM=pDNM)
     #rownames(output) <- class
     return(output)
   }
 
   ### Calculate probabilities for classes represented in data
   output <- list()
- myclasses=c("syn","mis","non","splice","frameshift","lof")
+  myclasses=c("syn","mis","mis_dam","mis_cons","mis_svm","startloss",
+              "stoploss","non","splice","frameshift","lof")
   myclasses <- myclasses[myclasses %in% dnm.classes]
- for (class in myclasses){
+  for (class in myclasses){
     output[[class]] <- doPermute(class)
-    }
+  }
 
- ### Calculate probabilities for "aggregate classes"
- ### LOF (if variants are annotated with increased granularity), protein-altering, and total
+  ### Calculate probabilities for "aggregate classes"
+  ### LOF (if variants are annotated with increased granularity), protein-altering, and total
 
- if(!"lof" %in% myclasses){
-   output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift"))
-   }
- output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","mis"))
- output[["prot_dam"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","mis_filter"))
- output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","mis","syn"))
+  if(!"lof" %in% myclasses){
+    output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","startloss","stoploss"))
+  }
+  output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss",
+                                                          "mis","mis_other","mis_dam","mis_cons","mis_svm"))
+  output[["prot_dam"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss",
+                                                              "mis_dam","mis_cons","mis_svm"))
+  output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss",
+                                                        "mis_dam","mis_cons","mis_svm","syn"))
 
   output <- output[names(output) %in% include.class]
   return(t(data.frame(output)))
