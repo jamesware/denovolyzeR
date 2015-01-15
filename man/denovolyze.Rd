@@ -6,23 +6,27 @@
 \title{Evaluates burden of \emph{de novo} variation against expectation}
 \usage{
 denovolyze(dnm.genes, dnm.classes, nsamples, group.by = "class",
-  include.gene = "all", include.class = c("syn", "mis", "non", "splice",
-  "frameshift", "lof", "prot", "all"), gene.id = "hgncID", signif.p = 3,
-  round.expected = 1)
+  include.gene = "all", include.class = c("syn", "mis", "mis_filter",
+  "mis_other", "mis", "non", "stoploss", "startgain", "splice", "frameshift",
+  "lof", "prot", "all", "prot_dam"), gene.id = "hgncID", signif.p = 3,
+  round.expected = 1, pDNM = NULL, mis_filter = NULL)
 
 denovolyzeByClass(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), gene.id = "hgncID", signif.p = 3, round.expected = 1)
+  "all"), gene.id = "hgncID", signif.p = 3, round.expected = 1,
+  pDNM = denovolyzeR:::pDNM)
 
 denovolyzeByGene(dnm.genes, dnm.classes, nsamples, group.by = "gene",
   include.gene = "all", include.class = c("lof", "prot"),
-  gene.id = "hgncID", signif.p = 3, round.expected = 1)
+  gene.id = "hgncID", signif.p = 3, round.expected = 1,
+  pDNM = denovolyzeR:::pDNM)
 }
 \arguments{
 \item{dnm.genes}{A vector of genes containing de novo variants.}
 
 \item{dnm.classes}{A vector of classes of de novo variants.  Supported
-classes are "syn", "mis", "non", "splice", "frameshift" and "lof".}
+classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
+"stoploss","startloss","splice", "frameshift" and "lof".}
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
@@ -37,7 +41,10 @@ classes are "syn", "mis", "non", "splice", "frameshift" and "lof".}
 \item{signif.p}{Number of sig figs used to round p values in output.}
 
 \item{round.expected}{Number of decimal places used to round expected burdens
-  in output.}
+in output.}
+
+\item{pDNM}{Probability table. A user-defined table of probabilities can be
+  provided here, to replace the probability table included in the package.}
 }
 \value{
 Returns a data frame

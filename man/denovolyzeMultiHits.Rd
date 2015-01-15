@@ -5,7 +5,8 @@
 \usage{
 denovolyzeMultiHits(dnm.genes, dnm.classes, nsamples, nperms = 100,
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", gene.id = "hgncID")
+  "all"), expectedDNMs = "actual", gene.id = "hgncID", pDNM = NULL,
+  mis_filter = NULL)
 }
 \arguments{
 \item{dnm.genes}{A vector of genes containing de novo variants}
@@ -17,7 +18,8 @@ classes are "syn", "mis", "lof", "prot"}
 
 \item{nperms}{Number of permutations}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+names}
 
 \item{include.class}{variant classes to tabulate in output.  Valid classes =
 "syn","mis","non","splice","frameshift","lof","prot","all".}
@@ -39,11 +41,6 @@ See vignette (denovostats_intro) for more information.
 \examples{
 denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
                     dnm.classes=autismDeNovos$dnmClass,
-                    nsamples=1078)
-
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
-                    include.class=c("syn","mis","non","splice","frameshift","lof","prot","all"),
                     nsamples=1078)
 }
 \keyword{keywords}

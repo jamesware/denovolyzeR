@@ -4,7 +4,7 @@
 \title{Permutes x variants across a genelist, and counts genes with multiple hits}
 \usage{
 PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "hgncID",
-  include.gene = "all")
+  include.gene = "all", pDNM = denovolyzer:::pDNM)
 }
 \arguments{
 \item{x}{Total number of de novo variants observed in dataset}
