@@ -105,7 +105,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
   # use specified missense filter
   if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
-  
+
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
   if(toupper(include.gene[1])=="ALL" & length(include.gene==1)){include.gene <- toupper(pDNM$gene)}
@@ -209,15 +209,16 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
     my.index <- output3 %>% select(ends_with("p.value")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
 
-    if(gene.id!="hgncID"){
-      output3 <- pDNM[,c("gene","gene.symbol")] %>%
-        unique %>%
-        merge(.,
-              output3,
-              by.x="gene",
-              by.y="row.names",
-              all=T)
-    }
+# remove this: not robust
+#     if(gene.id!="hgncID"){
+#       output3 <- pDNM[,c("gene","gene.symbol")] %>%
+#         unique %>%
+#         merge(.,
+#               output3,
+#               by.x="gene",
+#               by.y="row.names",
+#               all=T)
+#     }
 
     output <- output3[my.index,]
   }
