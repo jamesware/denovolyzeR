@@ -39,6 +39,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 pDNM=NULL,
                                 mis_filter=NULL) {
 
+  options(stringsAsFactors = FALSE)
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
   # The former is more conservative.  Samocha et al used the latter.
