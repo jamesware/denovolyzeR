@@ -78,11 +78,14 @@
 
 
 denovolyze <- function(dnm.genes,dnm.classes,nsamples,
-                       group.by="class",include.gene="all",
+                       group.by="class",
+                       include.gene="all",
                        include.class=c("syn","mis","mis_filter","mis_other","mis",
                                        "non","stoploss","startgain",
                                        "splice","frameshift","lof","prot","all", "prot_dam"),
-                       gene.id="hgncID",signif.p=3,round.expected=1,
+                       gene.id="hgncID",
+                       signif.p=3,
+                       round.expected=1,
                        pDNM=NULL,
                        mis_filter=NULL) {
 
@@ -103,9 +106,9 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                            signif.p,
                            round.expected)
 
-  # By default, pDNM uses internal prob table.  if "mis_filter" is supplied, it is interpreted as damaging metaSVM score.
+  # By default, pDNM uses internal prob table.
   if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
-  # use specified missense filter
+  # With an external pDNM table, if "mis_filter" is not supplied, it defaults to damaging metaSVM score.
   if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
 
   # Use specified gene ID
