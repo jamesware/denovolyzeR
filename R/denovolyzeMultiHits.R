@@ -48,6 +48,9 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
   if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
 
+  # Record all variant classes in probability table.  Only calculate stats for annotated variant classes.
+  allVariantClasses <- pDNM %>% select(class) %>% unique %>% unlist
+
   # Use specified gene ID
   names(pDNM)[names(pDNM)==gene.id] <- "gene"
   pDNM$gene <- toupper(as.character(pDNM$gene))
@@ -82,6 +85,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   myclasses=c("syn","mis_filter","startloss",
               "stoploss","non","splice","frameshift")
   myclasses <- myclasses[myclasses %in% dnm.classes]
+  myclasses <- myclasses[myclasses %in% allVariantClasses]
   for (class in myclasses){
     output[[class]] <- doPermute(class)
   }
@@ -93,8 +97,10 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
 
   output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                           "mis","mis_filter"))
-  output[["prot_dam"]] <- doPermute(class="prot_dam",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
+  if("prot_dam" %in% allVariantClasses){
+    output[["prot_dam"]] <- doPermute(class="prot_dam",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                               "mis_filter"))
+    }
   output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                         "mis","mis_filter","syn"))
 
