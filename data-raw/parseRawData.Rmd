@@ -20,7 +20,7 @@ opts_chunk$set(collapse=TRUE)
 pDNM <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
 #pDNM <- read.table("./data-raw/fixed_mut_prob_fs_adjdepdiv.txt",header=T)
 pDNM <- pDNM %>% 
-  dplyr::rename(splice = css, hgncID = gene, refseqID = transcript) %>% 
+  dplyr::rename(splice = css, geneID = gene, refseqID = transcript) %>% 
   select(-bp, -covered_bp, -rdt, -all)
 # antilog raw data
 pDNM[,3:7] <- 10^pDNM[,3:7]
@@ -32,9 +32,9 @@ pDNM$all <- apply(pDNM[,c("syn","prot")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM %>% head
 cat("pDNM:\n",
   "Number rows:",nrow(pDNM),"\n",
-  "Number unique genes:",length(unique(pDNM$hgncID)),"\n"
+  "Number unique genes:",length(unique(pDNM$geneID)),"\n"
     )
-pDNM <- melt(pDNM,id.vars=c("refseqID","hgncID"),variable_name="class")
+pDNM <- melt(pDNM,id.vars=c("refseqID","geneID"),variable_name="class")
 ```
 
 Revisit classification of variant consequences. Currently:
@@ -51,19 +51,19 @@ clarify whether these have no splice boundaries (hence p=0, or could not be calc
 ```{r, collapse=TRUE}
 # Autism (1,078 trios) de novo list from Nature Genetics publication.
 autismDeNovos <- read.table("./aut_dnm_3.5.13.txt")
-names(autismDeNovos) <- c("gene","dnmClass")
+names(autismDeNovos) <- c("gene","class")
 cat("autism demo data:\n",
   "Number variants:",nrow(autismDeNovos),"\n",
   "Number unique genes:",length(unique(autismDeNovos$gene)),"\n",
   "Tabulate by variant class:\n"
     )
-table(autismDeNovos$dnmClass) %>% data.frame
+table(autismDeNovos$class) %>% data.frame
 # truncate variant class names & filter unrecognised classes
-autismDeNovos$dnmClass[autismDeNovos$dnmClass %in% c("synonymous","missense","nonsense")] <- autismDeNovos$dnmClass[autismDeNovos$dnmClass %in% c("synonymous","missense","nonsense")] %>% substr(1,3)
+autismDeNovos$class[autismDeNovos$class %in% c("synonymous","missense","nonsense")] <- autismDeNovos$class[autismDeNovos$class %in% c("synonymous","missense","nonsense")] %>% substr(1,3)
 cat("removing unrecognised variant classes:\n")
-autismDeNovos %>% filter(!dnmClass %in% c("syn","mis","non","splice","frameshift"))
+autismDeNovos %>% filter(!class %in% c("syn","mis","non","splice","frameshift"))
 
-autismDeNovos <- autismDeNovos %>% filter(dnmClass %in% c("syn","mis","non","splice","frameshift"))
+autismDeNovos <- autismDeNovos %>% filter(class %in% c("syn","mis","non","splice","frameshift"))
 ```
 Need to decide how to classify 
 
@@ -72,7 +72,7 @@ Need to decide how to classify
 * splice_indel
 
 Note also: a number of genes in the autism *de novo* list do not have matching identifiers in the pDNM table:  
-`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(pDNM$hgncID)]`
+`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(pDNM$geneID)]`
 
 ## Autism demo data: FMRP genelist
 ```{r FMRP}

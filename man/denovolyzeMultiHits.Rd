@@ -6,7 +6,7 @@
 \usage{
 denovolyzeMultiHits(dnm.genes, dnm.classes, nsamples, nperms = 100,
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", gene.id = "hgncID", pDNM = NULL,
+  "all"), expectedDNMs = "actual", gene.id = "hgncID", probTable = NULL,
   mis_filter = NULL)
 }
 \arguments{
@@ -20,17 +20,24 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 
 \item{nperms}{Number of permutations}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names.}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+names.}
 
 \item{include.class}{Which variant classes are tabulated in output}
 
 \item{expectedDNMs}{Select whether expected number of multihits is determined
   by expected total de novos, or actual total}
 
-\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may work)}
+\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may
+work)}
 
-\item{pDNM}{Probability table. A user-defined table of probabilities can be
-  provided here, to replace the probability table included in the package.}
+\item{probTable}{Probability table. A user-defined table of probabilities can be
+provided here, to replace the probability table included in the package.}
+
+\item{mis_filter}{If the user-specified probability table contains
+  probabilities for a sub-category of missense variants (e.g. predicted to be
+  damaging by an in silico algorithm), thta column should be called
+  mis_filter, or the alternative name should be specified here.}
 }
 \value{
 Returns a data.frame

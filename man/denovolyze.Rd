@@ -10,16 +10,17 @@ denovolyze(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "mis_filter",
   "mis_other", "mis", "non", "stoploss", "startgain", "splice", "frameshift",
   "lof", "prot", "all", "prot_dam"), gene.id = "hgncID", signif.p = 3,
-  round.expected = 1, pDNM = NULL, mis_filter = NULL)
+  round.expected = 1, probTable = NULL, mis_filter = NULL)
 
 denovolyzeByClass(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
   "all"), gene.id = "hgncID", signif.p = 3, round.expected = 1,
-  pDNM = NULL)
+  probTable = NULL)
 
 denovolyzeByGene(dnm.genes, dnm.classes, nsamples, group.by = "gene",
   include.gene = "all", include.class = c("lof", "prot"),
-  gene.id = "hgncID", signif.p = 3, round.expected = 1, pDNM = NULL)
+  gene.id = "hgncID", signif.p = 3, round.expected = 1,
+  probTable = NULL)
 }
 \arguments{
 \item{dnm.genes}{A vector of genes containing de novo variants.}
@@ -32,19 +33,26 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 
 \item{group.by}{Results can be tabulated by gene, or by variant class}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names.}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+names.}
 
 \item{include.class}{Which variant classes are tabulated in output}
 
-\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may work)}
+\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may
+work)}
 
 \item{signif.p}{Number of sig figs used to round p values in output.}
 
 \item{round.expected}{Number of decimal places used to round expected burdens
 in output.}
 
-\item{pDNM}{Probability table. A user-defined table of probabilities can be
-  provided here, to replace the probability table included in the package.}
+\item{probTable}{Probability table. A user-defined table of probabilities can be
+provided here, to replace the probability table included in the package.}
+
+\item{mis_filter}{If the user-specified probability table contains
+  probabilities for a sub-category of missense variants (e.g. predicted to be
+  damaging by an in silico algorithm), thta column should be called
+  mis_filter, or the alternative name should be specified here.}
 }
 \value{
 Returns a data frame
@@ -56,7 +64,8 @@ LOF variants than expected, across the whole dataset?), or by gene (are there
 more variants of a given class in SCN2A?).
 }
 \details{
-Analyses can be restricted to a subset of genes, and/or a subset of variant classes
+Analyses can be restricted to a subset of genes, and/or a subset of variant
+classes
 
 See vignette("denovolyzeR_intro") for more information.
 }

@@ -5,7 +5,7 @@
 \title{Permutes x variants across a genelist, and counts genes with multiple hits}
 \usage{
 PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "hgncID",
-  include.gene = "all", pDNM = denovolyzer:::pDNM)
+  include.gene = "all", probTable = pDNM)
 }
 \arguments{
 \item{x}{Total number of de novo variants observed in dataset}
@@ -16,12 +16,14 @@ PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "hgncID",
 
 \item{class}{In c("lof","mis","syn","prot")}
 
-\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may work)}
+\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may
+work)}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names.}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+names.}
 
-\item{pDNM}{Probability table. A user-defined table of probabilities can be
-  provided here, to replace the probability table included in the package.}
+\item{probTable}{Probability table. A user-defined table of probabilities can be
+provided here, to replace the probability table included in the package.}
 }
 \value{
 Returns a named vector of 5 values

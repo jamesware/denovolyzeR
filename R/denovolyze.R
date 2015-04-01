@@ -19,7 +19,7 @@
 #' @param include.class Which variant classes are tabulated in output
 #' @param include.gene Genes to include in analysis. "all" or a vector of gene
 #'   names.
-#' @param gene.id Gene identifier used. Currently only hgncID. (refseqID may
+#' @param gene.id Gene identifier used. Currently only geneID. (refseqID may
 #'   work)
 #' @param signif.p Number of sig figs used to round p values in output.
 #' @param round.expected Number of decimal places used to round expected burdens
@@ -88,7 +88,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        include.class=c("syn","mis","mis_filter","mis_other","mis",
                                        "non","stoploss","startgain",
                                        "splice","frameshift","lof","prot","all", "prot_dam"),
-                       gene.id="hgncID",
+                       gene.id="geneID",
                        signif.p=3,
                        round.expected=1,
                        probTable=NULL,
@@ -238,7 +238,7 @@ denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
                               group.by="class",
                               include.gene="all",
                               include.class=c("syn","mis","lof","prot","all"),
-                              gene.id="hgncID",
+                              gene.id="geneID",
                               signif.p=3,round.expected=1,
                               probTable=NULL){
   denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
@@ -250,7 +250,7 @@ denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
                              group.by="gene",
                              include.gene="all",
                              include.class=c("lof","prot"),
-                             gene.id="hgncID",
+                             gene.id="geneID",
                              signif.p=3,round.expected=1,
                              probTable=NULL){
   denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)

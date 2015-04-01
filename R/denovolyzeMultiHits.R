@@ -29,7 +29,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 include.gene="all",
                                 include.class=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
-                                gene.id="hgncID",
+                                gene.id="geneID",
                                 probTable=NULL,
                                 mis_filter=NULL) {
 
