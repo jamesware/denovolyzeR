@@ -9,17 +9,17 @@
 denovolyze(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "mis_filter",
   "mis_other", "mis", "non", "stoploss", "startgain", "splice", "frameshift",
-  "lof", "prot", "all", "prot_dam"), gene.id = "hgncID", signif.p = 3,
+  "lof", "prot", "all", "prot_dam"), gene.id = "geneID", signif.p = 3,
   round.expected = 1, probTable = NULL, mis_filter = NULL)
 
 denovolyzeByClass(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), gene.id = "hgncID", signif.p = 3, round.expected = 1,
+  "all"), gene.id = "geneID", signif.p = 3, round.expected = 1,
   probTable = NULL)
 
 denovolyzeByGene(dnm.genes, dnm.classes, nsamples, group.by = "gene",
   include.gene = "all", include.class = c("lof", "prot"),
-  gene.id = "hgncID", signif.p = 3, round.expected = 1,
+  gene.id = "geneID", signif.p = 3, round.expected = 1,
   probTable = NULL)
 }
 \arguments{
@@ -38,7 +38,7 @@ names.}
 
 \item{include.class}{Which variant classes are tabulated in output}
 
-\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may
+\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
 \item{signif.p}{Number of sig figs used to round p values in output.}

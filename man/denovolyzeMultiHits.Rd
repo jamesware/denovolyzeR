@@ -6,7 +6,7 @@
 \usage{
 denovolyzeMultiHits(dnm.genes, dnm.classes, nsamples, nperms = 100,
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", gene.id = "hgncID", probTable = NULL,
+  "all"), expectedDNMs = "actual", gene.id = "geneID", probTable = NULL,
   mis_filter = NULL)
 }
 \arguments{
@@ -28,7 +28,7 @@ names.}
 \item{expectedDNMs}{Select whether expected number of multihits is determined
   by expected total de novos, or actual total}
 
-\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may
+\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
 \item{probTable}{Probability table. A user-defined table of probabilities can be
