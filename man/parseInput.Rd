@@ -4,15 +4,15 @@
 \alias{parseInput}
 \title{Checks input for errors}
 \usage{
-parseInput(dnm.genes = dnm.genes, dnm.classes = dnm.genes,
+parseInput(genes = genes, classes = genes,
   nsamples = nsamples, group.by = group.by, include.gene = include.gene,
   include.class = include.class, gene.id = gene.id, signif.p = signif.p,
   round.expected = round.expected)
 }
 \arguments{
-\item{dnm.genes}{A vector of genes containing de novo variants.}
+\item{genes}{A vector of genes containing de novo variants.}
 
-\item{dnm.classes}{A vector of classes of de novo variants.  Supported
+\item{classes}{A vector of classes of de novo variants.  Supported
 classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 "stoploss","startloss","splice", "frameshift" and "lof".}
 

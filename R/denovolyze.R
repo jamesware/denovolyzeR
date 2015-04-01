@@ -10,8 +10,8 @@
 #'
 #' See vignette("denovolyzeR_intro") for more information.
 #'
-#' @param dnm.genes A vector of genes containing de novo variants.
-#' @param dnm.classes A vector of classes of de novo variants.  Supported
+#' @param genes A vector of genes containing de novo variants.
+#' @param classes A vector of classes of de novo variants.  Supported
 #'   classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 #'   "stoploss","startloss","splice", "frameshift" and "lof".
 #' @param nsamples Number of individuals considered in de novo analysis.
@@ -42,20 +42,20 @@
 #'
 #' ### denovolyze
 #'
-#' denovolyze(dnm.genes=autismDeNovos$gene,
-#'            dnm.classes=autismDeNovos$dnmClass,
+#' denovolyze(genes=autismDeNovos$gene,
+#'            classes=autismDeNovos$dnmClass,
 #'            nsamples=1078)
 #'
 #' ### denovolyzeByClass
 #'
-#' denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-#'                   dnm.classes=autismDeNovos$dnmClass,
+#' denovolyzeByClass(genes=autismDeNovos$gene,
+#'                   classes=autismDeNovos$dnmClass,
 #'                   nsamples=1078)
 #'
 #' # this convenience function is identical to:
 #'
-#' denovolyze(dnm.genes=autismDeNovos$gene,
-#'            dnm.classes=autismDeNovos$dnmClass,
+#' denovolyze(genes=autismDeNovos$gene,
+#'            classes=autismDeNovos$dnmClass,
 #'            nsamples=1078,
 #'            group.by="class",
 #'            include.class=c("syn","mis","lof","prot","all"),
@@ -64,14 +64,14 @@
 #'
 #' ### denovolyzeByGene
 #'
-#' denovolyzeByGene(dnm.genes=autismDeNovos$gene,
-#'                  dnm.classes=autismDeNovos$dnmClass,
+#' denovolyzeByGene(genes=autismDeNovos$gene,
+#'                  classes=autismDeNovos$dnmClass,
 #'                  nsamples=1078)
 #'
 #' # this is identical to:
 #'
-#' denovolyze(dnm.genes=autismDeNovos$gene,
-#'            dnm.classes=autismDeNovos$dnmClass,
+#' denovolyze(genes=autismDeNovos$gene,
+#'            classes=autismDeNovos$dnmClass,
 #'            nsamples=1078,
 #'            group.by="gene",
 #'            include.class=c("lof","prot"),
@@ -82,7 +82,7 @@
 
 
 
-denovolyze <- function(dnm.genes,dnm.classes,nsamples,
+denovolyze <- function(genes,classes,nsamples,
                        group.by="class",
                        include.gene="all",
                        include.class=c("syn","mis","mis_filter","mis_other","mis",
@@ -101,8 +101,8 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   #options(stringsAsFactors=FALSE)
 
   # check inputs
-  parseInput(dnm.genes,
-                           dnm.classes,
+  parseInput(genes,
+                           classes,
                            nsamples,
                            group.by,
                            include.gene,
@@ -124,11 +124,11 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   # Use uppercase when matching gene symbols
   probTable$gene <- toupper(as.character(probTable$gene))
   include.gene <- toupper(as.character(include.gene))
-  dnm.genes <- toupper(as.character(dnm.genes))
+  genes <- toupper(as.character(genes))
   include.class <- tolower(as.character(include.class))
 
   # annotate lof & prot variant classes
-  input <- data.frame(gene=dnm.genes,class=dnm.classes)
+  input <- data.frame(gene=genes,class=classes)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
   input$class[input$class =="mis"] <- "mis_notFilter"
   input$class.2[input$class %in% c("mis_notFilter","mis_filter")] <- "mis"
@@ -234,26 +234,26 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
 #' @describeIn denovolyze denovolyzeByClass
 
-denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
+denovolyzeByClass <- function(genes,classes,nsamples,
                               group.by="class",
                               include.gene="all",
                               include.class=c("syn","mis","lof","prot","all"),
                               gene.id="geneID",
                               signif.p=3,round.expected=1,
                               probTable=NULL){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
+  denovolyze(genes,classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
 }
 
 #' @describeIn denovolyze denovolyzeByGene
 
-denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
+denovolyzeByGene <- function(genes,classes,nsamples,
                              group.by="gene",
                              include.gene="all",
                              include.class=c("lof","prot"),
                              gene.id="geneID",
                              signif.p=3,round.expected=1,
                              probTable=NULL){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
+  denovolyze(genes,classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
 }
 
 

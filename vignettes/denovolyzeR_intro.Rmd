@@ -49,8 +49,8 @@ First we want to know whether there are more de novos than expected, using the `
 
 
 ``` {r}
-denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$class,
+denovolyzeByClass(genes=autismDeNovos$gene,
+                  classes=autismDeNovos$class,
                   nsamples=1078)
 ```
 
@@ -61,8 +61,8 @@ The total number of de novos is almost exactly as our model predicts.  However, 
 Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the `denovolyzeMultiHits()` function.
 
 ``` {r}
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$class,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$class,
                     nsamples=1078)
 
 ```
@@ -77,8 +77,8 @@ Note that the number of observed genes with >1 protein-altering variant does **n
 Here it looks like there may be an excess of genes with >1 lof variant, >1 missense, and >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
 
 ``` {r}
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$class,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000)
 ```
@@ -93,8 +93,8 @@ This is a conservative approach, addressing the question: "given the number of v
 An alternative approach simply asks whether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `expectedDNMs="expected"`.
 
 ``` {r}
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$class,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
                     expectedDNMs="expected")
@@ -108,8 +108,8 @@ By default this function compares the number of LOF variants against expectation
 
 ``` {r}
 head(
-denovolyzeByGene(dnm.genes=autismDeNovos$gene,
-                 dnm.classes=autismDeNovos$class,
+denovolyzeByGene(genes=autismDeNovos$gene,
+                 classes=autismDeNovos$class,
                  nsamples=1078)
   )
 ```
@@ -125,13 +125,13 @@ The package includes as an example a list of 842 genes that interact with the fr
 ```{r geneset}
 length(FMRPgenes); head(FMRPgenes)
 
-denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$class,
+denovolyzeByClass(genes=autismDeNovos$gene,
+                  classes=autismDeNovos$class,
                   nsamples=1078,
                   include.gene=FMRPgenes)
 
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$class,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
                     include.gene=FMRPgenes)

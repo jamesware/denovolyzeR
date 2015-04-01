@@ -13,19 +13,19 @@ dim(autismDeNovos)
 head(autismDeNovos)
 
 ## ------------------------------------------------------------------------
-denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$dnmClass,
+denovolyzeByClass(genes=autismDeNovos$gene,
+                  classes=autismDeNovos$dnmClass,
                   nsamples=1078)
 
 ## ------------------------------------------------------------------------
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$dnmClass,
                     nsamples=1078)
 
 
 ## ------------------------------------------------------------------------
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$dnmClass,
                     nsamples=1078,
                     nperms=1000)
 
@@ -33,29 +33,29 @@ denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
 sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))
 
 ## ------------------------------------------------------------------------
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$dnmClass,
                     nsamples=1078,
                     nperms=1000,
                     expectedDNMs="expected")
 
 ## ------------------------------------------------------------------------
 head(
-denovolyzeByGene(dnm.genes=autismDeNovos$gene,
-                 dnm.classes=autismDeNovos$dnmClass,
+denovolyzeByGene(genes=autismDeNovos$gene,
+                 classes=autismDeNovos$dnmClass,
                  nsamples=1078)
   )
 
 ## ----geneset-------------------------------------------------------------
 length(FMRPgenes); head(FMRPgenes)
 
-denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$dnmClass,
+denovolyzeByClass(genes=autismDeNovos$gene,
+                  classes=autismDeNovos$dnmClass,
                   nsamples=1078,
                   include.gene=FMRPgenes)
 
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$dnmClass,
                     nsamples=1078,
                     nperms=1000,
                     include.gene=FMRPgenes)

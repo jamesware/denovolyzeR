@@ -17,14 +17,14 @@
 #' @export
 #'
 #' @examples
-#' denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-#'                     dnm.classes=autismDeNovos$dnmClass,
+#' denovolyzeMultiHits(genes=autismDeNovos$gene,
+#'                     classes=autismDeNovos$dnmClass,
 #'                     nsamples=1078)
 #'
 
 
 
-denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
+denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 nperms=100,
                                 include.gene="all",
                                 include.class=c("syn","mis","lof","prot","all"),
@@ -53,16 +53,16 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   # If a list of genes for inclusion is specified, restrict analysis to these genes
   if(include.gene[1]!="ALL"){
     probTable <- probTable[probTable$gene %in% include.gene,]
-    excludedgenes <- sum(!dnm.genes %in% include.gene)
+    excludedgenes <- sum(!genes %in% include.gene)
     if(excludedgenes > 0) {
       warning("De novo list includes ",excludedgenes," genes not specified for inclusion. These will not be analysed.")
     }
-    dnm.classes <- dnm.classes[dnm.genes %in% include.gene]
-    dnm.genes <- dnm.genes[dnm.genes %in% include.gene]
+    classes <- classes[genes %in% include.gene]
+    genes <- genes[genes %in% include.gene]
   }
 
   doPermute <- function(class,classgroup=class){
-    nextvars <- dnm.genes[dnm.classes %in% classgroup]
+    nextvars <- genes[classes %in% classgroup]
     if(expectedDNMs == "actual") {
       x=length(nextvars)
     } else if(expectedDNMs == "expected") {
@@ -78,7 +78,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   output <- list()
   myclasses=c("syn","mis_filter","startloss",
               "stoploss","non","splice","frameshift")
-  myclasses <- myclasses[myclasses %in% dnm.classes]
+  myclasses <- myclasses[myclasses %in% classes]
   myclasses <- myclasses[myclasses %in% allVariantClasses]
   for (class in myclasses){
     output[[class]] <- doPermute(class)

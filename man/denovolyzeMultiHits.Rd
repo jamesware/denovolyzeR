@@ -4,15 +4,15 @@
 \alias{denovolyzeMultiHits}
 \title{Determine significance of genes with multiple \emph{de novos}}
 \usage{
-denovolyzeMultiHits(dnm.genes, dnm.classes, nsamples, nperms = 100,
+denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
   "all"), expectedDNMs = "actual", gene.id = "geneID", probTable = NULL,
   mis_filter = NULL)
 }
 \arguments{
-\item{dnm.genes}{A vector of genes containing de novo variants.}
+\item{genes}{A vector of genes containing de novo variants.}
 
-\item{dnm.classes}{A vector of classes of de novo variants.  Supported
+\item{classes}{A vector of classes of de novo variants.  Supported
 classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 "stoploss","startloss","splice", "frameshift" and "lof".}
 
@@ -49,8 +49,8 @@ Are there more genes containing >1 \emph{de novos} than expected?
 See vignette (denovostats_intro) for more information.
 }
 \examples{
-denovolyzeMultiHits(dnm.genes=autismDeNovos$gene,
-                    dnm.classes=autismDeNovos$dnmClass,
+denovolyzeMultiHits(genes=autismDeNovos$gene,
+                    classes=autismDeNovos$dnmClass,
                     nsamples=1078)
 }
 \keyword{keywords}

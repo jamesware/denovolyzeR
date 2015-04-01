@@ -6,26 +6,26 @@
 \alias{denovolyzeByGene}
 \title{Evaluates burden of \emph{de novo} variation against expectation}
 \usage{
-denovolyze(dnm.genes, dnm.classes, nsamples, group.by = "class",
+denovolyze(genes, classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "mis_filter",
   "mis_other", "mis", "non", "stoploss", "startgain", "splice", "frameshift",
   "lof", "prot", "all", "prot_dam"), gene.id = "geneID", signif.p = 3,
   round.expected = 1, probTable = NULL, mis_filter = NULL)
 
-denovolyzeByClass(dnm.genes, dnm.classes, nsamples, group.by = "class",
+denovolyzeByClass(genes, classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
   "all"), gene.id = "geneID", signif.p = 3, round.expected = 1,
   probTable = NULL)
 
-denovolyzeByGene(dnm.genes, dnm.classes, nsamples, group.by = "gene",
+denovolyzeByGene(genes, classes, nsamples, group.by = "gene",
   include.gene = "all", include.class = c("lof", "prot"),
   gene.id = "geneID", signif.p = 3, round.expected = 1,
   probTable = NULL)
 }
 \arguments{
-\item{dnm.genes}{A vector of genes containing de novo variants.}
+\item{genes}{A vector of genes containing de novo variants.}
 
-\item{dnm.classes}{A vector of classes of de novo variants.  Supported
+\item{classes}{A vector of classes of de novo variants.  Supported
 classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 "stoploss","startloss","splice", "frameshift" and "lof".}
 
@@ -78,20 +78,20 @@ See vignette("denovolyzeR_intro") for more information.
 \examples{
 ### denovolyze
 
-denovolyze(dnm.genes=autismDeNovos$gene,
-           dnm.classes=autismDeNovos$dnmClass,
+denovolyze(genes=autismDeNovos$gene,
+           classes=autismDeNovos$dnmClass,
            nsamples=1078)
 
 ### denovolyzeByClass
 
-denovolyzeByClass(dnm.genes=autismDeNovos$gene,
-                  dnm.classes=autismDeNovos$dnmClass,
+denovolyzeByClass(genes=autismDeNovos$gene,
+                  classes=autismDeNovos$dnmClass,
                   nsamples=1078)
 
 # this convenience function is identical to:
 
-denovolyze(dnm.genes=autismDeNovos$gene,
-           dnm.classes=autismDeNovos$dnmClass,
+denovolyze(genes=autismDeNovos$gene,
+           classes=autismDeNovos$dnmClass,
            nsamples=1078,
            group.by="class",
            include.class=c("syn","mis","lof","prot","all"),
@@ -100,14 +100,14 @@ denovolyze(dnm.genes=autismDeNovos$gene,
 
 ### denovolyzeByGene
 
-denovolyzeByGene(dnm.genes=autismDeNovos$gene,
-                 dnm.classes=autismDeNovos$dnmClass,
+denovolyzeByGene(genes=autismDeNovos$gene,
+                 classes=autismDeNovos$dnmClass,
                  nsamples=1078)
 
 # this is identical to:
 
-denovolyze(dnm.genes=autismDeNovos$gene,
-           dnm.classes=autismDeNovos$dnmClass,
+denovolyze(genes=autismDeNovos$gene,
+           classes=autismDeNovos$dnmClass,
            nsamples=1078,
            group.by="gene",
            include.class=c("lof","prot"),

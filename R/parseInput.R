@@ -7,8 +7,8 @@
 #' @return tbc   , with or without error message
 #'
 
-parseInput <- function(dnm.genes=dnm.genes,
-                       dnm.classes=dnm.genes,
+parseInput <- function(genes=genes,
+                       classes=genes,
                        nsamples=nsamples,
                        group.by=group.by,
                        include.gene=include.gene,
@@ -19,28 +19,28 @@ parseInput <- function(dnm.genes=dnm.genes,
 
 
 ## check inputs have same length
-if(length(dnm.genes)!=length(dnm.classes)){
-  stop('The number of genes (dnm.genes) and number of variant consequences (dnm.classes) do not match')
+if(length(genes)!=length(classes)){
+  stop('The number of genes (genes) and number of variant consequences (classes) do not match')
 }
 
 ## checks on genenames:
 # capitalisation
-dnm.genes <- toupper(dnm.genes)
+genes <- toupper(genes)
 # recognised
 
 # no NA
-if(sum(is.na(dnm.genes))>0){
+if(sum(is.na(genes))>0){
   stop('gene name can not be NA')
 }
 #pass capitalised gene names to parent function
-assign("dnm.genes",dnm.genes,pos=sys.frame(sys.parent()))
+assign("genes",genes,pos=sys.frame(sys.parent()))
 
 
 ## checks on variant classes:
 # capitalisation
 # recognised
 # no NA
-if(sum(is.na(dnm.classes))>0){
+if(sum(is.na(classes))>0){
   stop('variant class can not be NA')
 }
 # match to SO?
@@ -77,10 +77,10 @@ assign("group.by",group.by,pos=sys.frame(sys.parent()))
 
 
 # TESTS
-# denovolyze(dnm.genes=autismDeNovos$gene, dnm.classes=autismDeNovos$dnmClass, nsamples=1078)
-# denovolyze(dnm.genes=autismDeNovos$gene, dnm.classes=autismDeNovos$dnmClass[-1], nsamples=1078)
-# denovolyze(dnm.genes=c("KCNQ1","RYR2",NA), dnm.classes=c("lof","lof","lof"), nsamples=10)
-# denovolyze(dnm.genes=autismDeNovos$gene, dnm.classes=autismDeNovos$dnmClass, nsamples=1078.3)
-# denovolyze(dnm.genes=autismDeNovos$gene, dnm.classes=autismDeNovos$dnmClass, nsamples=1078, group.by="CLASS")
-# denovolyze(dnm.genes=autismDeNovos$gene, dnm.classes=autismDeNovos$dnmClass, nsamples=1078, group.by="genie")
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass[-1], nsamples=1078)
+# denovolyze(genes=c("KCNQ1","RYR2",NA), classes=c("lof","lof","lof"), nsamples=10)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078.3)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078, group.by="CLASS")
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078, group.by="genie")
 
