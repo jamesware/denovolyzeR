@@ -3,7 +3,11 @@ Title: Statistical analyses of de novo genetic variants
 Version: 0.0.0.9002
 Date: 2014-11-10
 Authors@R:
-    person("James","Ware",email="j.ware@imperial.ac.uk",role=c("aut","cre"))
+    c(
+    person("James","Ware",email="j.ware@imperial.ac.uk",role=c("aut","cre")),
+    person("Jason","Homsy",role="ctb"),
+    person("Kaitlin","Samocha",role="ctb")
+    )
 Description: A package for the analysis of de novo genetic sequence variants
 Depends:
     R (>= 3.1.0),
