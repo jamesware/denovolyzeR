@@ -90,7 +90,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
   gene <- value <- enrichment <- Row.names <- ends_with <- NULL
 
-  options(stringsAsFactors=FALSE)
+  #options(stringsAsFactors=FALSE)
 
   # check inputs
   parseInput(dnm.genes,
@@ -129,7 +129,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   input$class.4[input$class %in% c("splice","frameshift","non","stoploss","startloss",
                                    "lof","mis_filter")] <- "prot_dam"
   input$class.5 <- "all"
-  input <- reshape::melt(input,id.vars="gene") %>%
+  input <- reshape::melt.data.frame(input,id.vars="gene") %>%
     select(gene, class = value)  %>%
     filter(!is.na(class)) %>%
     filter(class!="mis_notFilter")
