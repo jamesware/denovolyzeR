@@ -15,12 +15,11 @@ denovolyze(dnm.genes, dnm.classes, nsamples, group.by = "class",
 denovolyzeByClass(dnm.genes, dnm.classes, nsamples, group.by = "class",
   include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
   "all"), gene.id = "hgncID", signif.p = 3, round.expected = 1,
-  pDNM = denovolyzeR:::pDNM)
+  pDNM = NULL)
 
 denovolyzeByGene(dnm.genes, dnm.classes, nsamples, group.by = "gene",
   include.gene = "all", include.class = c("lof", "prot"),
-  gene.id = "hgncID", signif.p = 3, round.expected = 1,
-  pDNM = denovolyzeR:::pDNM)
+  gene.id = "hgncID", signif.p = 3, round.expected = 1, pDNM = NULL)
 }
 \arguments{
 \item{dnm.genes}{A vector of genes containing de novo variants.}

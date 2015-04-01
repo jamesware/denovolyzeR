@@ -29,9 +29,6 @@
 #' @export denovolyze denovolyzeByClass denovolyzeByGene
 #'
 #' @import dplyr
-#' @importFrom reshape melt
-#' @importFrom reshape cast
-#' @importFrom reshape recast
 #'
 #' @examples
 #'
@@ -132,7 +129,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
   input$class.4[input$class %in% c("splice","frameshift","non","stoploss","startloss",
                                    "lof","mis_filter")] <- "prot_dam"
   input$class.5 <- "all"
-  input <- melt(input,id.vars="gene") %>%
+  input <- reshape::melt(input,id.vars="gene") %>%
     select(gene, class = value)  %>%
     filter(!is.na(class)) %>%
     filter(class!="mis_notFilter")
@@ -196,7 +193,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
     output <- output %>%
       select(-enrichment) %>%
-      recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
+      reshape::recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
 
     classNotRepresented <- include.class[!include.class %in% dimnames(output)$class]
     if (length(classNotRepresented)!=0){
