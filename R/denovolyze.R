@@ -98,18 +98,16 @@ denovolyze <- function(genes,classes,nsamples,
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
   gene <- value <- enrichment <- Row.names <- ends_with <- NULL
 
-  #options(stringsAsFactors=FALSE)
-
   # check inputs
   parseInput(genes,
-                           classes,
-                           nsamples,
-                           groupBy,
-                           includeGenes,
-                           includeClasses,
-                           geneId,
-                           signifP,
-                           roundExpected)
+             classes,
+             nsamples,
+             groupBy,
+             includeGenes,
+             includeClasses,
+             geneId,
+             signifP,
+             roundExpected)
 
   # By default, probTable uses internal prob table.
   if(is.null(probTable)){probTable <- pDNM}
@@ -128,7 +126,7 @@ denovolyze <- function(genes,classes,nsamples,
   includeClasses <- tolower(as.character(includeClasses))
 
   # annotate lof & prot variant classes
-  input <- data.frame(gene=genes,class=classes)
+  input <- data.frame(gene=genes,class=classes,stringsAsFactors=F)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
   input$class[input$class == "mis"] <- "mis_notFilter"
   input$class.2[input$class %in% c("mis_notFilter","misD")] <- "mis"
