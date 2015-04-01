@@ -30,7 +30,7 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
                                 include.class=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
                                 gene.id="hgncID",
-                                pDNM=NULL,
+                                probTable=NULL,
                                 mis_filter=NULL) {
 
   options(stringsAsFactors = FALSE)
@@ -39,20 +39,20 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
   # The former is more conservative.  Samocha et al used the latter.
   # Set expectedDNMs="actual" or "expected
 
-  if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
-  if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
+  if(is.null(probTable)){probTable <- pDNM}
+  if(!is.null(mis_filter)){names(probTable)[names(probTable)==mis_filter] <- "mis_filter"}
 
   # Record all variant classes in probability table.  Only calculate stats for annotated variant classes.
-  allVariantClasses <- pDNM %>% select(class) %>% unique %>% unlist
+  allVariantClasses <- probTable %>% select(class) %>% unique %>% unlist
 
   # Use specified gene ID
-  names(pDNM)[names(pDNM)==gene.id] <- "gene"
-  pDNM$gene <- toupper(as.character(pDNM$gene))
+  names(probTable)[names(probTable)==gene.id] <- "gene"
+  probTable$gene <- toupper(as.character(probTable$gene))
   include.gene <- toupper(as.character(include.gene))
 
   # If a list of genes for inclusion is specified, restrict analysis to these genes
   if(include.gene[1]!="ALL"){
-    pDNM <- pDNM[pDNM$gene %in% include.gene,]
+    probTable <- probTable[probTable$gene %in% include.gene,]
     excludedgenes <- sum(!dnm.genes %in% include.gene)
     if(excludedgenes > 0) {
       warning("De novo list includes ",excludedgenes," genes not specified for inclusion. These will not be analysed.")
@@ -66,10 +66,10 @@ denovolyzeMultiHits <- function(dnm.genes,dnm.classes,nsamples,
     if(expectedDNMs == "actual") {
       x=length(nextvars)
     } else if(expectedDNMs == "expected") {
-      x=2*sum(pDNM$value[pDNM$class==class])*nsamples
+      x=2*sum(probTable$value[probTable$class==class])*nsamples
     }
     y=length(unique(nextvars[duplicated(nextvars)]))
-    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,pDNM=pDNM)
+    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,probTable=probTable)
     #rownames(output) <- class
     return(output)
   }

@@ -17,7 +17,7 @@ PermuteMultiHits <- function(x,y,nperms=100,
                              class="lof",
                              gene.id="hgncID",
                              include.gene="all",
-                             pDNM=denovolyzer:::pDNM) {
+                             probTable=pDNM) {
 
   #x = total number of DNM observed
   #y = no of genes with >1 DNM in class of interest
@@ -25,15 +25,15 @@ PermuteMultiHits <- function(x,y,nperms=100,
   #class = type of DNM assessed, defaults to "lof"
 
   # Use specified gene ID
-  names(pDNM)[names(pDNM)==gene.id] <- "gene"
-  pDNM$gene <- toupper(as.character(pDNM$gene))
+  names(probTable)[names(probTable)==gene.id] <- "gene"
+  probTable$gene <- toupper(as.character(probTable$gene))
   include.gene <- toupper(as.character(include.gene))
 
   # If a list of genes for inclusion is specified, restrict analysis to these genes
   if(include.gene[1]!="ALL"){
-    pDNM <- pDNM[pDNM$gene %in% include.gene,]
+    probTable <- probTable[probTable$gene %in% include.gene,]
   }
-  probtable <- pDNM[pDNM$class==class,c("gene","value")]
+  probtable <- probTable[probTable$class==class,c("gene","value")]
   mycounts<- NA
   for (i in 1:nperms) {
     DNMsim <- sample(probtable$gene,x,replace=T,prob=probtable$value)

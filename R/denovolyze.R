@@ -5,7 +5,8 @@
 #' LOF variants than expected, across the whole dataset?), or by gene (are there
 #' more variants of a given class in SCN2A?).
 #'
-#' Analyses can be restricted to a subset of genes, and/or a subset of variant classes
+#' Analyses can be restricted to a subset of genes, and/or a subset of variant
+#' classes
 #'
 #' See vignette("denovolyzeR_intro") for more information.
 #'
@@ -16,13 +17,20 @@
 #' @param nsamples Number of individuals considered in de novo analysis.
 #' @param group.by Results can be tabulated by gene, or by variant class
 #' @param include.class Which variant classes are tabulated in output
-#' @param include.gene Genes to include in analysis. "all" or a vector of gene names.
-#' @param gene.id Gene identifier used. Currently only hgncID. (refseqID may work)
+#' @param include.gene Genes to include in analysis. "all" or a vector of gene
+#'   names.
+#' @param gene.id Gene identifier used. Currently only hgncID. (refseqID may
+#'   work)
 #' @param signif.p Number of sig figs used to round p values in output.
 #' @param round.expected Number of decimal places used to round expected burdens
 #'   in output.
-#' @param pDNM Probability table. A user-defined table of probabilities can be
+#' @param probTable Probability table. A user-defined table of probabilities can be
 #'   provided here, to replace the probability table included in the package.
+#' @param mis_filter If the user-specified probability table contains
+#'   probabilities for a sub-category of missense variants (e.g. predicted to be
+#'   damaging by an in silico algorithm), thta column should be called
+#'   mis_filter, or the alternative name should be specified here.
+#'
 #'
 #' @return Returns a data frame
 #'
@@ -83,7 +91,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                        gene.id="hgncID",
                        signif.p=3,
                        round.expected=1,
-                       pDNM=NULL,
+                       probTable=NULL,
                        mis_filter=NULL) {
 
   # this line defines variables in order to pass R CMD check
@@ -103,17 +111,18 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                            signif.p,
                            round.expected)
 
-  # By default, pDNM uses internal prob table.
-  if(is.null(pDNM)){pDNM <- denovolyzeR:::pDNM}
-  # With an external pDNM table, if "mis_filter" is not supplied, it defaults to damaging metaSVM score.
-  if(!is.null(mis_filter)){names(pDNM)[names(pDNM)==mis_filter] <- "mis_filter"}
+  # By default, probTable uses internal prob table.
+  if(is.null(probTable)){probTable <- pDNM}
+
+  # With an external probTable table, if "mis_filter" is not supplied, it defaults to damaging metaSVM score.
+  if(!is.null(mis_filter)){names(probTable)[names(probTable)==mis_filter] <- "mis_filter"}
 
   # Use specified gene ID
-  names(pDNM)[names(pDNM)==gene.id] <- "gene"
-  if(toupper(include.gene[1])=="ALL" & length(include.gene==1)){include.gene <- toupper(pDNM$gene)}
+  names(probTable)[names(probTable)==gene.id] <- "gene"
+  if(toupper(include.gene[1])=="ALL" & length(include.gene==1)){include.gene <- toupper(probTable$gene)}
 
   # Use uppercase when matching gene symbols
-  pDNM$gene <- toupper(as.character(pDNM$gene))
+  probTable$gene <- toupper(as.character(probTable$gene))
   include.gene <- toupper(as.character(include.gene))
   dnm.genes <- toupper(as.character(dnm.genes))
   include.class <- tolower(as.character(include.class))
@@ -149,7 +158,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
     observed <- observed[order(observed$class),]
 
 
-    expected <- pDNM %>%
+    expected <- probTable %>%
       filter(gene %in% include.gene, class %in% include.class) %>%
       group_by(class) %>%
       summarise(
@@ -171,7 +180,7 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
         observed = n()
       )
 
-    expected <- pDNM %>%
+    expected <- probTable %>%
       filter(gene %in% include.gene, class %in% include.class) %>%
       group_by(gene,class) %>%
       summarise(
@@ -216,17 +225,6 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
 
     my.index <- output3 %>% select(ends_with("p.value")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
 
-# remove this: not robust
-#     if(gene.id!="hgncID"){
-#       output3 <- pDNM[,c("gene","gene.symbol")] %>%
-#         unique %>%
-#         merge(.,
-#               output3,
-#               by.x="gene",
-#               by.y="row.names",
-#               all=T)
-#     }
-
     output <- output3[my.index,]
   }
 
@@ -242,8 +240,8 @@ denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
                               include.class=c("syn","mis","lof","prot","all"),
                               gene.id="hgncID",
                               signif.p=3,round.expected=1,
-                              pDNM=NULL){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
+                              probTable=NULL){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
 }
 
 #' @describeIn denovolyze denovolyzeByGene
@@ -254,8 +252,8 @@ denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
                              include.class=c("lof","prot"),
                              gene.id="hgncID",
                              signif.p=3,round.expected=1,
-                             pDNM=NULL){
-  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
+                             probTable=NULL){
+  denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,probTable)
 }
 
 
