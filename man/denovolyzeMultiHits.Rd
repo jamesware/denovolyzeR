@@ -10,25 +10,27 @@ denovolyzeMultiHits(dnm.genes, dnm.classes, nsamples, nperms = 100,
   mis_filter = NULL)
 }
 \arguments{
-\item{dnm.genes}{A vector of genes containing de novo variants}
+\item{dnm.genes}{A vector of genes containing de novo variants.}
 
 \item{dnm.classes}{A vector of classes of de novo variants.  Supported
-classes are "syn", "mis", "lof", "prot"}
+classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
+"stoploss","startloss","splice", "frameshift" and "lof".}
 
-\item{nsamples}{Number of individuals considered in de novo analysis#'}
+\item{nsamples}{Number of individuals considered in de novo analysis.}
 
 \item{nperms}{Number of permutations}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
-names}
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names.}
 
-\item{include.class}{variant classes to tabulate in output.  Valid classes =
-"syn","mis","non","splice","frameshift","lof","prot","all".}
+\item{include.class}{Which variant classes are tabulated in output}
 
 \item{expectedDNMs}{Select whether expected number of multihits is determined
-by expected total de novos, or actual total}
+  by expected total de novos, or actual total}
 
-\item{gene.id}{Gene identifier used. Currently only hgnc.id}
+\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may work)}
+
+\item{pDNM}{Probability table. A user-defined table of probabilities can be
+  provided here, to replace the probability table included in the package.}
 }
 \value{
 Returns a data.frame

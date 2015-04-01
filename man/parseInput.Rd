@@ -9,6 +9,28 @@ parseInput(dnm.genes = dnm.genes, dnm.classes = dnm.genes,
   include.class = include.class, gene.id = gene.id, signif.p = signif.p,
   round.expected = round.expected)
 }
+\arguments{
+\item{dnm.genes}{A vector of genes containing de novo variants.}
+
+\item{dnm.classes}{A vector of classes of de novo variants.  Supported
+classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
+"stoploss","startloss","splice", "frameshift" and "lof".}
+
+\item{nsamples}{Number of individuals considered in de novo analysis.}
+
+\item{group.by}{Results can be tabulated by gene, or by variant class}
+
+\item{include.gene}{Genes to include in analysis. "all" or a vector of gene names.}
+
+\item{include.class}{Which variant classes are tabulated in output}
+
+\item{gene.id}{Gene identifier used. Currently only hgncID. (refseqID may work)}
+
+\item{signif.p}{Number of sig figs used to round p values in output.}
+
+\item{round.expected}{Number of decimal places used to round expected burdens
+in output.}
+}
 \value{
 tbc   , with or without error message
 }
