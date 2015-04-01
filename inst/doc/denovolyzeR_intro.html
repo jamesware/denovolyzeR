@@ -10,7 +10,7 @@
 
 <meta name="author" content="James Ware" />
 
-<meta name="date" content="2014-11-10" />
+<meta name="date" content="2015-04-01" />
 
 <title>denovolyzeR intro</title>
 
@@ -54,7 +54,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">denovolyzeR intro</h1>
 <h4 class="author"><em>James Ware</em></h4>
-<h4 class="date"><em>2014-11-10</em></h4>
+<h4 class="date"><em>2015-04-01</em></h4>
 </div>
 
 
@@ -116,11 +116,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">dnm.classes=</span>autismDeNovos$dnmClass,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4        3.86           9        0.56         269
-## mis        33       22.17          34        0.02         684
-## lof         6        0.92           4        0.00         143
-## prot       48       31.80          44        0.00         827
-## all        74       53.02          77        0.01        1096</code></pre>
+## syn         4        3.89          10        0.52         269
+## mis        33       22.30          34        0.01         684
+## lof         6        1.17           4        0.00         143
+## prot       48       31.97          45        0.00         827
+## all        74       52.41          74        0.01        1096</code></pre>
 <p>ObsGenes = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />TotalObsDNM = the total number of <em>de novo</em> variants in each class<br />AvgExpGenes = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />MaxExpGenes = the maximum number of genes containin &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />Empirical.P = an empirical p value<br />Note that the number of observed genes with &gt;1 protein-altering variant does <strong>not</strong> equal the number of genes with &gt;1 lof + number of genes with &gt;1 missense, as genes containing 1 lof + 1 missense will only be counted as “multihits” in the combined analysis.</p>
 <p>Here it looks like there may be an excess of genes with &gt;1 lof variant, &gt;1 missense, and &gt;1 protein-altering variant. We will want to increase the number if permutations here to get a handle on our level of significance.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">dnm.genes=</span>autismDeNovos$gene,
@@ -128,11 +128,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4       3.766          11       0.518         269
-## mis        33      22.341          37       0.018         684
-## lof         6       1.065           5       0.000         143
-## prot       48      31.619          47       0.000         827
-## all        74      54.084          77       0.001        1096</code></pre>
+## syn         4       3.752          10       0.523         269
+## mis        33      22.358          36       0.013         684
+## lof         6       1.058           7       0.002         143
+## prot       48      31.617          48       0.001         827
+## all        74      53.740          72       0.000        1096</code></pre>
 <p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 143 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>expectedDNMs=&quot;actual&quot;</code></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$dnmClass %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
 <pre><code>## [1] 143</code></pre>
@@ -144,11 +144,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">expectedDNMs=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4       4.532          13       0.688       295.8
-## mis        33      21.497          37       0.008       668.6
-## lof         6       0.441           3       0.000        92.4
-## prot       48      27.170          41       0.000       761.0
-## all        74      50.426          75       0.001      1056.9</code></pre>
+## syn         4       4.542          15       0.657   295.84220
+## mis        33      21.316          39       0.008   668.64987
+## lof         6       0.430           3       0.000    92.40006
+## prot       48      27.464          43       0.000   761.04993
+## all        74      50.319          75       0.001  1056.89213</code></pre>
 </div>
 <div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
 <h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
@@ -173,7 +173,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ## KATNAL2      6.08e-04
 ## SUV420H1     3.48e-05
 ## POGZ         4.82e-03</code></pre>
-<p>Several genes meet statistical significance after correcting for multiple testing. Default options apply two tests across 18271 genes, so a Bonferroni corrected p-value threshold at <span class="math">\(\alpha\)</span> = 0.05 would be 1.4 × 10<sup>-6</sup></p>
+<p>Several genes meet statistical significance after correcting for multiple testing. Default options apply two tests across 18271 genes, so a Bonferroni corrected p-value threshold at <span class="math">\(\alpha\)</span> = 0.05 would be 1.410^{-6}</p>
 </div>
 <div id="geneset-analysis" class="section level4">
 <h4>Geneset analysis</h4>
@@ -197,14 +197,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">include.gene=</span>FMRPgenes)</code></pre>
-<pre><code>## Warning: De novo list includes 952 genes not specified for inclusion.
-## These will not be analysed.</code></pre>
+<pre><code>## Warning in denovolyzeMultiHits(dnm.genes = autismDeNovos$gene, dnm.classes
+## = autismDeNovos$dnmClass, : De novo list includes 952 genes not specified
+## for inclusion. These will not be analysed.</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         0       0.747           4       1.000          30
-## mis         8       4.853          12       0.082          80
-## lof         3       0.956           5       0.064          34
-## prot       15       9.530          18       0.032         114
-## all        21      14.347          24       0.027         144</code></pre>
+## syn         0       0.699           5       1.000          30
+## mis         8       4.968          11       0.096          80
+## lof         3       0.967           5       0.063          34
+## prot       15       9.495          17       0.017         114
+## all        21      14.378          26       0.026         144</code></pre>
 </div>
 </div>
 <div id="other-functions" class="section level2">
@@ -213,30 +214,30 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewDeNovoProbs</span>()
   )</code></pre>
-<pre><code>##    refseqID hgncID       syn       mis       non    splice frameshift
-## 1 NM_000014    A2M 1.710e-05 3.926e-05 2.177e-06 0.000e+00  2.803e-06
-## 2 NM_000015   NAT2 2.959e-06 7.115e-06 4.046e-07 1.549e-08  5.530e-07
-## 3 NM_000017  ACADS 8.253e-06 1.602e-05 4.166e-07 5.150e-07  7.848e-07
-## 4 NM_000018 ACADVL 9.098e-06 2.072e-05 7.686e-07 8.106e-07  1.247e-06
-## 5 NM_000019  ACAT1 3.757e-06 9.755e-06 4.341e-07 4.645e-07  8.133e-07
-## 6 NM_000020 ACVRL1 8.892e-06 1.874e-05 7.361e-07 3.604e-07  9.577e-07
-##         lof      prot       all
-## 1 4.980e-06 4.424e-05 6.134e-05
-## 2 9.731e-07 8.088e-06 1.105e-05
-## 3 1.716e-06 1.774e-05 2.599e-05
-## 4 2.826e-06 2.355e-05 3.265e-05
-## 5 1.712e-06 1.147e-05 1.522e-05
-## 6 2.054e-06 2.080e-05 2.969e-05</code></pre>
+<pre><code>##    refseqID hgncID          syn          mis          non       splice
+## 1 NM_000014    A2M 1.709697e-05 3.926497e-05 2.177173e-06 0.000000e+00
+## 2 NM_000015   NAT2 2.958853e-06 7.114996e-06 4.045867e-07 1.549337e-08
+## 3 NM_000017  ACADS 8.253083e-06 1.601921e-05 4.166169e-07 5.150058e-07
+## 4 NM_000018 ACADVL 9.097545e-06 2.072449e-05 7.685547e-07 8.105660e-07
+## 5 NM_000019  ACAT1 3.757332e-06 9.754503e-06 4.341453e-07 4.645149e-07
+## 6 NM_000020 ACVRL1 8.892200e-06 1.874103e-05 7.360634e-07 3.604277e-07
+##     frameshift          lof         prot          all
+## 1 2.802855e-06 4.980028e-06 4.424499e-05 6.134197e-05
+## 2 5.529700e-07 9.730500e-07 8.088046e-06 1.104690e-05
+## 3 7.847993e-07 1.716422e-06 1.773564e-05 2.598872e-05
+## 4 1.246558e-06 2.825678e-06 2.355017e-05 3.264771e-05
+## 5 8.133029e-07 1.711963e-06 1.146647e-05 1.522380e-05
+## 6 9.577212e-07 2.054212e-06 2.079524e-05 2.968744e-05</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewDeNovoProbs</span>(<span class="dt">format=</span><span class="st">&quot;long&quot;</span>)
   )</code></pre>
-<pre><code>##       refseqID  hgncID class     value
-## 1    NM_017582  UBE2Q1   syn 5.428e-06
-## 2    NM_014372   RNF11   syn 2.307e-06
-## 3    NM_014455  RNF115   syn 3.154e-06
-## 4    NM_001357    DHX9   syn 1.206e-05
-## 5 NM_001101376 FAM183A   syn 1.572e-06
-## 6 NM_001042549    NSL1   syn 2.643e-06</code></pre>
+<pre><code>##       refseqID  hgncID class        value
+## 1    NM_017582  UBE2Q1   syn 5.428059e-06
+## 2    NM_014372   RNF11   syn 2.306612e-06
+## 3    NM_014455  RNF115   syn 3.153658e-06
+## 4    NM_001357    DHX9   syn 1.205980e-05
+## 5 NM_001101376 FAM183A   syn 1.572484e-06
+## 6 NM_001042549    NSL1   syn 2.643121e-06</code></pre>
 <p>Most of the core functionality of this package is contained in the <code>denovolyze</code> function. The <code>denovolyzeByClass</code> and <code>denovolyzeByGene</code> functions used in this vignette are convenience functions that set defaults appropriate to the most common usages of this function. Full details of additional options and default behaviours are available using <code>?denovolyze</code>.</p>
 </div>
 

@@ -245,7 +245,7 @@ denovolyzeByClass <- function(dnm.genes,dnm.classes,nsamples,
                               include.class=c("syn","mis","lof","prot","all"),
                               gene.id="hgncID",
                               signif.p=3,round.expected=1,
-                              pDNM=denovolyzeR:::pDNM){
+                              pDNM=NULL){
   denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
 }
 
@@ -257,7 +257,7 @@ denovolyzeByGene <- function(dnm.genes,dnm.classes,nsamples,
                              include.class=c("lof","prot"),
                              gene.id="hgncID",
                              signif.p=3,round.expected=1,
-                             pDNM=denovolyzeR:::pDNM){
+                             pDNM=NULL){
   denovolyze(dnm.genes,dnm.classes,nsamples,group.by,include.gene,include.class,gene.id,signif.p,round.expected,pDNM)
 }
 
