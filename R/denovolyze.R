@@ -7,7 +7,7 @@
 #'
 #' Analyses can be restricted to a subset of genes, and/or a subset of variant classes
 #'
-#' See vignette (denovolyeR intro) for more information.
+#' See vignette("denovolyzeR_intro") for more information.
 #'
 #' @param dnm.genes A vector of genes containing de novo variants.
 #' @param dnm.classes A vector of classes of de novo variants.  Supported
