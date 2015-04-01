@@ -151,12 +151,17 @@ denovolyze <- function(dnm.genes,dnm.classes,nsamples,
                                                         "splice","frameshift","lof","prot","prot_dam","all")))
     observed <- observed[order(observed$class),]
 
+
     expected <- pDNM %>%
       filter(gene %in% include.gene, class %in% include.class) %>%
       group_by(class) %>%
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
+    expected$class <- factor(expected$class, levels=c(c("syn","mis_filter","mis",
+                                                        "non","stoploss","startloss",
+                                                        "splice","frameshift","lof","prot","prot_dam","all")))
+
 
     output <- left_join(observed,expected,by=c("class"))
 
