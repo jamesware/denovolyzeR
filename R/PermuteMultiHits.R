@@ -2,12 +2,11 @@
 #'
 #' An internal function called by denovolyzeMultiHits
 #'
+#' @inheritParams denovolyze
 #' @param x Total number of de novo variants observed in dataset
 #' @param y Number of genes with >1 de novo variant (of class "class") in the population
 #' @param nperms Number permutations
 #' @param class In c("lof","mis","syn","prot")
-#' @param gene.id Gene identifier used. Currently only hgnc.id
-#' @param include.gene Genes to include in analysis. "all" or a vector of gene names
 #'
 #' @seealso \code{\link{denovolyzeMultiHits}}
 #'

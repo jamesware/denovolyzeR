@@ -2,6 +2,8 @@
 #'
 #' An internal function to check inputs
 #'
+#' @inheritParams denovolyze
+#'
 #' @return tbc   , with or without error message
 #'
 

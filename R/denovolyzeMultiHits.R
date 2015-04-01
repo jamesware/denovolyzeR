@@ -4,18 +4,12 @@
 #'
 #' See vignette (denovostats_intro) for more information.
 #'
-#' @param dnm.genes A vector of genes containing de novo variants
-#' @param dnm.classes A vector of classes of de novo variants.  Supported
-#'   classes are "syn", "mis", "lof", "prot"
-#' @param nsamples Number of individuals considered in de novo analysis#' @param
-#'   nperms Number of permutations
-#' @param include.gene Genes to include in analysis. "all" or a vector of gene
-#'   names
+#' @inheritParams denovolyze
+#'
+#' @param nperms Number of permutations
 #' @param expectedDNMs Select whether expected number of multihits is determined
 #'   by expected total de novos, or actual total
-#' @param gene.id Gene identifier used. Currently only hgnc.id
-#' @param include.class variant classes to tabulate in output.  Valid classes =
-#'   "syn","mis","non","splice","frameshift","lof","prot","all".
+#'
 #' @return Returns a data.frame
 #'
 #' @keywords keywords
