@@ -15,8 +15,8 @@
 
 PermuteMultiHits <- function(x,y,nperms=100,
                              class="lof",
-                             gene.id="geneID",
-                             include.gene="all",
+                             geneId="geneID",
+                             includeGenes="all",
                              probTable=pDNM) {
 
   #x = total number of DNM observed
@@ -25,13 +25,13 @@ PermuteMultiHits <- function(x,y,nperms=100,
   #class = type of DNM assessed, defaults to "lof"
 
   # Use specified gene ID
-  names(probTable)[names(probTable)==gene.id] <- "gene"
+  names(probTable)[names(probTable)==geneId] <- "gene"
   probTable$gene <- toupper(as.character(probTable$gene))
-  include.gene <- toupper(as.character(include.gene))
+  includeGenes <- toupper(as.character(includeGenes))
 
   # If a list of genes for inclusion is specified, restrict analysis to these genes
-  if(include.gene[1]!="ALL"){
-    probTable <- probTable[probTable$gene %in% include.gene,]
+  if(includeGenes[1]!="ALL"){
+    probTable <- probTable[probTable$gene %in% includeGenes,]
   }
   probtable <- probTable[probTable$class==class,c("gene","value")]
   mycounts<- NA

@@ -88,18 +88,18 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <span class="kw">dim</span>(autismDeNovos)</code></pre>
 <pre><code>## [1] 1096    2</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(autismDeNovos)</code></pre>
-<pre><code>##      gene dnmClass
-## 1   NOC2L      mis
-## 2 ADPRHL2      mis
-## 3   SGIP1      mis
-## 4   HMCN1      syn
-## 5   KCNT2      mis
-## 6   MARK1      syn</code></pre>
+<pre><code>##      gene class
+## 1   NOC2L   mis
+## 2 ADPRHL2   mis
+## 3   SGIP1   mis
+## 4   HMCN1   syn
+## 5   KCNT2   mis
+## 6   MARK1   syn</code></pre>
 <div id="overall-de-novo-burden" class="section level4">
 <h4>Overall <em>de novo</em> burden</h4>
 <p>First we want to know whether there are more de novos than expected, using the <code>denovolyzeByClass()</code> function. These variants were obtained by sequencing 1,078 cases, so we use <code>nsamples=1078</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeByClass</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                  <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                  <span class="dt">classes=</span>autismDeNovos$class,
                   <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
 <pre><code>##   class observed expected enrichment  p.value
 ## 1   syn      251    295.8      0.848 9.97e-01
@@ -113,42 +113,42 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h4>Genes containing multiple <em>de novos</em></h4>
 <p>Next, we look to see if the total number of genes that contain more than one de novo is greater than expected, using the <code>denovolyzeMultiHits()</code> function.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                    <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4        3.89          10        0.52         269
-## mis        33       22.30          34        0.01         684
-## lof         6        1.17           4        0.00         143
-## prot       48       31.97          45        0.00         827
-## all        74       52.41          74        0.01        1096</code></pre>
+## syn         4        3.86           8        0.54         269
+## mis        33       23.03          35        0.02         684
+## lof         6        1.09           4        0.00         143
+## prot       48       32.02          45        0.00         827
+## all        74       53.23          66        0.00        1096</code></pre>
 <p>ObsGenes = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />TotalObsDNM = the total number of <em>de novo</em> variants in each class<br />AvgExpGenes = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />MaxExpGenes = the maximum number of genes containin &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />Empirical.P = an empirical p value<br />Note that the number of observed genes with &gt;1 protein-altering variant does <strong>not</strong> equal the number of genes with &gt;1 lof + number of genes with &gt;1 missense, as genes containing 1 lof + 1 missense will only be counted as “multihits” in the combined analysis.</p>
 <p>Here it looks like there may be an excess of genes with &gt;1 lof variant, &gt;1 missense, and &gt;1 protein-altering variant. We will want to increase the number if permutations here to get a handle on our level of significance.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                    <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4       3.752          10       0.523         269
-## mis        33      22.358          36       0.013         684
-## lof         6       1.058           7       0.002         143
-## prot       48      31.617          48       0.001         827
-## all        74      53.740          72       0.000        1096</code></pre>
+## syn         4       3.730          12       0.515         269
+## mis        33      22.455          39       0.014         684
+## lof         6       1.049           5       0.000         143
+## prot       48      31.893          48       0.001         827
+## all        74      53.853          76       0.001        1096</code></pre>
 <p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 143 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>expectedDNMs=&quot;actual&quot;</code></p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$dnmClass %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$class %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
 <pre><code>## [1] 143</code></pre>
 <p>This is a conservative approach, addressing the question: “given the number of variants in our dataset, do we see more genes with &gt;1 variant than expected?”</p>
 <p>An alternative approach simply asks whether there are more genes with &gt;1 variant than our de novo model predicts. This is accessed by setting <code>expectedDNMs=&quot;expected&quot;</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                    <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">expectedDNMs=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         4       4.542          15       0.657   295.84220
-## mis        33      21.316          39       0.008   668.64987
-## lof         6       0.430           3       0.000    92.40006
-## prot       48      27.464          43       0.000   761.04993
-## all        74      50.319          75       0.001  1056.89213</code></pre>
+## syn         4       4.517          13       0.678   295.84220
+## mis        33      21.396          36       0.004   668.64987
+## lof         6       0.484           4       0.000    92.40006
+## prot       48      27.126          41       0.000   761.04993
+## all        74      49.836          69       0.000  1056.89213</code></pre>
 </div>
 <div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
 <h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
@@ -156,7 +156,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <p>By default this function compares the number of LOF variants against expectation for each gene, and then the total number of protein-altering variants (LOF + missense). It can also be configured to return other classes if relevant.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
 <span class="kw">denovolyzeByGene</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                 <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                 <span class="dt">classes=</span>autismDeNovos$class,
                  <span class="dt">nsamples=</span><span class="dv">1078</span>)
   )</code></pre>
 <pre><code>##          lof.observed lof.expected lof.p.value prot.observed prot.expected
@@ -177,15 +177,15 @@ code > span.er { color: #ff0000; font-weight: bold; }
 </div>
 <div id="geneset-analysis" class="section level4">
 <h4>Geneset analysis</h4>
-<p>The analyses presented so far have been exome-wide. It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of <em>de novo</em> variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing). All of the above funtions can be targeted to a subset of genes using the <code>include.gene</code> argument.</p>
+<p>The analyses presented so far have been exome-wide. It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of <em>de novo</em> variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing). All of the above funtions can be targeted to a subset of genes using the <code>includeGenes</code> argument.</p>
 <p>The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP). Is this geneset enriched for <em>de novos</em>, and recurrent <em>de novos</em>, in our autism trios?</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(FMRPgenes); <span class="kw">head</span>(FMRPgenes)</code></pre>
 <pre><code>## [1] 842</code></pre>
 <pre><code>## [1] &quot;BSN&quot;   &quot;KIF1A&quot; &quot;MAP1A&quot; &quot;APC&quot;   &quot;MAP1B&quot; &quot;AGAP2&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeByClass</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                  <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                  <span class="dt">classes=</span>autismDeNovos$class,
                   <span class="dt">nsamples=</span><span class="dv">1078</span>,
-                  <span class="dt">include.gene=</span>FMRPgenes)</code></pre>
+                  <span class="dt">includeGenes=</span>FMRPgenes)</code></pre>
 <pre><code>##   class observed expected enrichment  p.value
 ## 1   syn       30     33.0      0.909 7.22e-01
 ## 2   mis       80     73.7      1.090 2.46e-01
@@ -193,19 +193,19 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ## 4  prot      114     83.2      1.370 7.90e-04
 ## 5   all      144    116.2      1.240 7.04e-03</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
-                    <span class="dt">classes=</span>autismDeNovos$dnmClass,
+                    <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
-                    <span class="dt">include.gene=</span>FMRPgenes)</code></pre>
-<pre><code>## Warning in denovolyzeMultiHits(genes = autismDeNovos$gene, classes
-## = autismDeNovos$dnmClass, : De novo list includes 952 genes not specified
-## for inclusion. These will not be analysed.</code></pre>
+                    <span class="dt">includeGenes=</span>FMRPgenes)</code></pre>
+<pre><code>## Warning in denovolyzeMultiHits(genes = autismDeNovos$gene, classes =
+## autismDeNovos$class, : De novo list includes 952 genes not specified for
+## inclusion. These will not be analysed.</code></pre>
 <pre><code>##      ObsGenes AvgExpGenes MaxExpGenes Empirical.P TotalObsDNM
-## syn         0       0.699           5       1.000          30
-## mis         8       4.968          11       0.096          80
-## lof         3       0.967           5       0.063          34
-## prot       15       9.495          17       0.017         114
-## all        21      14.378          26       0.026         144</code></pre>
+## syn         0       0.735           4       1.000          30
+## mis         8       4.899          11       0.081          80
+## lof         3       0.978           4       0.060          34
+## prot       15       9.381          17       0.021         114
+## all        21      14.535          27       0.023         144</code></pre>
 </div>
 </div>
 <div id="other-functions" class="section level2">
@@ -214,7 +214,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewDeNovoProbs</span>()
   )</code></pre>
-<pre><code>##    refseqID hgncID          syn          mis          non       splice
+<pre><code>##    refseqID geneID          syn          mis          non       splice
 ## 1 NM_000014    A2M 1.709697e-05 3.926497e-05 2.177173e-06 0.000000e+00
 ## 2 NM_000015   NAT2 2.958853e-06 7.114996e-06 4.045867e-07 1.549337e-08
 ## 3 NM_000017  ACADS 8.253083e-06 1.601921e-05 4.166169e-07 5.150058e-07
@@ -231,7 +231,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewDeNovoProbs</span>(<span class="dt">format=</span><span class="st">&quot;long&quot;</span>)
   )</code></pre>
-<pre><code>##       refseqID  hgncID class        value
+<pre><code>##       refseqID  geneID class        value
 ## 1    NM_017582  UBE2Q1   syn 5.428059e-06
 ## 2    NM_014372   RNF11   syn 2.306612e-06
 ## 3    NM_014455  RNF115   syn 3.153658e-06

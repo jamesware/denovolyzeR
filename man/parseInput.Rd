@@ -4,10 +4,10 @@
 \alias{parseInput}
 \title{Checks input for errors}
 \usage{
-parseInput(genes = genes, classes = genes,
-  nsamples = nsamples, group.by = group.by, include.gene = include.gene,
-  include.class = include.class, gene.id = gene.id, signif.p = signif.p,
-  round.expected = round.expected)
+parseInput(genes = genes, classes = genes, nsamples = nsamples,
+  groupBy = groupBy, includeGenes = includeGenes,
+  includeClasses = includeClasses, geneId = geneId, signifP = signifP,
+  roundExpected = roundExpected)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -18,19 +18,19 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
-\item{group.by}{Results can be tabulated by gene, or by variant class}
+\item{groupBy}{Results can be tabulated by gene, or by variant class}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+\item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
-\item{include.class}{Which variant classes are tabulated in output}
+\item{includeClasses}{Which variant classes are tabulated in output}
 
-\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
+\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
-\item{signif.p}{Number of sig figs used to round p values in output.}
+\item{signifP}{Number of sig figs used to round p values in output.}
 
-\item{round.expected}{Number of decimal places used to round expected burdens
+\item{roundExpected}{Number of decimal places used to roundExpected burdens
 in output.}
 }
 \value{

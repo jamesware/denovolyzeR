@@ -11,7 +11,7 @@
 #' @format A data frame with 1096 obs of 2 variables:
 #' \describe{
 #'   \item{gene}{Name of gene containing de novo variant (hgnc)}
-#'   \item{dnmClass}{Fucntional class of variant:
+#'   \item{class}{Functional class of variant:
 #'     "syn" = synonymous,
 #'     "mis" = missense,
 #'     "non" = nonsense,

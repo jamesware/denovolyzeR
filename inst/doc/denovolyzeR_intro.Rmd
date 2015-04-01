@@ -50,7 +50,7 @@ First we want to know whether there are more de novos than expected, using the `
 
 ``` {r}
 denovolyzeByClass(genes=autismDeNovos$gene,
-                  classes=autismDeNovos$dnmClass,
+                  classes=autismDeNovos$class,
                   nsamples=1078)
 ```
 
@@ -62,7 +62,7 @@ Next, we look to see if the total number of genes that contain more than one de 
 
 ``` {r}
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078)
 
 ```
@@ -78,14 +78,14 @@ Here it looks like there may be an excess of genes with >1 lof variant, >1 misse
 
 ``` {r}
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000)
 ```
 
-There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains `r sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))` lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
+There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains `r sum(autismDeNovos$class %in% c("frameshift","non","splice"))` lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
 ``` {r}
-sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))
+sum(autismDeNovos$class %in% c("frameshift","non","splice"))
 ```
 
 This is a conservative approach, addressing the question: "given the number of variants in our dataset, do we see more genes with >1 variant than expected?"
@@ -94,7 +94,7 @@ An alternative approach simply asks whether there are more genes with >1 variant
 
 ``` {r}
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
                     expectedDNMs="expected")
@@ -109,16 +109,16 @@ By default this function compares the number of LOF variants against expectation
 ``` {r}
 head(
 denovolyzeByGene(genes=autismDeNovos$gene,
-                 classes=autismDeNovos$dnmClass,
+                 classes=autismDeNovos$class,
                  nsamples=1078)
   )
 ```
 
-Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$hgncID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$hgncID))),2)`
+Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneID))),2)`
 
 #### Geneset analysis
 
-The analyses presented so far have been exome-wide.  It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of *de novo* variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing).  All of the above funtions can be targeted to a subset of genes using the `include.gene` argument.
+The analyses presented so far have been exome-wide.  It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of *de novo* variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing).  All of the above funtions can be targeted to a subset of genes using the `includeGenes` argument.
 
 The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
 
@@ -126,15 +126,15 @@ The package includes as an example a list of 842 genes that interact with the fr
 length(FMRPgenes); head(FMRPgenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
-                  classes=autismDeNovos$dnmClass,
+                  classes=autismDeNovos$class,
                   nsamples=1078,
-                  include.gene=FMRPgenes)
+                  includeGenes=FMRPgenes)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    include.gene=FMRPgenes)
+                    includeGenes=FMRPgenes)
 ```
 
 ## Other functions

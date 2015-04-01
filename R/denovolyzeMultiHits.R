@@ -18,7 +18,7 @@
 #'
 #' @examples
 #' denovolyzeMultiHits(genes=autismDeNovos$gene,
-#'                     classes=autismDeNovos$dnmClass,
+#'                     classes=autismDeNovos$class,
 #'                     nsamples=1078)
 #'
 
@@ -26,12 +26,12 @@
 
 denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 nperms=100,
-                                include.gene="all",
-                                include.class=c("syn","mis","lof","prot","all"),
+                                includeGenes="all",
+                                includeClasses=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
-                                gene.id="geneID",
+                                geneId="geneID",
                                 probTable=NULL,
-                                mis_filter=NULL) {
+                                misD=NULL) {
 
   options(stringsAsFactors = FALSE)
   # 2 options: the simulation draws N DNMs from the gene list.
@@ -40,25 +40,25 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
   # Set expectedDNMs="actual" or "expected
 
   if(is.null(probTable)){probTable <- pDNM}
-  if(!is.null(mis_filter)){names(probTable)[names(probTable)==mis_filter] <- "mis_filter"}
+  if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
 
   # Record all variant classes in probability table.  Only calculate stats for annotated variant classes.
   allVariantClasses <- probTable %>% select(class) %>% unique %>% unlist
 
   # Use specified gene ID
-  names(probTable)[names(probTable)==gene.id] <- "gene"
+  names(probTable)[names(probTable)==geneId] <- "gene"
   probTable$gene <- toupper(as.character(probTable$gene))
-  include.gene <- toupper(as.character(include.gene))
+  includeGenes <- toupper(as.character(includeGenes))
 
   # If a list of genes for inclusion is specified, restrict analysis to these genes
-  if(include.gene[1]!="ALL"){
-    probTable <- probTable[probTable$gene %in% include.gene,]
-    excludedgenes <- sum(!genes %in% include.gene)
+  if(includeGenes[1]!="ALL"){
+    probTable <- probTable[probTable$gene %in% includeGenes,]
+    excludedgenes <- sum(!genes %in% includeGenes)
     if(excludedgenes > 0) {
       warning("De novo list includes ",excludedgenes," genes not specified for inclusion. These will not be analysed.")
     }
-    classes <- classes[genes %in% include.gene]
-    genes <- genes[genes %in% include.gene]
+    classes <- classes[genes %in% includeGenes]
+    genes <- genes[genes %in% includeGenes]
   }
 
   doPermute <- function(class,classgroup=class){
@@ -69,14 +69,14 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
       x=2*sum(probTable$value[probTable$class==class])*nsamples
     }
     y=length(unique(nextvars[duplicated(nextvars)]))
-    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,gene.id=gene.id,include.gene=include.gene,probTable=probTable)
+    output <- PermuteMultiHits(x,y,nperms=nperms,class=class,geneId=geneId,includeGenes=includeGenes,probTable=probTable)
     #rownames(output) <- class
     return(output)
   }
 
   ### Calculate probabilities for non-overlapping classes represented in data
   output <- list()
-  myclasses=c("syn","mis_filter","startloss",
+  myclasses=c("syn","misD","startloss",
               "stoploss","non","splice","frameshift")
   myclasses <- myclasses[myclasses %in% classes]
   myclasses <- myclasses[myclasses %in% allVariantClasses]
@@ -85,19 +85,19 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
   }
 
   ### Calculate probabilities for "aggregate classes"
-  output[["mis"]] <- doPermute(class="mis",classgroup=c("mis","mis_filter"))
+  output[["mis"]] <- doPermute(class="mis",classgroup=c("mis","misD"))
 
   output[["lof"]] <- doPermute(class="lof",classgroup=c("non","splice","frameshift","startloss","stoploss","lof"))
 
   output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
-                                                          "mis","mis_filter"))
+                                                          "mis","misD"))
   if("prot_dam" %in% allVariantClasses){
     output[["prot_dam"]] <- doPermute(class="prot_dam",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
-                                                              "mis_filter"))
+                                                              "misD"))
     }
   output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
-                                                        "mis","mis_filter","syn"))
+                                                        "mis","misD","syn"))
 
-  output <- output[names(output) %in% include.class]
+  output <- output[names(output) %in% includeClasses]
   return(t(data.frame(output)))
 }

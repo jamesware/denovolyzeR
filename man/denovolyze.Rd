@@ -6,21 +6,20 @@
 \alias{denovolyzeByGene}
 \title{Evaluates burden of \emph{de novo} variation against expectation}
 \usage{
-denovolyze(genes, classes, nsamples, group.by = "class",
-  include.gene = "all", include.class = c("syn", "mis", "mis_filter",
+denovolyze(genes, classes, nsamples, groupBy = "class",
+  includeGenes = "all", includeClasses = c("syn", "mis", "misD",
   "mis_other", "mis", "non", "stoploss", "startgain", "splice", "frameshift",
-  "lof", "prot", "all", "prot_dam"), gene.id = "geneID", signif.p = 3,
-  round.expected = 1, probTable = NULL, mis_filter = NULL)
+  "lof", "prot", "all", "prot_dam"), geneId = "geneID", signifP = 3,
+  roundExpected = 1, probTable = NULL, misD = NULL)
 
-denovolyzeByClass(genes, classes, nsamples, group.by = "class",
-  include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), gene.id = "geneID", signif.p = 3, round.expected = 1,
+denovolyzeByClass(genes, classes, nsamples, groupBy = "class",
+  includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
+  "all"), geneId = "geneID", signifP = 3, roundExpected = 1,
   probTable = NULL)
 
-denovolyzeByGene(genes, classes, nsamples, group.by = "gene",
-  include.gene = "all", include.class = c("lof", "prot"),
-  gene.id = "geneID", signif.p = 3, round.expected = 1,
-  probTable = NULL)
+denovolyzeByGene(genes, classes, nsamples, groupBy = "gene",
+  includeGenes = "all", includeClasses = c("lof", "prot"),
+  geneId = "geneID", signifP = 3, roundExpected = 1, probTable = NULL)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -31,28 +30,28 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
-\item{group.by}{Results can be tabulated by gene, or by variant class}
+\item{groupBy}{Results can be tabulated by gene, or by variant class}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+\item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
-\item{include.class}{Which variant classes are tabulated in output}
+\item{includeClasses}{Which variant classes are tabulated in output}
 
-\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
+\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
-\item{signif.p}{Number of sig figs used to round p values in output.}
+\item{signifP}{Number of sig figs used to round p values in output.}
 
-\item{round.expected}{Number of decimal places used to round expected burdens
+\item{roundExpected}{Number of decimal places used to roundExpected burdens
 in output.}
 
 \item{probTable}{Probability table. A user-defined table of probabilities can be
 provided here, to replace the probability table included in the package.}
 
-\item{mis_filter}{If the user-specified probability table contains
+\item{misD}{If the user-specified probability table contains
   probabilities for a sub-category of missense variants (e.g. predicted to be
   damaging by an in silico algorithm), thta column should be called
-  mis_filter, or the alternative name should be specified here.}
+  misD, or the alternative name should be specified here.}
 }
 \value{
 Returns a data frame
@@ -79,39 +78,39 @@ See vignette("denovolyzeR_intro") for more information.
 ### denovolyze
 
 denovolyze(genes=autismDeNovos$gene,
-           classes=autismDeNovos$dnmClass,
+           classes=autismDeNovos$class,
            nsamples=1078)
 
 ### denovolyzeByClass
 
 denovolyzeByClass(genes=autismDeNovos$gene,
-                  classes=autismDeNovos$dnmClass,
+                  classes=autismDeNovos$class,
                   nsamples=1078)
 
 # this convenience function is identical to:
 
 denovolyze(genes=autismDeNovos$gene,
-           classes=autismDeNovos$dnmClass,
+           classes=autismDeNovos$class,
            nsamples=1078,
-           group.by="class",
-           include.class=c("syn","mis","lof","prot","all"),
-           include.gene="all"
+           groupBy="class",
+           includeClasses=c("syn","mis","lof","prot","all"),
+           includeGenes="all"
            )
 
 ### denovolyzeByGene
 
 denovolyzeByGene(genes=autismDeNovos$gene,
-                 classes=autismDeNovos$dnmClass,
+                 classes=autismDeNovos$class,
                  nsamples=1078)
 
 # this is identical to:
 
 denovolyze(genes=autismDeNovos$gene,
-           classes=autismDeNovos$dnmClass,
+           classes=autismDeNovos$class,
            nsamples=1078,
-           group.by="gene",
-           include.class=c("lof","prot"),
-           include.gene="all"
+           groupBy="gene",
+           includeClasses=c("lof","prot"),
+           includeGenes="all"
            )
 }
 

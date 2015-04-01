@@ -5,9 +5,9 @@
 \title{Determine significance of genes with multiple \emph{de novos}}
 \usage{
 denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
-  include.gene = "all", include.class = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", gene.id = "geneID", probTable = NULL,
-  mis_filter = NULL)
+  includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
+  "all"), expectedDNMs = "actual", geneId = "geneID", probTable = NULL,
+  misD = NULL)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -20,24 +20,24 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 
 \item{nperms}{Number of permutations}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+\item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
-\item{include.class}{Which variant classes are tabulated in output}
+\item{includeClasses}{Which variant classes are tabulated in output}
 
 \item{expectedDNMs}{Select whether expected number of multihits is determined
   by expected total de novos, or actual total}
 
-\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
+\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
 \item{probTable}{Probability table. A user-defined table of probabilities can be
 provided here, to replace the probability table included in the package.}
 
-\item{mis_filter}{If the user-specified probability table contains
+\item{misD}{If the user-specified probability table contains
   probabilities for a sub-category of missense variants (e.g. predicted to be
   damaging by an in silico algorithm), thta column should be called
-  mis_filter, or the alternative name should be specified here.}
+  misD, or the alternative name should be specified here.}
 }
 \value{
 Returns a data.frame
@@ -50,7 +50,7 @@ See vignette (denovostats_intro) for more information.
 }
 \examples{
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078)
 }
 \keyword{keywords}

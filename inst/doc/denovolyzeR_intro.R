@@ -14,27 +14,27 @@ head(autismDeNovos)
 
 ## ------------------------------------------------------------------------
 denovolyzeByClass(genes=autismDeNovos$gene,
-                  classes=autismDeNovos$dnmClass,
+                  classes=autismDeNovos$class,
                   nsamples=1078)
 
 ## ------------------------------------------------------------------------
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078)
 
 
 ## ------------------------------------------------------------------------
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000)
 
 ## ------------------------------------------------------------------------
-sum(autismDeNovos$dnmClass %in% c("frameshift","non","splice"))
+sum(autismDeNovos$class %in% c("frameshift","non","splice"))
 
 ## ------------------------------------------------------------------------
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
                     expectedDNMs="expected")
@@ -42,7 +42,7 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
 ## ------------------------------------------------------------------------
 head(
 denovolyzeByGene(genes=autismDeNovos$gene,
-                 classes=autismDeNovos$dnmClass,
+                 classes=autismDeNovos$class,
                  nsamples=1078)
   )
 
@@ -50,15 +50,15 @@ denovolyzeByGene(genes=autismDeNovos$gene,
 length(FMRPgenes); head(FMRPgenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
-                  classes=autismDeNovos$dnmClass,
+                  classes=autismDeNovos$class,
                   nsamples=1078,
-                  include.gene=FMRPgenes)
+                  includeGenes=FMRPgenes)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
-                    classes=autismDeNovos$dnmClass,
+                    classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    include.gene=FMRPgenes)
+                    includeGenes=FMRPgenes)
 
 ## ----viewDeNovoProbs-----------------------------------------------------
 head(

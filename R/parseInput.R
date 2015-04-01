@@ -10,12 +10,12 @@
 parseInput <- function(genes=genes,
                        classes=genes,
                        nsamples=nsamples,
-                       group.by=group.by,
-                       include.gene=include.gene,
-                       include.class=include.class,
-                       gene.id=gene.id,
-                       signif.p=signif.p,
-                       round.expected=round.expected){
+                       groupBy=groupBy,
+                       includeGenes=includeGenes,
+                       includeClasses=includeClasses,
+                       geneId=geneId,
+                       signifP=signifP,
+                       roundExpected=roundExpected){
 
 
 ## check inputs have same length
@@ -52,35 +52,35 @@ if(!is.wholenumber(nsamples)){
   stop('nsamples must be an integer')
 }
 
-## checks on group.by
-group.by <- tolower(group.by)
-if(!group.by %in% c("gene","class")){
-  stop(paste("\"",group.by,"\" is not a valid group.by option",sep=""))
+## checks on groupBy
+groupBy <- tolower(groupBy)
+if(!groupBy %in% c("gene","class")){
+  stop(paste("\"",groupBy,"\" is not a valid groupBy option",sep=""))
 }
-# passes lower case group.by to parent function
-assign("group.by",group.by,pos=sys.frame(sys.parent()))
+# passes lower case groupBy to parent function
+assign("groupBy",groupBy,pos=sys.frame(sys.parent()))
 
 
-## checks on include.gene
+## checks on includeGenes
 
-## checks on include.class
+## checks on includeClasses
 
-## checks on gene.id
+## checks on geneId
 
 
-## checks on round.expected
+## checks on roundExpected
 
-## checks on signif.p
+## checks on signifP
 
 }
 
 
 
 # TESTS
-# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078)
-# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass[-1], nsamples=1078)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$class, nsamples=1078)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$class[-1], nsamples=1078)
 # denovolyze(genes=c("KCNQ1","RYR2",NA), classes=c("lof","lof","lof"), nsamples=10)
-# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078.3)
-# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078, group.by="CLASS")
-# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$dnmClass, nsamples=1078, group.by="genie")
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$class, nsamples=1078.3)
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$class, nsamples=1078, groupBy="CLASS")
+# denovolyze(genes=autismDeNovos$gene, classes=autismDeNovos$class, nsamples=1078, groupBy="genie")
 

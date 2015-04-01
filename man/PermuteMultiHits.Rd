@@ -4,8 +4,8 @@
 \alias{PermuteMultiHits}
 \title{Permutes x variants across a genelist, and counts genes with multiple hits}
 \usage{
-PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "geneID",
-  include.gene = "all", probTable = pDNM)
+PermuteMultiHits(x, y, nperms = 100, class = "lof", geneId = "geneID",
+  includeGenes = "all", probTable = pDNM)
 }
 \arguments{
 \item{x}{Total number of de novo variants observed in dataset}
@@ -16,10 +16,10 @@ PermuteMultiHits(x, y, nperms = 100, class = "lof", gene.id = "geneID",
 
 \item{class}{In c("lof","mis","syn","prot")}
 
-\item{gene.id}{Gene identifier used. Currently only geneID. (refseqID may
+\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
 work)}
 
-\item{include.gene}{Genes to include in analysis. "all" or a vector of gene
+\item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
 \item{probTable}{Probability table. A user-defined table of probabilities can be
