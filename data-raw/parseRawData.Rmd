@@ -14,27 +14,86 @@ library(devtools)
 opts_chunk$set(collapse=TRUE)
 ```
 
+prob table IDs are not perfect.  Use biomaRt to rerieve a definitive set
+```{r}
+library(biomaRt)
+#define biomart to use
+grch37 <- biomaRt::useMart(biomart="ENSEMBL_MART_ENSEMBL", host="grch37.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+```
+
+
 ## De novo probabilities
+Latest (Gencode) probabilities
 ```{r pDNM}
 #Previously published de novo probability table
-pDNM <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
-#pDNM <- read.table("./data-raw/fixed_mut_prob_fs_adjdepdiv.txt",header=T)
+pDNM <- read.table("./hgnc_annotated_depthadj_pmuts_fs_canonical_transcripts_div_Feb07.txt",header=T)
+#Use biomaRt to re-annotate pDNM
+#biomart does not retain transcript versions: trim to 15 digit unversioned ENST
+pDNM$enst <- pDNM$transcript %>%
+    substr(1,15)
+#listAttributes(grch37) #returns all available fields
+#retrieve matching gene IDs
+enstToEnsg <- biomaRt::getBM(
+  attributes=c("ensembl_gene_id","ensembl_transcript_id","hgnc_id","hgnc_symbol"),
+  filters="ensembl_transcript_id",
+  values=pDNM$enst,
+  mart=grch37
+  )
+## Some QC on the new annotations
+cat("DUPLICATES:\n")
+apply(enstToEnsg,MARGIN=2,FUN=function(x){sum(duplicated(x))})
+duplicated <- enstToEnsg$ensembl_transcript_id[duplicated(enstToEnsg$ensembl_transcript_id)]
+cat("One ENST maps to 2 hgnc_id: VTN / SEBOX:\n")
+enstToEnsg <- filter(enstToEnsg,hgnc_symbol!="SEBOX")
+enstToEnsg %>% filter(ensembl_transcript_id %in% duplicated)
+cat("In latest Ensembl (79, GRCh38.p2), this ENST & ENSG maps to VTN.  SEBOX maps elsewhere")
+duplicated <- enstToEnsg$hgnc_id[duplicated(enstToEnsg$hgnc_id)] %>% unique
+duplicated
+cat("There are no duplicated hgncID. ",sum(is.na(enstToEnsg$hgnc_id)),"ENST have no matching hgncID.\n")
+
+## Join to prob table, and keep chosen fields
+pDNM <- left_join(enstToEnsg,pDNM,by=c("ensembl_transcript_id"="enst"))
 pDNM <- pDNM %>% 
-  dplyr::rename(splice = css, geneID = gene, refseqID = transcript) %>% 
-  select(-bp, -covered_bp, -rdt, -all)
-# antilog raw data
-pDNM[,3:7] <- 10^pDNM[,3:7]
-pDNM$splice[is.na(pDNM$splice)] <- 0
+  dplyr::select(ensgID = ensembl_gene_id, enstID = ensembl_transcript_id, 
+                hgncID = hgnc_id, hgncSymbol = hgnc_symbol,
+                syn = p_syn, mis = p_mis, non = p_non, splice = p_css, frameshift = p_fs)  
+# already antilogged...
+# pDNM$splice[is.na(pDNM$splice)] <- 0 # not required: there are no NAs...
 # summarise protein-altering and lof variants as defined below
 pDNM$lof <- apply(pDNM[,c("non","splice","frameshift")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM$prot <- apply(pDNM[,c("mis","lof")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM$all <- apply(pDNM[,c("syn","prot")],MARGIN=1,FUN=sum,na.rm=T)
+# show head & numbers of vars
 pDNM %>% head
 cat("pDNM:\n",
   "Number rows:",nrow(pDNM),"\n",
-  "Number unique genes:",length(unique(pDNM$geneID)),"\n"
+  "Number unique geneID:",length(unique(pDNM$enstID)),"\n",
+  "Number unique hgncID:",length(unique(pDNM$hgncID)),"\n"
     )
-pDNM <- melt(pDNM,id.vars=c("refseqID","geneID"),variable_name="class")
+write.table(pDNM,"probTable_gencode_reannotatedIDs.txt",quote=F,row.names=F,sep="\t")
+pDNM <- melt(pDNM,id.vars=c("hgncID","hgncSymbol","enstID","ensgID"),variable_name="class")
+```
+
+Original RefSeq probabilities, as per Samocha 2014
+```{r probTable_Samocha2014}
+#Previously published de novo probability table
+probTable_Samocha2014 <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
+probTable_Samocha2014 <- probTable_Samocha2014 %>% 
+  dplyr::rename(splice = css, geneID = gene, refseqID = transcript) %>% 
+  select(-bp, -covered_bp, -rdt, -all)
+# antilog raw data
+probTable_Samocha2014[,3:7] <- 10^probTable_Samocha2014[,3:7]
+probTable_Samocha2014$splice[is.na(probTable_Samocha2014$splice)] <- 0
+# summarise protein-altering and lof variants as defined below
+probTable_Samocha2014$lof <- apply(probTable_Samocha2014[,c("non","splice","frameshift")],MARGIN=1,FUN=sum,na.rm=T)
+probTable_Samocha2014$prot <- apply(probTable_Samocha2014[,c("mis","lof")],MARGIN=1,FUN=sum,na.rm=T)
+probTable_Samocha2014$all <- apply(probTable_Samocha2014[,c("syn","prot")],MARGIN=1,FUN=sum,na.rm=T)
+probTable_Samocha2014 %>% head
+cat("probTable_Samocha2014:\n",
+  "Number rows:",nrow(probTable_Samocha2014),"\n",
+  "Number unique genes:",length(unique(probTable_Samocha2014$geneID)),"\n"
+    )
+probTable_Samocha2014 <- melt(probTable_Samocha2014,id.vars=c("refseqID","geneID"),variable_name="class")
 ```
 
 Revisit classification of variant consequences. Currently:
@@ -71,8 +130,8 @@ Need to decide how to classify
 * inframe (ignore?  same probability as frameshift?)
 * splice_indel
 
-Note also: a number of genes in the autism *de novo* list do not have matching identifiers in the pDNM table:  
-`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(pDNM$geneID)]`
+Note also: a number of genes in the autism *de novo* list do not have matching identifiers in the probTable_Samocha2014 table:  
+`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(probTable_Samocha2014$geneID)]`
 
 ## Autism demo data: FMRP genelist
 ```{r FMRP}
@@ -94,6 +153,7 @@ devtools::use_data(autismDeNovos,FMRPgenes, overwrite=T)
 # Add data to sysdata.R
 devtools::use_data(pDNM, internal = TRUE, overwrite=T)
 setwd("./data-raw")
+save(probTable_Samocha2014, "probTable_Samocha2014.rda")
 ```
 
 
@@ -101,8 +161,8 @@ setwd("./data-raw")
 ```{r}
 #Unadjusted probabilities of mutation for all GENCODE transcripts. I can extract just the ones that I defined as canonical and send that file if you'd like. 
 #Note that these don't even have the divergence adjustment. I have that information as well.
-# pDNMgencode <-read.table("data-raw/all_transcripts_pmut_July16.txt",header=T)
-# pDNMgencode %>% tbl_df %>% head
+# probTable_Samocha2014gencode <-read.table("data-raw/all_transcripts_pmut_July16.txt",header=T)
+# probTable_Samocha2014gencode %>% tbl_df %>% head
 ```
 
 
