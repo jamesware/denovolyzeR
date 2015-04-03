@@ -8,7 +8,8 @@
 #'
 #' @param nperms Number of permutations
 #' @param expectedDNMs Select whether expected number of multihits is determined
-#'   by expected total de novos, or actual total
+#'   by "expected" total number of variants , or "actual" total.  Actual
+#'   (default) is more conservative.
 #'
 #' @return Returns a data.frame
 #'
@@ -33,7 +34,6 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 probTable=NULL,
                                 misD=NULL) {
 
-  options(stringsAsFactors = FALSE)
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
   # The former is more conservative.  Samocha et al used the latter.
