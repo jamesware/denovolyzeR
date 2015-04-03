@@ -4,7 +4,7 @@
 \name{FMRPgenes}
 \alias{FMRPgenes}
 \title{FMRP genes}
-\format{A vector of (hgnc) gene identifiers}
+\format{A vector of gene symbols}
 \usage{
 data(FMRPgenes)
 }

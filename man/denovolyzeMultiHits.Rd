@@ -6,15 +6,20 @@
 \usage{
 denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
   includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", geneId = "geneID", probTable = NULL,
-  misD = NULL)
+  "all"), expectedDNMs = "actual", geneId = "hgncSymbol",
+  probTable = NULL, misD = NULL)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
 
-\item{classes}{A vector of classes of de novo variants.  Supported
-classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
-"stoploss","startloss","splice", "frameshift" and "lof".}
+\item{classes}{A vector of classes of de novo variants.  Standard supported
+classes are "syn" (synonymous), "mis" (missense), "non" (nonsense),
+"splice" (splice), "frameshift" (frameshift) and "lof" (loss of function =
+non + splice + frameshift). Additional classes that are supported by the
+code, but are not included in the built-in probability tables, are
+"stoploss","startloss", "misD" (damaging missense).  These labels may be
+used for user-supplied probability tables. If "misD" is present, then "mis"
+(in the input) implies non-damaging missense.}
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
@@ -23,21 +28,26 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 \item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
-\item{includeClasses}{Which variant classes are tabulated in output}
+\item{includeClasses}{Determines which variant classes are tabulated in
+output.  In addition to the input classes, summaries can be produced for
+"prot" (protein-altering = mis + lof), "all", and "protD" (protein damaging
+= misD + lof, only available if misD included in user-specified probability
+table).  If "misD" is present, then "mis" will return statistics for all
+missense.  Non-damaging missense are not analysed separately.}
 
 \item{expectedDNMs}{Select whether expected number of multihits is determined
   by expected total de novos, or actual total}
 
-\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
-work)}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
+"enstID", "ensgID"}
 
-\item{probTable}{Probability table. A user-defined table of probabilities can be
-provided here, to replace the probability table included in the package.}
+\item{probTable}{Probability table. A user-defined table of probabilities can
+be provided here, to replace the probability table included in the package.}
 
-\item{misD}{If the user-specified probability table contains
-  probabilities for a sub-category of missense variants (e.g. predicted to be
-  damaging by an in silico algorithm), thta column should be called
-  misD, or the alternative name should be specified here.}
+\item{misD}{If the user-specified probability table contains probabilities
+  for a sub-category of missense variants (e.g. predicted to be damaging by
+  an in silico algorithm), this column should be called misD, or the
+  alternative name should be specified here.}
 }
 \value{
 Returns a data.frame

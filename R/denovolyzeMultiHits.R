@@ -91,8 +91,8 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
 
   output[["prot"]] <- doPermute(class="prot",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                           "mis","misD"))
-  if("prot_dam" %in% allVariantClasses){
-    output[["prot_dam"]] <- doPermute(class="prot_dam",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
+  if("protD" %in% allVariantClasses){
+    output[["protD"]] <- doPermute(class="protD",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                               "misD"))
     }
   output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",

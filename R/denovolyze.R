@@ -11,24 +11,36 @@
 #' See vignette("denovolyzeR_intro") for more information.
 #'
 #' @param genes A vector of genes containing de novo variants.
-#' @param classes A vector of classes of de novo variants.  Supported
-#'   classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
-#'   "stoploss","startloss","splice", "frameshift" and "lof".
+#' @param classes A vector of classes of de novo variants.  Standard supported
+#'   classes are "syn" (synonymous), "mis" (missense), "non" (nonsense),
+#'   "splice" (splice), "frameshift" (frameshift) and "lof" (loss of function =
+#'   non + splice + frameshift). Additional classes that are supported by the
+#'   code, but are not included in the built-in probability tables, are
+#'   "stoploss","startloss", "misD" (damaging missense).  These labels may be
+#'   used for user-supplied probability tables. If "misD" is present, then "mis"
+#'   (in the input) implies non-damaging missense.
 #' @param nsamples Number of individuals considered in de novo analysis.
-#' @param groupBy Results can be tabulated by gene, or by variant class
-#' @param includeClasses Which variant classes are tabulated in output
+#' @param groupBy Results can be tabulated by "gene", or by variant "class"
+#' @param includeClasses Determines which variant classes are tabulated in
+#'   output.  In addition to the input classes, summaries can be produced for
+#'   "prot" (protein-altering = mis + lof), "all", and "protD" (protein damaging
+#'   = misD + lof, only available if misD included in user-specified probability
+#'   table).  If "misD" is present, then "mis" will return statistics for all
+#'   missense.  Non-damaging missense are not analysed separately.
 #' @param includeGenes Genes to include in analysis. "all" or a vector of gene
 #'   names.
-#' @param geneId Gene identifier used. One of hgncID, hgncSymbol (default), enstID, ensgID
-#' @param signifP Number of sig figs used to round p values in output.
-#' @param roundExpected Number of decimal places used to roundExpected burdens
+#' @param geneId Gene identifier used. One of "hgncID", "hgncSymbol" (default),
+#'   "enstID", "ensgID"
+#' @param signifP Number of significant figures used to round p-values in
+#'   output.
+#' @param roundExpected Number of decimal places used to round expected burdens
 #'   in output.
-#' @param probTable Probability table. A user-defined table of probabilities can be
-#'   provided here, to replace the probability table included in the package.
-#' @param misD If the user-specified probability table contains
-#'   probabilities for a sub-category of missense variants (e.g. predicted to be
-#'   damaging by an in silico algorithm), thta column should be called
-#'   misD, or the alternative name should be specified here.
+#' @param probTable Probability table. A user-defined table of probabilities can
+#'   be provided here, to replace the probability table included in the package.
+#' @param misD If the user-specified probability table contains probabilities
+#'   for a sub-category of missense variants (e.g. predicted to be damaging by
+#'   an in silico algorithm), this column should be called misD, or the
+#'   alternative name should be specified here.
 #'
 #'
 #' @return Returns a data frame
@@ -79,14 +91,13 @@
 #'
 
 
-
-
 denovolyze <- function(genes,classes,nsamples,
                        groupBy="class",
                        includeGenes="all",
-                       includeClasses=c("syn","mis","misD","mis_other","mis",
+                       includeClasses=c("syn","mis","misD",
                                        "non","stoploss","startgain",
-                                       "splice","frameshift","lof","prot","all", "prot_dam"),
+                                       "splice","frameshift","lof","prot",
+                                       "protD", "all"),
                        geneId="hgncSymbol",
                        signifP=3,
                        roundExpected=1,
@@ -133,7 +144,7 @@ denovolyze <- function(genes,classes,nsamples,
                                    "lof",
                                    "mis_notFilter","misD")] <- "prot"
   input$class.4[input$class %in% c("splice","frameshift","non","stoploss","startloss",
-                                   "lof","misD")] <- "prot_dam"
+                                   "lof","misD")] <- "protD"
   input$class.5 <- "all"
   input <- reshape::melt.data.frame(input,id.vars="gene") %>%
     select(gene, class = value)  %>%
@@ -151,7 +162,7 @@ denovolyze <- function(genes,classes,nsamples,
       )
     observed$class <- factor(observed$class, levels=c(c("syn","misD","mis",
                                                         "non","stoploss","startloss",
-                                                        "splice","frameshift","lof","prot","prot_dam","all")))
+                                                        "splice","frameshift","lof","prot","protD","all")))
     observed <- observed[order(observed$class),]
 
 
@@ -163,7 +174,7 @@ denovolyze <- function(genes,classes,nsamples,
       )
     expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
                                                         "non","stoploss","startloss",
-                                                        "splice","frameshift","lof","prot","prot_dam","all")))
+                                                        "splice","frameshift","lof","prot","protD","all")))
 
 
     output <- left_join(observed,expected,by=c("class"))

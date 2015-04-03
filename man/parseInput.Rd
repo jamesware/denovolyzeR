@@ -12,9 +12,14 @@ parseInput(genes = genes, classes = genes, nsamples = nsamples,
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
 
-\item{classes}{A vector of classes of de novo variants.  Supported
-classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
-"stoploss","startloss","splice", "frameshift" and "lof".}
+\item{classes}{A vector of classes of de novo variants.  Standard supported
+classes are "syn" (synonymous), "mis" (missense), "non" (nonsense),
+"splice" (splice), "frameshift" (frameshift) and "lof" (loss of function =
+non + splice + frameshift). Additional classes that are supported by the
+code, but are not included in the built-in probability tables, are
+"stoploss","startloss", "misD" (damaging missense).  These labels may be
+used for user-supplied probability tables. If "misD" is present, then "mis"
+(in the input) implies non-damaging missense.}
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
@@ -23,14 +28,20 @@ classes are "syn", "mis", "mis_cons", "mis_dam", "mis_oth","non" or
 \item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
 
-\item{includeClasses}{Which variant classes are tabulated in output}
+\item{includeClasses}{Determines which variant classes are tabulated in
+output.  In addition to the input classes, summaries can be produced for
+"prot" (protein-altering = mis + lof), "all", and "protD" (protein damaging
+= misD + lof, only available if misD included in user-specified probability
+table).  If "misD" is present, then "mis" will return statistics for all
+missense.  Non-damaging missense are not analysed separately.}
 
-\item{geneId}{Gene identifier used. Currently only geneID. (refseqID may
-work)}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
+"enstID", "ensgID"}
 
-\item{signifP}{Number of sig figs used to round p values in output.}
+\item{signifP}{Number of significant figures used to round p-values in
+output.}
 
-\item{roundExpected}{Number of decimal places used to roundExpected burdens
+\item{roundExpected}{Number of decimal places used to round expected burdens
 in output.}
 }
 \value{
