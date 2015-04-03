@@ -4,7 +4,8 @@
 #'
 #' @inheritParams denovolyze
 #'
-#' @return tbc   , with or without error message
+#' @return warning or error if any invalid input, else assigns variables back to
+#'   parent function
 #'
 
 parseInput <- function(genes=genes,
@@ -18,26 +19,27 @@ parseInput <- function(genes=genes,
                        roundExpected=roundExpected,
                        probTable=NULL){
 
-  ## Define a function to verify integer inputs
+  ## Define a function to verify integer inputs --------------------
   is.wholenumber <- function(x, tol = .Machine$double.eps^0.5) {abs(x - round(x)) < tol}
 
-  ## Use specified probTable
+  ## Use specified probTable --------------------
   if(is.null(probTable)){probTable <- pDNM}
 
-  ## checks on geneId
+  ## checks on geneId --------------------
   if(!geneId %in% names(probTable)){
     stop(paste(geneId,"is not a valid geneId"))
   }
   # use geneID if valid
   names(probTable)[names(probTable)==geneId] <- "gene"
 
-  ## check inputs have same length
+  ## check inputs have same length --------------------
   if(length(genes)!=length(classes)){
     stop('The number of genes (genes) and number of variant consequences (classes) do not match')
   }
 
-  ## checks on genenames:
-  # capitalisation
+  ## checks on genenames --------------------
+
+  # character & capitalisation
   genes <- toupper(genes)
 
   # recognised
@@ -57,9 +59,10 @@ parseInput <- function(genes=genes,
   assign("genes",genes,pos=sys.frame(sys.parent()))
 
 
-  ## checks on variant classes:
+  ## checks on variant classes --------------------
   # capitalisation - not implemented
-
+  # as.character
+  classes <- as.character(classes)
   # recognised
   validClasses <- unique(probTable$class)
   noMatchClasses <- classes[!classes %in% validClasses] %>% unique
@@ -72,13 +75,15 @@ parseInput <- function(genes=genes,
   }
   # match to SO? - not implemented
 
-  ## checks on nsamples
+  assign("classes",classes,pos=sys.frame(sys.parent()))
+
+  ## checks on nsamples --------------------
   # is integer
   if(!is.wholenumber(nsamples)){
     stop('nsamples must be an integer')
   }
 
-  ## checks on groupBy
+  ## checks on groupBy --------------------
   groupBy <- tolower(groupBy)
   if(!groupBy %in% c("gene","class")){
     stop(paste("\"",groupBy,"\" is not a valid groupBy option",sep=""))
@@ -87,9 +92,10 @@ parseInput <- function(genes=genes,
   assign("groupBy",groupBy,pos=sys.frame(sys.parent()))
 
 
-  ## checks on includeGenes
+  ## checks on includeGenes --------------------
+  includeGenes <- toupper(includeGenes)
   #apply only if includeGenes is not "all"
-  if(!toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){
+  if(!includeGenes[1]=="ALL" & length(includeGenes==1)){
     noMatchGenes <- (!includeGenes %in% probTable$gene) %>% sum
     if(noMatchGenes>0){
       warning(
@@ -97,8 +103,9 @@ parseInput <- function(genes=genes,
         ))
     }
   }
+  assign("includeGenes",includeGenes,pos=sys.frame(sys.parent()))
 
-  ## checks on includeClasses
+  ## checks on includeClasses --------------------
   validClasses  <- c("syn","mis","misD",
                                     "non","stoploss","startgain",
                                     "splice","frameshift","lof","prot",
@@ -108,13 +115,13 @@ parseInput <- function(genes=genes,
     stop(paste("The following are not recognised variant classes:",noMatchClasses))
   }
 
-  ## checks on roundExpected
+  ## checks on roundExpected --------------------
   # is integer
   if(!is.wholenumber(roundExpected)){
     stop('roundExpected must be an integer')
   }
 
-  ## checks on signifP
+  ## checks on signifP --------------------
   # is integer
   if(!is.wholenumber(signifP)){
     stop('signifP must be an integer')
@@ -122,6 +129,8 @@ parseInput <- function(genes=genes,
 
 
 } #end of function
+
+##### --------------------
 
 # TESTS
 # genes=autismDeNovos$gene;classes=autismDeNovos$class;nsamples=1078

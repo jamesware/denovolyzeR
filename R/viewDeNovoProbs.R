@@ -4,6 +4,8 @@
 #' @param format option to display table in wide format (default; one line per gene), or long format
 #' @export
 
+# --------------------
+
 viewDeNovoProbs <- function(format="wide"){
   if(format=="long"){
     return(pDNM)

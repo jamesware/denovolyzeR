@@ -13,6 +13,8 @@
 #' @return Returns a named vector of 5 values
 #'
 
+# --------------------
+
 PermuteMultiHits <- function(x,y,nperms=100,
                              class="lof",
                              geneId="hgncSymbol",
@@ -24,11 +26,13 @@ PermuteMultiHits <- function(x,y,nperms=100,
   #nperms = number permutations, defaults to 100
   #class = type of DNM assessed, defaults to "lof"
 
+  # --------------------
   # Use specified gene ID
   names(probTable)[names(probTable)==geneId] <- "gene"
   probTable$gene <- toupper(as.character(probTable$gene))
   includeGenes <- toupper(as.character(includeGenes))
 
+  # --------------------
   # If a list of genes for inclusion is specified, restrict analysis to these genes
   if(includeGenes[1]!="ALL"){
     probTable <- probTable[probTable$gene %in% includeGenes,]
@@ -40,7 +44,8 @@ PermuteMultiHits <- function(x,y,nperms=100,
     mycounts[i] <- length(unique(DNMsim[duplicated(DNMsim)]))
   }
   empirical.p<-length(which(mycounts >= y))/nperms
-  #output <- data.frame(matrix(nrow=1,ncol=5))
+
+  # --------------------
   output <- vector(length=5)
   output <-c(y,mean(mycounts),max(mycounts),empirical.p,x)
   names(output) <- c("ObsGenes","AvgExpGenes","MaxExpGenes","Empirical.P","TotalObsDNM")

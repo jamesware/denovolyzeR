@@ -23,7 +23,7 @@
 #'                     nsamples=1078)
 #'
 
-
+##### ----------------------------------------
 
 denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 nperms=100,
@@ -61,6 +61,8 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
     genes <- genes[genes %in% includeGenes]
   }
 
+  ## define internal function to perform permutation --------------------
+
   doPermute <- function(class,classgroup=class){
     nextvars <- genes[classes %in% classgroup]
     if(expectedDNMs == "actual") {
@@ -74,6 +76,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
     return(output)
   }
 
+  # --------------------
   ### Calculate probabilities for non-overlapping classes represented in data
   output <- list()
   myclasses=c("syn","misD","startloss",
@@ -84,6 +87,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
     output[[class]] <- doPermute(class)
   }
 
+  # --------------------
   ### Calculate probabilities for "aggregate classes"
   output[["mis"]] <- doPermute(class="mis",classgroup=c("mis","misD"))
 
@@ -98,6 +102,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
   output[["all"]] <- doPermute(class="all",classgroup=c("non","splice","frameshift","startloss","stoploss","lof",
                                                         "mis","misD","syn"))
 
+  # --------------------
   output <- output[names(output) %in% includeClasses]
   return(t(data.frame(output)))
 }
