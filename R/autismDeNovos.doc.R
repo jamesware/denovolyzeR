@@ -10,7 +10,7 @@
 #' @keywords datasets
 #' @format A data frame with 1096 obs of 2 variables:
 #' \describe{
-#'   \item{gene}{Name of gene containing de novo variant (hgnc)}
+#'   \item{gene}{Gene symbol of gene containing de novo variant}
 #'   \item{class}{Functional class of variant:
 #'     "syn" = synonymous,
 #'     "mis" = missense,

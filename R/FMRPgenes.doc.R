@@ -9,7 +9,7 @@
 #' @references \url{http://dx.doi.org/10.1016/j.cell.2011.06.013}
 #' @usage data(FMRPgenes)
 #' @keywords datasets
-#' @format A vector of (hgnc) gene identifiers
+#' @format A vector of gene symbols
 NULL
 
 
