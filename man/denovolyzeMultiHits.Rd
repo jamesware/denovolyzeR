@@ -36,7 +36,8 @@ table).  If "misD" is present, then "mis" will return statistics for all
 missense.  Non-damaging missense are not analysed separately.}
 
 \item{expectedDNMs}{Select whether expected number of multihits is determined
-  by expected total de novos, or actual total}
+  by "expected" total number of variants , or "actual" total.  Actual
+  (default) is more conservative.}
 
 \item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
 "enstID", "ensgID"}

@@ -36,7 +36,7 @@ used for user-supplied probability tables. If "misD" is present, then "mis"
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
-\item{groupBy}{Results can be tabulated by gene, or by variant class}
+\item{groupBy}{Results can be tabulated by "gene", or by variant "class"}
 
 \item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}

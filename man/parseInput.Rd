@@ -4,10 +4,10 @@
 \alias{parseInput}
 \title{Checks input for errors}
 \usage{
-parseInput(genes = genes, classes = genes, nsamples = nsamples,
+parseInput(genes = genes, classes = classes, nsamples = nsamples,
   groupBy = groupBy, includeGenes = includeGenes,
   includeClasses = includeClasses, geneId = geneId, signifP = signifP,
-  roundExpected = roundExpected)
+  roundExpected = roundExpected, probTable = NULL)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -23,7 +23,7 @@ used for user-supplied probability tables. If "misD" is present, then "mis"
 
 \item{nsamples}{Number of individuals considered in de novo analysis.}
 
-\item{groupBy}{Results can be tabulated by gene, or by variant class}
+\item{groupBy}{Results can be tabulated by "gene", or by variant "class"}
 
 \item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}
@@ -43,6 +43,9 @@ output.}
 
 \item{roundExpected}{Number of decimal places used to round expected burdens
 in output.}
+
+\item{probTable}{Probability table. A user-defined table of probabilities can
+be provided here, to replace the probability table included in the package.}
 }
 \value{
 tbc   , with or without error message
