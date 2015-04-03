@@ -90,6 +90,7 @@
 #'            )
 #'
 
+##### ----------------------------------------------------
 
 denovolyze <- function(genes,classes,nsamples,
                        groupBy="class",
@@ -108,7 +109,7 @@ denovolyze <- function(genes,classes,nsamples,
   # these are column names used in dplyr::select(x) statement, but R CMD CHECK interprets them as global variables without visible binding
   gene <- value <- enrichment <- Row.names <- ends_with <- NULL
 
-  # check inputs
+  # check inputs --------------------------
   parseInput(genes,
              classes,
              nsamples,
@@ -119,25 +120,28 @@ denovolyze <- function(genes,classes,nsamples,
              signifP,
              roundExpected)
 
-  # By default, probTable uses internal prob table.
+  # By default, probTable uses internal prob table  --------------------------
   if(is.null(probTable)){probTable <- pDNM}
 
-  # With an external probTable table, if "misD" is not supplied, it defaults to damaging metaSVM score.
+  # With an external probTable table, label the damaging missense column as misD
+  # --------------------------
   if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
 
-  # Use specified gene ID
+  # Use specified gene ID --------------------------
   names(probTable)[names(probTable)==geneId] <- "gene"
   if(toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){includeGenes <- toupper(probTable$gene)}
 
-  # Use uppercase when matching gene symbols
+  # Use uppercase when matching gene symbols --------------------------
   probTable$gene <- toupper(as.character(probTable$gene))
   includeGenes <- toupper(as.character(includeGenes))
   genes <- toupper(as.character(genes))
   includeClasses <- tolower(as.character(includeClasses))
 
-  # annotate lof & prot variant classes
+  # generate meta-classes: "lof", "prot", "protD" and "all".  if "misD" is present, "mis" in input = not-damaging mis.  In output mis will refer to all missense.
+  # --------------------------
   input <- data.frame(gene=genes,class=classes,stringsAsFactors=F)
   input$class.1[input$class %in% c("splice","frameshift","non","stoploss","startloss")] <- "lof"
+  #temporarily relabel non-damaging missense as mis_notFilter.
   input$class[input$class == "mis"] <- "mis_notFilter"
   input$class.2[input$class %in% c("mis_notFilter","misD")] <- "mis"
   input$class.3[input$class %in% c("splice","frameshift","non","stoploss","startloss",
@@ -146,12 +150,14 @@ denovolyze <- function(genes,classes,nsamples,
   input$class.4[input$class %in% c("splice","frameshift","non","stoploss","startloss",
                                    "lof","misD")] <- "protD"
   input$class.5 <- "all"
+
   input <- reshape::melt.data.frame(input,id.vars="gene") %>%
     select(gene, class = value)  %>%
     filter(!is.na(class)) %>%
     filter(class!="mis_notFilter")
 
   # tabulate observed & expected numbers, either by gene or by class
+  # --------------------------
   if(groupBy=="class"){
     observed <-
       input %>%
@@ -197,15 +203,15 @@ denovolyze <- function(genes,classes,nsamples,
 
     output <- merge(observed,expected,by=c("gene","class"),all=T)
   }
-  #includeClasses <- c("lof","prot")
 
-  # calculate poisson stats and enrichments
+  # calculate poisson stats and enrichments ____________________
   output[is.na(output)] <- 0
   output$enrichment <- signif(output$observed/output$expected,signifP)
   output$p.value <- signif(ppois(output$observed-1,lambda=output$expected,lower.tail=F),signifP)
   output$expected <- round(output$expected,roundExpected)
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
+  #  --------------------------
   if(groupBy=="gene"){
 
     output <- output %>%
@@ -236,9 +242,12 @@ denovolyze <- function(genes,classes,nsamples,
     output <- output3[my.index,]
   }
 
+  # --------------------------
   class(output) <- "data.frame"
   return(output)
 }
+
+##### ----------------------------------------------------
 
 #' @describeIn denovolyze denovolyzeByClass
 
@@ -251,6 +260,8 @@ denovolyzeByClass <- function(genes,classes,nsamples,
                               probTable=NULL){
   denovolyze(genes,classes,nsamples,groupBy,includeGenes,includeClasses,geneId,signifP,roundExpected,probTable)
 }
+
+##### ----------------------------------------------------
 
 #' @describeIn denovolyze denovolyzeByGene
 
