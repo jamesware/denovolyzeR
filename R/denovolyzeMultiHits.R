@@ -29,7 +29,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 includeGenes="all",
                                 includeClasses=c("syn","mis","lof","prot","all"),
                                 expectedDNMs="actual",
-                                geneId="geneID",
+                                geneId="hgncSymbol",
                                 probTable=NULL,
                                 misD=NULL) {
 

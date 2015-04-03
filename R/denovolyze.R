@@ -19,8 +19,7 @@
 #' @param includeClasses Which variant classes are tabulated in output
 #' @param includeGenes Genes to include in analysis. "all" or a vector of gene
 #'   names.
-#' @param geneId Gene identifier used. Currently only geneID. (refseqID may
-#'   work)
+#' @param geneId Gene identifier used. One of hgncID, hgncSymbol (default), enstID, ensgID
 #' @param signifP Number of sig figs used to round p values in output.
 #' @param roundExpected Number of decimal places used to roundExpected burdens
 #'   in output.
@@ -88,7 +87,7 @@ denovolyze <- function(genes,classes,nsamples,
                        includeClasses=c("syn","mis","misD","mis_other","mis",
                                        "non","stoploss","startgain",
                                        "splice","frameshift","lof","prot","all", "prot_dam"),
-                       geneId="geneID",
+                       geneId="hgncSymbol",
                        signifP=3,
                        roundExpected=1,
                        probTable=NULL,
@@ -236,7 +235,7 @@ denovolyzeByClass <- function(genes,classes,nsamples,
                               groupBy="class",
                               includeGenes="all",
                               includeClasses=c("syn","mis","lof","prot","all"),
-                              geneId="geneID",
+                              geneId="hgncSymbol",
                               signifP=3,roundExpected=1,
                               probTable=NULL){
   denovolyze(genes,classes,nsamples,groupBy,includeGenes,includeClasses,geneId,signifP,roundExpected,probTable)
@@ -248,7 +247,7 @@ denovolyzeByGene <- function(genes,classes,nsamples,
                              groupBy="gene",
                              includeGenes="all",
                              includeClasses=c("lof","prot"),
-                             geneId="geneID",
+                             geneId="hgncSymbol",
                              signifP=3,roundExpected=1,
                              probTable=NULL){
   denovolyze(genes,classes,nsamples,groupBy,includeGenes,includeClasses,geneId,signifP,roundExpected,probTable)
