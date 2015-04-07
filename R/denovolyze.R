@@ -172,7 +172,7 @@ denovolyze <- function(genes,classes,nsamples,
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(class) %>%
       summarise(
-        expected = round(2*sum(value, na.rm=T)*nsamples,roundExpected)
+        expected = 2*sum(value, na.rm=T)*nsamples
       )
     expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
                                                         "non","stoploss","startloss",
@@ -194,7 +194,7 @@ denovolyze <- function(genes,classes,nsamples,
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        exp = round(2*sum(value, na.rm=T)*nsamples,roundExpected)
+        exp = 2*sum(value, na.rm=T)*nsamples
       )
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
@@ -204,6 +204,11 @@ denovolyze <- function(genes,classes,nsamples,
   output[is.na(output)] <- 0
   output$enrichment <- signif(output$obs/output$exp,signifP)
   output$pValue <- signif(ppois(output$obs-1,lambda=output$exp,lower.tail=F),signifP)
+  if("exp" %in% names(output)){
+    output$exp <- round(output$exp,roundExpected)
+  } else if ("expected" %in% names(output)){
+    output$expected <- round(output$expected,roundExpected)
+  }
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   #  --------------------------
@@ -236,9 +241,9 @@ denovolyze <- function(genes,classes,nsamples,
         output3 <- dplyr::select(output3,-Row.names)
       }
 
-      my.index <- output3 %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+      myIndex <- output3 %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
 
-      output <- output3[my.index,]
+      output <- output3[myIndex,]
     }
   }
   # --------------------------
