@@ -32,7 +32,9 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 expectedDNMs="actual",
                                 geneId="hgncSymbol",
                                 probTable=NULL,
-                                misD=NULL) {
+                                misD=NULL,
+                                signifP=3,
+                                roundExpected=1) {
 
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
@@ -104,5 +106,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
 
   # --------------------
   output <- output[names(output) %in% includeClasses]
+  output$expMean <- round(output$expMean,roundExpected)
+  output$pValue <- signif(output$pValue,signifP)
   return(t(data.frame(output)))
 }
