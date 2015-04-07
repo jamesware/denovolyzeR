@@ -194,7 +194,7 @@ denovolyze <- function(genes,classes,nsamples,
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        exp = 2*sum(value, na.rm=T)*nsamples
+        exp = round(2*sum(value, na.rm=T)*nsamples,roundExpected)
       )
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
@@ -204,7 +204,6 @@ denovolyze <- function(genes,classes,nsamples,
   output[is.na(output)] <- 0
   output$enrichment <- signif(output$obs/output$exp,signifP)
   output$pValue <- signif(ppois(output$obs-1,lambda=output$exp,lower.tail=F),signifP)
-  output$exp <- round(output$exp,roundExpected)
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   #  --------------------------
