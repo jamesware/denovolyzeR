@@ -187,28 +187,28 @@ denovolyze <- function(genes,classes,nsamples,
 
   } else if(groupBy=="gene"){
 
-    observed <- input %>%
+    obs <- input %>%
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        observed = n()
+        obs = n()
       )
 
-    expected <- probTable %>%
+    exp <- probTable %>%
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        expected = 2*sum(value, na.rm=T)*nsamples
+        exp = 2*sum(value, na.rm=T)*nsamples
       )
 
-    output <- merge(observed,expected,by=c("gene","class"),all=T)
+    output <- merge(obs,exp,by=c("gene","class"),all=T)
   }
 
   # calculate poisson stats and enrichments ____________________
   output[is.na(output)] <- 0
-  output$enrichment <- signif(output$observed/output$expected,signifP)
-  output$p.value <- signif(ppois(output$observed-1,lambda=output$expected,lower.tail=F),signifP)
-  output$expected <- round(output$expected,roundExpected)
+  output$enrichment <- signif(output$obs/output$exp,signifP)
+  output$pValue <- signif(ppois(output$obs-1,lambda=output$exp,lower.tail=F),signifP)
+  output$exp <- round(output$exp,roundExpected)
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   #  --------------------------
@@ -237,7 +237,7 @@ denovolyze <- function(genes,classes,nsamples,
       output3 <- output3 %>% select(-Row.names)
     }
 
-    my.index <- output3 %>% select(ends_with("p.value")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+    my.index <- output3 %>% select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
 
     output <- output3[my.index,]
   }

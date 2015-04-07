@@ -48,7 +48,8 @@ in output.}
 be provided here, to replace the probability table included in the package.}
 }
 \value{
-tbc   , with or without error message
+warning or error if any invalid input, else assigns variables back to
+  parent function
 }
 \description{
 An internal function to check inputs

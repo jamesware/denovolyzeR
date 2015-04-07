@@ -7,7 +7,7 @@
 denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
   includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
   "all"), expectedDNMs = "actual", geneId = "hgncSymbol",
-  probTable = NULL, misD = NULL)
+  probTable = NULL, misD = NULL, signifP = 3, roundExpected = 1)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -49,6 +49,12 @@ be provided here, to replace the probability table included in the package.}
   for a sub-category of missense variants (e.g. predicted to be damaging by
   an in silico algorithm), this column should be called misD, or the
   alternative name should be specified here.}
+
+\item{signifP}{Number of significant figures used to round p-values in
+output.}
+
+\item{roundExpected}{Number of decimal places used to round expected burdens
+in output.}
 }
 \value{
 Returns a data.frame
