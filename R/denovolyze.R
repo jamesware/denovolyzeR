@@ -120,22 +120,18 @@ denovolyze <- function(genes,classes,nsamples,
              signifP,
              roundExpected)
 
-  # By default, probTable uses internal prob table  --------------------------
-  if(is.null(probTable)){probTable <- pDNM}
-
   # With an external probTable table, label the damaging missense column as misD
   # --------------------------
   if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
 
-  # Use specified gene ID --------------------------
-  names(probTable)[names(probTable)==geneId] <- "gene"
+#  # Include all genes if indicated --------------------------
   if(toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){includeGenes <- toupper(probTable$gene)}
 
-  # Use uppercase when matching gene symbols --------------------------
-  probTable$gene <- toupper(as.character(probTable$gene))
-  includeGenes <- toupper(as.character(includeGenes))
-  genes <- toupper(as.character(genes))
-  includeClasses <- tolower(as.character(includeClasses))
+#   # Use uppercase when matching gene symbols --------------------------
+#   probTable$gene <- toupper(as.character(probTable$gene))
+#   includeGenes <- toupper(as.character(includeGenes))
+#   genes <- toupper(as.character(genes))
+#   includeClasses <- tolower(as.character(includeClasses))
 
   # generate meta-classes: "lof", "prot", "protD" and "all".  if "misD" is present, "mis" in input = not-damaging mis.  In output mis will refer to all missense.
   # --------------------------
@@ -176,7 +172,7 @@ denovolyze <- function(genes,classes,nsamples,
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(class) %>%
       summarise(
-        expected = 2*sum(value, na.rm=T)*nsamples
+        expected = round(2*sum(value, na.rm=T)*nsamples,roundExpected)
       )
     expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
                                                         "non","stoploss","startloss",
