@@ -31,6 +31,9 @@ parseInput <- function(genes=genes,
   }
   # use geneID if valid
   names(probTable)[names(probTable)==geneId] <- "gene"
+  probTable$gene <- toupper(probTable$gene)
+  #pass probTable to parent function
+  assign("probTable",probTable,pos=sys.frame(sys.parent()))
 
   ## check inputs have same length --------------------
   if(length(genes)!=length(classes)){
