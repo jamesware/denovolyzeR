@@ -105,8 +105,11 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
                                                         "mis","misD","syn"))
 
   # --------------------
-  output <- output[names(output) %in% includeClasses]
+  output <- output[names(output) %in% includeClasses] %>%
+    data.frame %>%
+    t %>%
+    data.frame
   output$expMean <- round(output$expMean,roundExpected)
   output$pValue <- signif(output$pValue,signifP)
-  return(t(data.frame(output)))
+  return(output)
 }
