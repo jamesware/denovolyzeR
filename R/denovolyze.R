@@ -96,9 +96,9 @@ denovolyze <- function(genes,classes,nsamples,
                        groupBy="class",
                        includeGenes="all",
                        includeClasses=c("syn","mis","misD",
-                                       "non","stoploss","startgain",
-                                       "splice","frameshift","lof","prot",
-                                       "protD", "all"),
+                                        "non","stoploss","startgain",
+                                        "splice","frameshift","lof","prot",
+                                        "protD", "all"),
                        geneId="hgncSymbol",
                        signifP=3,
                        roundExpected=1,
@@ -124,14 +124,14 @@ denovolyze <- function(genes,classes,nsamples,
   # --------------------------
   if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
 
-#  # Include all genes if indicated --------------------------
+  #  # Include all genes if indicated --------------------------
   if(toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){includeGenes <- toupper(probTable$gene)}
 
-#   # Use uppercase when matching gene symbols --------------------------
-#   probTable$gene <- toupper(as.character(probTable$gene))
-#   includeGenes <- toupper(as.character(includeGenes))
-#   genes <- toupper(as.character(genes))
-#   includeClasses <- tolower(as.character(includeClasses))
+  #   # Use uppercase when matching gene symbols --------------------------
+  #   probTable$gene <- toupper(as.character(probTable$gene))
+  #   includeGenes <- toupper(as.character(includeGenes))
+  #   genes <- toupper(as.character(genes))
+  #   includeClasses <- tolower(as.character(includeClasses))
 
   # generate meta-classes: "lof", "prot", "protD" and "all".  if "misD" is present, "mis" in input = not-damaging mis.  In output mis will refer to all missense.
   # --------------------------
@@ -148,7 +148,7 @@ denovolyze <- function(genes,classes,nsamples,
   input$class.5 <- "all"
 
   input <- reshape::melt.data.frame(input,id.vars="gene") %>%
-    select(gene, class = value)  %>%
+    dplyr::select(gene, class = value)  %>%
     filter(!is.na(class)) %>%
     filter(class!="mis_notFilter")
 
@@ -210,34 +210,38 @@ denovolyze <- function(genes,classes,nsamples,
   #  --------------------------
   if(groupBy=="gene"){
 
-    output <- output %>%
-      select(-enrichment) %>%
-      reshape::recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
+    #For single gene, format 1 row per class.  Else 1 row per gene.
+    if(length(includeGenes)==1){
+      output <-  dplyr::select(output,-enrichment)
+    } else {
+      output <- output %>%
+        dplyr::select(-enrichment) %>%
+        reshape::recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
 
-    classNotRepresented <- includeClasses[!includeClasses %in% dimnames(output)$class]
-    if (length(classNotRepresented)!=0){
-      warning(paste(classNotRepresented,"is not found in data"))
-      includeClasses[includeClasses %in% unique(output$class)]
+      classNotRepresented <- includeClasses[!includeClasses %in% dimnames(output)$class]
+      if (length(classNotRepresented)!=0){
+        warning(paste(classNotRepresented,"is not found in data"))
+        includeClasses[includeClasses %in% unique(output$class)]
+      }
+
+      output2 <- list()
+      for (i in seq(along=includeClasses)){
+        output2[[i]] <- as.data.frame(output[,,i])
+        names(output2[[i]]) <- paste(includeClasses[i],names(output2[[i]]),sep=".")
+      }
+
+      output3 <- output2[[1]]
+      for (i in seq(along=includeClasses)[-1]){
+        output3 <- merge(output3,output2[[i]],by="row.names",all=T)
+        rownames(output3) <- output3$Row.names
+        output3 <- dplyr::select(output3,-Row.names)
+      }
+
+      my.index <- output3 %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+
+      output <- output3[my.index,]
     }
-
-    output2 <- list()
-    for (i in seq(along=includeClasses)){
-      output2[[i]] <- as.data.frame(output[,,i])
-      names(output2[[i]]) <- paste(includeClasses[i],names(output2[[i]]),sep=".")
-    }
-
-    output3 <- output2[[1]]
-    for (i in seq(along=includeClasses)[-1]){
-      output3 <- merge(output3,output2[[i]],by="row.names",all=T)
-      rownames(output3) <- output3$Row.names
-      output3 <- output3 %>% select(-Row.names)
-    }
-
-    my.index <- output3 %>% select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
-
-    output <- output3[my.index,]
   }
-
   # --------------------------
   class(output) <- "data.frame"
   return(output)
