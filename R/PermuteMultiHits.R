@@ -48,7 +48,7 @@ PermuteMultiHits <- function(x,y,nperms=100,
   # --------------------
   output <- vector(length=5)
   output <-c(y,mean(mycounts),max(mycounts),empirical.p,x)
-  names(output) <- c("ObsGenes","AvgExpGenes","MaxExpGenes","Empirical.P","TotalObsDNM")
+  names(output) <- c("obs","expMean","expMax","pValue","nVars")
   return(output)
 
 }
