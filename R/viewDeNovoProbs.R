@@ -11,7 +11,7 @@ viewDeNovoProbs <- function(format="wide"){
     return(pDNM)
   } else if (format=="wide") {
     return(
-      reshape::cast(pDNM, hgncID + hgncSymbol + enstID + ensgID ~ class)
+      reshape::cast(pDNM, hgncID + hgncSymbol + enstID + ensgID + geneName ~ class)
       )
   }
 }
