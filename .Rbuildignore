@@ -7,3 +7,5 @@
 ^NEWS.md$
 ^updateArgumentNames.sh$
 ^alternativeProbabilityTables$
+^cran-comments.md$
+^\.travis\.yml$
