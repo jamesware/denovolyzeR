@@ -118,7 +118,8 @@ denovolyze <- function(genes,classes,nsamples,
              includeClasses,
              geneId,
              signifP,
-             roundExpected)
+             roundExpected,
+             probTable)
 
   # With an external probTable table, label the damaging missense column as misD
   # --------------------------
