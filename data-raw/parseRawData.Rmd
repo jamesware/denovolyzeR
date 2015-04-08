@@ -1,53 +1,87 @@
 ---
 title: "rawdata_log"
 author: "James Ware"
-date: "6 November 2014"
+date: "`r Sys.Date()`"
 output: html_document
 ---
 
 ```{r initialise, collapse=TRUE}
 #This script requires that the script & relevant data are in the same folder, presumed to be denovolyzeR/data-raw
-library(reshape)
-library(dplyr)
-library(knitr)
 library(devtools)
+library(knitr)
+library(reshape)
+library(biomaRt)
+library(dplyr)
 opts_chunk$set(collapse=TRUE)
 ```
 
-prob table IDs are not perfect.  Use biomaRt to rerieve a definitive set
-```{r}
-library(biomaRt)
-#define biomart to use
-grch37 <- biomaRt::useMart(biomart="ENSEMBL_MART_ENSEMBL", host="grch37.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
+```{r, eval=F, include=F}
+cat("TURN OFF CACHE BEFORE SAVING DEFINITIVE DATA\n")
+opts_chunk$set(cache=T) # disable before saving data
 ```
 
+## Define source data
+```{r input files}
+probTableCurrent_raw <- "hgnc_annotated_depthadj_pmuts_fs_canonical_transcripts_div_Feb07.txt"
+probTable2014_raw <- "fixed_mut_prob_fs_adjdepdiv.txt"
+autismDeNovos_raw <- "annotated_asd_trios1078.txt"
+fmrpGenes_raw <- "fmrp_gencode.txt"
+```
+
+-default prob table = `r probTableCurrent_raw`  
+-extra (original) prob table = `r probTable2014_raw`  
+-example variants = `r autismDeNovos_raw`  
+-example gene list = `r fmrpGenes_raw`  
 
 ## De novo probabilities
-Latest (Gencode) probabilities
+Import latest (Gencode-based) probabilities.
+Update other identifiers using biomaRt (from ENST)
 ```{r pDNM}
-#Previously published de novo probability table
-pDNM <- read.table("./hgnc_annotated_depthadj_pmuts_fs_canonical_transcripts_div_Feb07.txt",header=T)
-#Use biomaRt to re-annotate pDNM
+#Gencode probability table
+pDNM <- read.table(probTableCurrent_raw,header=T)
+#Use biomaRt to update annotations:
+grch37 <- biomaRt::useMart(biomart="ENSEMBL_MART_ENSEMBL", host="grch37.ensembl.org", path="/biomart/martservice", dataset="hsapiens_gene_ensembl")
 #biomart does not retain transcript versions: trim to 15 digit unversioned ENST
 pDNM$enst <- pDNM$transcript %>%
     substr(1,15)
-#listAttributes(grch37) #returns all available fields
+
+#bmAttributes <- listAttributes(grch37) #returns all available fields
 #retrieve matching gene IDs
 enstToEnsg <- biomaRt::getBM(
-  attributes=c("ensembl_gene_id","ensembl_transcript_id","hgnc_id","hgnc_symbol"),
+  attributes=c("ensembl_gene_id","ensembl_transcript_id","hgnc_id","hgnc_symbol","external_gene_name"),
   filters="ensembl_transcript_id",
   values=pDNM$enst,
   mart=grch37
   )
 ## Some QC on the new annotations
-cat("DUPLICATES:\n")
-apply(enstToEnsg,MARGIN=2,FUN=function(x){sum(duplicated(x))})
+cat("QC duplicate entries (imply 1:many mappings):\n")
+apply(enstToEnsg,MARGIN=2,FUN=function(x){
+  paste("Dups:",sum(duplicated(x)),"NAs:",sum(is.na(x)))})
+
+cat("Explore duplicated ENSG / ENST:\n")
 duplicated <- enstToEnsg$ensembl_transcript_id[duplicated(enstToEnsg$ensembl_transcript_id)]
-cat("One ENST maps to 2 hgnc_id: VTN / SEBOX:\n")
+filter(enstToEnsg,ensembl_transcript_id %in% duplicated)
+cat("In latest Ensembl (79, GRCh38.p2), this ENST & ENSG maps to VTN.  SEBOX maps elsewhere. Discard SEBOX.")
+
+cat("Explore duplicated external gene name:\n")
+duplicated <- enstToEnsg$external_gene_name[duplicated(enstToEnsg$external_gene_name)]
+filter(enstToEnsg,external_gene_name %in% duplicated)
+cat("2 genes: VTN & NPIPA7.  VTN already sorted. 3 transcripts map to NPIPA7.  Retain the transcript with HGNC data.")
+
+duplicated <- pDNM$external_gene_name[duplicated(enstToEnsg$hgnc_symbol)] %>% unique
+
+# REMOVE DODGY CASES
+#1 remove SEBOX
 enstToEnsg <- filter(enstToEnsg,hgnc_symbol!="SEBOX")
-enstToEnsg %>% filter(ensembl_transcript_id %in% duplicated)
-cat("In latest Ensembl (79, GRCh38.p2), this ENST & ENSG maps to VTN.  SEBOX maps elsewhere")
-duplicated <- enstToEnsg$hgnc_id[duplicated(enstToEnsg$hgnc_id)] %>% unique
+#2 remove NPIPA7 transcripts
+enstToEnsg <- filter(enstToEnsg,
+                     ensembl_transcript_id!="ENST00000381497" & ensembl_transcript_id!="ENST00000427999")
+
+nrow(enstToEnsg)
+
+
+cat("Explore duplicated HGNC:\n")
+duplicated <- enstToEnsg$hgnc_symbol[duplicated(enstToEnsg$hgnc_symbol)] %>% unique
 duplicated
 cat("There are no duplicated hgncID. ",sum(is.na(enstToEnsg$hgnc_id)),"ENST have no matching hgncID.\n")
 
@@ -55,7 +89,7 @@ cat("There are no duplicated hgncID. ",sum(is.na(enstToEnsg$hgnc_id)),"ENST have
 pDNM <- left_join(enstToEnsg,pDNM,by=c("ensembl_transcript_id"="enst"))
 pDNM <- pDNM %>% 
   dplyr::select(ensgID = ensembl_gene_id, enstID = ensembl_transcript_id, 
-                hgncID = hgnc_id, hgncSymbol = hgnc_symbol,
+                hgncID = hgnc_id, hgncSymbol = hgnc_symbol, geneName = external_gene_name,
                 syn = p_syn, mis = p_mis, non = p_non, splice = p_css, frameshift = p_fs)  
 # already antilogged...
 # pDNM$splice[is.na(pDNM$splice)] <- 0 # not required: there are no NAs...
@@ -67,20 +101,23 @@ pDNM$all <- apply(pDNM[,c("syn","prot")],MARGIN=1,FUN=sum,na.rm=T)
 pDNM %>% head
 cat("pDNM:\n",
   "Number rows:",nrow(pDNM),"\n",
-  "Number unique geneID:",length(unique(pDNM$enstID)),"\n",
-  "Number unique hgncID:",length(unique(pDNM$hgncID)),"\n"
+  "Number unique enstID:",length(unique(pDNM$enstID)),"\n",
+  "Number unique hgncID:",length(unique(pDNM$hgncID)),"\n",
+  "Number unique geneSymbol:",length(unique(pDNM$geneName)),"\n"
     )
 write.table(pDNM,"probTable_gencode_reannotatedIDs.txt",quote=F,row.names=F,sep="\t")
-pDNM <- melt(pDNM,id.vars=c("hgncID","hgncSymbol","enstID","ensgID"),variable_name="class")
+pDNM <- melt(pDNM,id.vars=c("hgncID","hgncSymbol","enstID","ensgID","geneName"),variable_name="class")
 ```
 
-Original RefSeq probabilities, as per Samocha 2014
-```{r probTable_Samocha2014}
+
+Import original (RefSeq-based) probabilities.
+```{r}
 #Previously published de novo probability table
-probTable_Samocha2014 <- read.table("./fixed_mut_prob_fs_adjdepdiv.txt",header=T)
+probTable_Samocha2014 <- read.table(probTable2014_raw,header=T)
+#
 probTable_Samocha2014 <- probTable_Samocha2014 %>% 
   dplyr::rename(splice = css, geneID = gene, refseqID = transcript) %>% 
-  select(-bp, -covered_bp, -rdt, -all)
+  dplyr::select(-bp, -covered_bp, -rdt, -all)
 # antilog raw data
 probTable_Samocha2014[,3:7] <- 10^probTable_Samocha2014[,3:7]
 probTable_Samocha2014$splice[is.na(probTable_Samocha2014$splice)] <- 0
@@ -96,21 +133,20 @@ cat("probTable_Samocha2014:\n",
 probTable_Samocha2014 <- melt(probTable_Samocha2014,id.vars=c("refseqID","geneID"),variable_name="class")
 ```
 
-Revisit classification of variant consequences. Currently:
-
+Current classification of variant consequences:
 * ignore rdt
 * rename css -> splice
 * lof = non + splice + frameshift
 * prot = lof + mis
 * total = prot + syn
 
-clarify whether these have no splice boundaries (hence p=0, or could not be calculated (in which case p might best be mean(p_all)
+Variants with p_css = NA have no splice boundaries, so are converted to p=0
 
 ## Autism demo data: *de novos*
-```{r, collapse=TRUE}
+```{r autismData, collapse=TRUE}
 # Autism (1,078 trios) de novo list from Nature Genetics publication.
-autismDeNovos <- read.table("./aut_dnm_3.5.13.txt")
-names(autismDeNovos) <- c("gene","class")
+autismDeNovos <- read.table(autismDeNovos_raw)
+names(autismDeNovos) <- c("coords","gene","class")
 cat("autism demo data:\n",
   "Number variants:",nrow(autismDeNovos),"\n",
   "Number unique genes:",length(unique(autismDeNovos$gene)),"\n",
@@ -118,56 +154,83 @@ cat("autism demo data:\n",
     )
 table(autismDeNovos$class) %>% data.frame
 # truncate variant class names & filter unrecognised classes
-autismDeNovos$class[autismDeNovos$class %in% c("synonymous","missense","nonsense")] <- autismDeNovos$class[autismDeNovos$class %in% c("synonymous","missense","nonsense")] %>% substr(1,3)
-cat("removing unrecognised variant classes:\n")
-autismDeNovos %>% filter(!class %in% c("syn","mis","non","splice","frameshift"))
+updateClassNames <- data.frame(
+ oldclasses=c(".","3_prime_UTR_variant","frameshift_variant",
+ "inframe_deletion","intron_variant","missense_variant",
+ "non_coding_transcript_exon_variant","splice_acceptor_variant","splice_donor_variant",
+"splice_region_variant","stop_gained","synonymous_variant"),
+newclasses=c("filter","filter","frameshift",
+ "filter","filter","mis",
+ "filter","splice","splice",
+ "syn","non","syn")
+)
+cat("Re-mapping variant classes using the following classification:")
+updateClassNames
 
+autismDeNovos <- left_join(autismDeNovos,updateClassNames,by=c("class"="oldclasses")) %>%
+  dplyr::select(coords,gene,class=newclasses)
+
+cat("removing unrecognised variant classes:\n")
+autismDeNovos %>% filter(class=="filter")
+if(sum(is.na(autismDeNovos$class))>0){warning("unrecognised class names present")}
 autismDeNovos <- autismDeNovos %>% filter(class %in% c("syn","mis","non","splice","frameshift"))
 ```
-Need to decide how to classify 
 
-* absent_stop (=rdt?)
-* inframe (ignore?  same probability as frameshift?)
-* splice_indel
+There are `r nrow(autismDeNovos)` coding variants in the dataset.
+Looking for genes that are not in probability table:
+```{r}
+missing <- autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(pDNM$hgncSymbol)]
+missing <- missing[!missing %in% toupper(pDNM$geneName)]
+```
+The following genes in `autismDeNovos` do not match to geneName or hgncSymbol in the gencode-based probability table:
+`r missing`
+These will be removed from autism de novo list
+```{r}
+autismDeNovos <- autismDeNovos %>%
+  filter(!gene %in% missing) %>%
+  select(-coords)
+```
 
-Note also: a number of genes in the autism *de novo* list do not have matching identifiers in the probTable_Samocha2014 table:  
-`r autismDeNovos$gene[!toupper(autismDeNovos$gene) %in% toupper(probTable_Samocha2014$geneID)]`
+number variants = `r nrow(autismDeNovos)`  
+number unique genes = `r length(unique(autismDeNovos$gene))`
+
 
 ## Autism demo data: FMRP genelist
 ```{r FMRP}
 # List of FMRP genes
-FMRPgenes <- read.table("./fmrp_list_edited.txt")
-FMRPgenes <- FMRPgenes$V1
-FMRPgenes %>% head
+fmrpGenes_enst <- read.table(pipe(paste("cut -f1",fmrpGenes_raw)))$V1
+close(pipe(paste("cut -f1",fmrpGenes_raw)))
+fmrpGenes_geneName <- read.table(pipe(paste("cut -f2",fmrpGenes_raw)))$V1
+close(pipe(paste("cut -f2",fmrpGenes_raw)))
+fmrpGenes <- data.frame(enst=fmrpGenes_enst,geneName=fmrpGenes_geneName)
+# NA for missing ENST
+fmrpGenes[grep("ENST",fmrpGenes$enst,invert=T),"enst"] <- NA
+#biomart does not retain transcript versions: trim to 15 digit unversioned ENST
+fmrpGenes$enst <- fmrpGenes$enst %>% substr(1,15)
+#Note NEURL should be NEURL1
+fmrpGenes$geneName[fmrpGenes$geneName=="NEURL"] <- "NEURL1"
+#Complete missing enst
+fmrpGenes  <- left_join(fmrpGenes, enstToEnsg, by=c("geneName"="external_gene_name"))
+#QC: Do all of the old ENST match the new ENST (after joining on geneName)
+sum(!is.na(fmrpGenes$enst)) == sum(fmrpGenes$enst==fmrpGenes$ensembl_transcript_id,na.rm=T)
+fmrpGenes <- fmrpGenes %>%
+  select(ensgID = ensembl_gene_id, enstID = ensembl_transcript_id, 
+         hgncID = hgnc_id, hgncSymbol = hgnc_symbol, geneName)
+
 
 cat("FMRP genes:\n",
-  "Number genes:",length(FMRPgenes),"\n",
-  "Number unique:",length(unique(FMRPgenes)),"\n"
+  "Number genes:",nrow(fmrpGenes),"\n",
+  "Number unique:",length(unique(fmrpGenes$geneName)),"\n",
+  "Number in probTable:",sum(fmrpGenes$geneName %in% pDNM$geneName),"\n"
     )
 ```
 
-```{r write output}
+```{r write output, eval=TRUE}
 setwd("..")
 # Add data to data folder
-devtools::use_data(autismDeNovos,FMRPgenes, overwrite=T)
+devtools::use_data(autismDeNovos,fmrpGenes, overwrite=T)
 # Add data to sysdata.R
 devtools::use_data(pDNM, internal = TRUE, overwrite=T)
-setwd("./data-raw")
-save(probTable_Samocha2014, "probTable_Samocha2014.rda")
+save(probTable_Samocha2014, file=file.path("alternativeProbabilityTables","probTable_Samocha2014.rda"))
 ```
-
-
-
-```{r}
-#Unadjusted probabilities of mutation for all GENCODE transcripts. I can extract just the ones that I defined as canonical and send that file if you'd like. 
-#Note that these don't even have the divergence adjustment. I have that information as well.
-# probTable_Samocha2014gencode <-read.table("data-raw/all_transcripts_pmut_July16.txt",header=T)
-# probTable_Samocha2014gencode %>% tbl_df %>% head
-```
-
-
-
-
-
-
 
