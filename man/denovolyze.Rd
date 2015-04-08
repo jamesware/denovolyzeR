@@ -92,6 +92,11 @@ denovolyze(genes=autismDeNovos$gene,
            classes=autismDeNovos$class,
            nsamples=1078)
 
+denovolyze(genes=autismDeNovos$gene,
+           classes=autismDeNovos$class,
+           nsamples=1078,
+           includeGenes=fmrpGenes)
+
 ### denovolyzeByClass
 
 denovolyzeByClass(genes=autismDeNovos$gene,

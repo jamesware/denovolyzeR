@@ -9,7 +9,7 @@
 data(fmrpGenes)
 }
 \description{
-842 genes found to interact with the fragile X mental retardation protein (FMRP)
+837 genes found to interact with the fragile X mental retardation protein (FMRP)
 }
 \author{
 James Ware

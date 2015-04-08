@@ -1,6 +1,6 @@
 #' FMRP genes
 #'
-#' 842 genes found to interact with the fragile X mental retardation protein (FMRP)
+#' 837 genes found to interact with the fragile X mental retardation protein (FMRP)
 #'
 #' @name fmrpGenes
 #' @docType data
