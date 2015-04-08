@@ -8,7 +8,7 @@ Authors@R:
     person("Jason","Homsy",role="ctb"),
     person("Kaitlin","Samocha",role="ctb")
     )
-Description: A package for the analysis of de novo genetic sequence variants
+Description: A package for the analysis of de novo (sporadic) genetic sequence variants
 Depends:
     R (>= 3.1.0)
 Imports:
