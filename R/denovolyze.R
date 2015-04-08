@@ -57,11 +57,6 @@
 #'            classes=autismDeNovos$class,
 #'            nsamples=1078)
 #'
-#' denovolyze(genes=autismDeNovos$gene,
-#'            classes=autismDeNovos$class,
-#'            nsamples=1078,
-#'            includeGenes=fmrpGenes)
-#'
 #' ### denovolyzeByClass
 #'
 #' denovolyzeByClass(genes=autismDeNovos$gene,
@@ -131,13 +126,15 @@ denovolyze <- function(genes,classes,nsamples,
   if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
 
   #  # Include all genes if indicated --------------------------
-  if(toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){includeGenes <- toupper(probTable$gene)}
+  #  # If byClass - include all genes.  if byGene - include only genes containing at least one variant
+  if(toupper(includeGenes[1])=="ALL" & length(includeGenes==1)){
+    if(groupBy=="class"){
+      includeGenes <- toupper(probTable$gene)
+    } else if (groupBy=="gene"){
+      includeGenes <- unique(genes)
+    }
 
-  #   # Use uppercase when matching gene symbols --------------------------
-  #   probTable$gene <- toupper(as.character(probTable$gene))
-  #   includeGenes <- toupper(as.character(includeGenes))
-  #   genes <- toupper(as.character(genes))
-  #   includeClasses <- tolower(as.character(includeClasses))
+  }
 
   # generate meta-classes: "lof", "prot", "protD" and "all".  if "misD" is present, "mis" in input = not-damaging mis.  In output mis will refer to all missense.
   # --------------------------
