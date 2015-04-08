@@ -5,9 +5,6 @@
 \alias{fmrpGenes}
 \title{FMRP genes}
 \format{A vector of gene symbols}
-\usage{
-data(fmrpGenes)
-}
 \description{
 837 genes found to interact with the fragile X mental retardation protein (FMRP)
 }

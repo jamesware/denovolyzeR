@@ -14,9 +14,6 @@
     "splice" = canonical splice site,
     "frameshift" = frameshift indel}
 }}
-\usage{
-data(autismDeNovos)
-}
 \description{
 de novo variants found in 1,078 autism trios, published in Nature Genetics(http://www.nature.com/doifinder/10.1038/ng.3050)
 }
