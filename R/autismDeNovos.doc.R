@@ -6,7 +6,6 @@
 #' @docType data
 #' @author James Ware
 #' @references \url{http://dx.doi.org/10.1038/ng.3050}
-#' @usage data(autismDeNovos)
 #' @keywords datasets
 #' @format A data frame with 1096 obs of 2 variables:
 #' \describe{
