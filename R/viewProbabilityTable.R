@@ -6,7 +6,7 @@
 
 # --------------------
 
-viewDeNovoProbs <- function(format="wide"){
+viewProbabilityTable <- function(format="wide"){
   if(format=="long"){
     return(pDNM)
   } else if (format=="wide") {

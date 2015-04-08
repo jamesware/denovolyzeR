@@ -4,7 +4,7 @@
 \alias{PermuteMultiHits}
 \title{Permutes x variants across a genelist, and counts genes with multiple hits}
 \usage{
-PermuteMultiHits(x, y, nperms = 100, class = "lof", geneId = "hgncSymbol",
+PermuteMultiHits(x, y, nperms = 100, class = "lof", geneId = "geneName",
   includeGenes = "all", probTable = pDNM)
 }
 \arguments{
@@ -16,8 +16,8 @@ PermuteMultiHits(x, y, nperms = 100, class = "lof", geneId = "hgncSymbol",
 
 \item{class}{In c("lof","mis","syn","prot")}
 
-\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
-"enstID", "ensgID"}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol",
+"enstID", "ensgID" or "geneName" (default, equals ensembl "external_gene_name")}
 
 \item{includeGenes}{Genes to include in analysis. "all" or a vector of gene
 names.}

@@ -6,8 +6,8 @@
 \usage{
 denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
   includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", geneId = "hgncSymbol",
-  probTable = NULL, misD = NULL, signifP = 3, roundExpected = 1)
+  "all"), expectedDNMs = "actual", geneId = "geneName", probTable = NULL,
+  misD = NULL, signifP = 3, roundExpected = 1)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -39,8 +39,8 @@ missense.  Non-damaging missense are not analysed separately.}
   by "expected" total number of variants , or "actual" total.  Actual
   (default) is more conservative.}
 
-\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
-"enstID", "ensgID"}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol",
+"enstID", "ensgID" or "geneName" (default, equals ensembl "external_gene_name")}
 
 \item{probTable}{Probability table. A user-defined table of probabilities can
 be provided here, to replace the probability table included in the package.}

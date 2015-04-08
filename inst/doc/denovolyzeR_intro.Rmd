@@ -64,7 +64,6 @@ Next, we look to see if the total number of genes that contain more than one de 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078)
-
 ```
 
 ObsGenes = the number of genes in our dataset with >1 *de novo* variant  
@@ -120,34 +119,34 @@ Several genes meet statistical significance after correcting for multiple testin
 
 The analyses presented so far have been exome-wide.  It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of *de novo* variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing).  All of the above funtions can be targeted to a subset of genes using the `includeGenes` argument.
 
-The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
+The package includes as an example a list of `nrow(fmrpGenes)` genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
 
 ```{r geneset}
-length(fmrpGenes); head(fmrpGenes)
+nrow(fmrpGenes); head(fmrpGenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
                   classes=autismDeNovos$class,
                   nsamples=1078,
-                  includeGenes=fmrpGenes)
+                  includeGenes=fmrpGenes$geneName)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    includeGenes=fmrpGenes)
+                    includeGenes=fmrpGenes$geneName)
 ```
 
 ## Other functions
 
-`viewDeNovoProbs` provides access to the underlying *de novo* probability tables used to calculate expected *de novo* burdens throughout this package:
+`viewProbabilityTable` provides access to the underlying *de novo* probability tables used to calculate expected *de novo* burdens throughout this package:
 
-```{r viewDeNovoProbs}
+```{r viewProbabilityTable}
 head(
-  viewDeNovoProbs()
+  viewProbabilityTable()
   )
 
 head(
-  viewDeNovoProbs(format="long")
+  viewProbabilityTable(format="long")
   )
 ```
 

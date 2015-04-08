@@ -9,18 +9,17 @@
 denovolyze(genes, classes, nsamples, groupBy = "class",
   includeGenes = "all", includeClasses = c("syn", "mis", "misD", "non",
   "stoploss", "startgain", "splice", "frameshift", "lof", "prot", "protD",
-  "all"), geneId = "hgncSymbol", signifP = 3, roundExpected = 1,
+  "all"), geneId = "geneName", signifP = 3, roundExpected = 1,
   probTable = NULL, misD = NULL)
 
 denovolyzeByClass(genes, classes, nsamples, groupBy = "class",
   includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
-  "all"), geneId = "hgncSymbol", signifP = 3, roundExpected = 1,
+  "all"), geneId = "geneName", signifP = 3, roundExpected = 1,
   probTable = NULL)
 
 denovolyzeByGene(genes, classes, nsamples, groupBy = "gene",
   includeGenes = "all", includeClasses = c("lof", "prot"),
-  geneId = "hgncSymbol", signifP = 3, roundExpected = 1,
-  probTable = NULL)
+  geneId = "geneName", signifP = 3, roundExpected = 1, probTable = NULL)
 }
 \arguments{
 \item{genes}{A vector of genes containing de novo variants.}
@@ -48,8 +47,8 @@ output.  In addition to the input classes, summaries can be produced for
 table).  If "misD" is present, then "mis" will return statistics for all
 missense.  Non-damaging missense are not analysed separately.}
 
-\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
-"enstID", "ensgID"}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol",
+"enstID", "ensgID" or "geneName" (default, equals ensembl "external_gene_name")}
 
 \item{signifP}{Number of significant figures used to round p-values in
 output.}

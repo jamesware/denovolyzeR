@@ -22,7 +22,6 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078)
 
-
 ## ------------------------------------------------------------------------
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
@@ -47,25 +46,25 @@ denovolyzeByGene(genes=autismDeNovos$gene,
   )
 
 ## ----geneset-------------------------------------------------------------
-length(fmrpGenes); head(fmrpGenes)
+nrow(fmrpGenes); head(fmrpGenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
                   classes=autismDeNovos$class,
                   nsamples=1078,
-                  includeGenes=fmrpGenes)
+                  includeGenes=fmrpGenes$geneName)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    includeGenes=fmrpGenes)
+                    includeGenes=fmrpGenes$geneName)
 
-## ----viewDeNovoProbs-----------------------------------------------------
+## ----viewProbabilityTable------------------------------------------------
 head(
-  viewDeNovoProbs()
+  viewProbabilityTable()
   )
 
 head(
-  viewDeNovoProbs(format="long")
+  viewProbabilityTable(format="long")
   )
 

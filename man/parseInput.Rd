@@ -35,8 +35,8 @@ output.  In addition to the input classes, summaries can be produced for
 table).  If "misD" is present, then "mis" will return statistics for all
 missense.  Non-damaging missense are not analysed separately.}
 
-\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol" (default),
-"enstID", "ensgID"}
+\item{geneId}{Gene identifier used. One of "hgncID", "hgncSymbol",
+"enstID", "ensgID" or "geneName" (default, equals ensembl "external_gene_name")}
 
 \item{signifP}{Number of significant figures used to round p-values in
 output.}

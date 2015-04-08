@@ -17,7 +17,7 @@
 
 PermuteMultiHits <- function(x,y,nperms=100,
                              class="lof",
-                             geneId="hgncSymbol",
+                             geneId="geneName",
                              includeGenes="all",
                              probTable=pDNM) {
 
