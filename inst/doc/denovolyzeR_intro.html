@@ -179,13 +179,13 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h4>Geneset analysis</h4>
 <p>The analyses presented so far have been exome-wide. It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of <em>de novo</em> variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing). All of the above funtions can be targeted to a subset of genes using the <code>includeGenes</code> argument.</p>
 <p>The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP). Is this geneset enriched for <em>de novos</em>, and recurrent <em>de novos</em>, in our autism trios?</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(FMRPgenes); <span class="kw">head</span>(FMRPgenes)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">length</span>(fmrpGenes); <span class="kw">head</span>(fmrpGenes)</code></pre>
 <pre><code>## [1] 842</code></pre>
 <pre><code>## [1] &quot;BSN&quot;   &quot;KIF1A&quot; &quot;MAP1A&quot; &quot;APC&quot;   &quot;MAP1B&quot; &quot;AGAP2&quot;</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeByClass</span>(<span class="dt">genes=</span>autismDeNovos$gene,
                   <span class="dt">classes=</span>autismDeNovos$class,
                   <span class="dt">nsamples=</span><span class="dv">1078</span>,
-                  <span class="dt">includeGenes=</span>FMRPgenes)</code></pre>
+                  <span class="dt">includeGenes=</span>fmrpGenes)</code></pre>
 <pre><code>##   class observed expected enrichment  pValue
 ## 1   syn       30     33.0      0.909 7.22e-01
 ## 2   mis       80     73.7      1.090 2.46e-01
@@ -196,7 +196,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
-                    <span class="dt">includeGenes=</span>FMRPgenes)</code></pre>
+                    <span class="dt">includeGenes=</span>fmrpGenes)</code></pre>
 <pre><code>## Warning in denovolyzeMultiHits(genes = autismDeNovos$gene, classes =
 ## autismDeNovos$class, : De novo list includes 952 genes not specified for
 ## inclusion. These will not be analysed.</code></pre>

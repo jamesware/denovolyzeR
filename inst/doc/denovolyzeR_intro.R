@@ -47,18 +47,18 @@ denovolyzeByGene(genes=autismDeNovos$gene,
   )
 
 ## ----geneset-------------------------------------------------------------
-length(FMRPgenes); head(FMRPgenes)
+length(fmrpGenes); head(fmrpGenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
                   classes=autismDeNovos$class,
                   nsamples=1078,
-                  includeGenes=FMRPgenes)
+                  includeGenes=fmrpGenes)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    includeGenes=FMRPgenes)
+                    includeGenes=fmrpGenes)
 
 ## ----viewDeNovoProbs-----------------------------------------------------
 head(

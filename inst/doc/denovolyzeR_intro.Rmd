@@ -123,18 +123,18 @@ The analyses presented so far have been exome-wide.  It may be appropriate to re
 The package includes as an example a list of 842 genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
 
 ```{r geneset}
-length(FMRPgenes); head(FMRPgenes)
+length(fmrpGenes); head(fmrpGenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
                   classes=autismDeNovos$class,
                   nsamples=1078,
-                  includeGenes=FMRPgenes)
+                  includeGenes=fmrpGenes)
 
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    includeGenes=FMRPgenes)
+                    includeGenes=fmrpGenes)
 ```
 
 ## Other functions
