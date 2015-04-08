@@ -1,5 +1,5 @@
 Package: denovolyzeR
-Title: Statistical Analyses Of De Novo Genetic Variants
+Title: Statistical Analyses of De Novo Genetic Variants
 Version: 0.1.0
 Date: 2015-04-01
 Authors@R:
@@ -8,7 +8,7 @@ Authors@R:
     person("Jason","Homsy",role="ctb"),
     person("Kaitlin","Samocha",role="ctb")
     )
-Description: A package for the analysis of de novo (sporadic) genetic sequence variants
+Description: A package for the analysis of de novo (sporadic) genetic sequence variants.
 Depends:
     R (>= 3.1.0)
 Imports:
