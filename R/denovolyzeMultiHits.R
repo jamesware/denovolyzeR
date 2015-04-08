@@ -7,7 +7,7 @@
 #' @inheritParams denovolyze
 #'
 #' @param nperms Number of permutations
-#' @param expectedDNMs Select whether expected number of multihits is determined
+#' @param nVars Select whether expected number of multihits is determined
 #'   by "expected" total number of variants , or "actual" total.  Actual
 #'   (default) is more conservative.
 #'
@@ -29,7 +29,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
                                 nperms=100,
                                 includeGenes="all",
                                 includeClasses=c("syn","mis","lof","prot","all"),
-                                expectedDNMs="actual",
+                                nVars="actual",
                                 geneId="geneName",
                                 probTable=NULL,
                                 misD=NULL,
@@ -39,7 +39,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
   # 2 options: the simulation draws N DNMs from the gene list.
   # N could be the actual number of variants seen in the population (case or control), or the expected number (based on DNM model).
   # The former is more conservative.  Samocha et al used the latter.
-  # Set expectedDNMs="actual" or "expected
+  # Set nVars="actual" or "expected
 
   if(is.null(probTable)){probTable <- pDNM}
   if(!is.null(misD)){names(probTable)[names(probTable)==misD] <- "misD"}
@@ -67,9 +67,9 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
 
   doPermute <- function(class,classgroup=class){
     nextvars <- genes[classes %in% classgroup]
-    if(expectedDNMs == "actual") {
+    if(nVars == "actual") {
       x=length(nextvars)
-    } else if(expectedDNMs == "expected") {
+    } else if(nVars == "expected") {
       x=2*sum(probTable$value[probTable$class==class])*nsamples
     }
     y=length(unique(nextvars[duplicated(nextvars)]))

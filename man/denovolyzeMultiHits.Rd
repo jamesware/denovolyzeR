@@ -6,7 +6,7 @@
 \usage{
 denovolyzeMultiHits(genes, classes, nsamples, nperms = 100,
   includeGenes = "all", includeClasses = c("syn", "mis", "lof", "prot",
-  "all"), expectedDNMs = "actual", geneId = "geneName", probTable = NULL,
+  "all"), nVars = "actual", geneId = "geneName", probTable = NULL,
   misD = NULL, signifP = 3, roundExpected = 1)
 }
 \arguments{
@@ -35,7 +35,7 @@ output.  In addition to the input classes, summaries can be produced for
 table).  If "misD" is present, then "mis" will return statistics for all
 missense.  Non-damaging missense are not analysed separately.}
 
-\item{expectedDNMs}{Select whether expected number of multihits is determined
+\item{nVars}{Select whether expected number of multihits is determined
   by "expected" total number of variants , or "actual" total.  Actual
   (default) is more conservative.}
 

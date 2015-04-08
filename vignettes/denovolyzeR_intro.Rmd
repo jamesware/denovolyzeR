@@ -82,21 +82,21 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
                     nperms=1000)
 ```
 
-There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains `r sum(autismDeNovos$class %in% c("frameshift","non","splice"))` lof variants, so this is the number used in the permutation. This is controlled by the default parameter `expectedDNMs="actual"`
+There is another important option here.  The expected number of genes containing >1 hit is obtained by permutation: Given n *de novo* variants, how many genes contain >1 de novo?  There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains `r sum(autismDeNovos$class %in% c("frameshift","non","splice"))` lof variants, so this is the number used in the permutation. This is controlled by the default parameter `nVars="actual"`
 ``` {r}
 sum(autismDeNovos$class %in% c("frameshift","non","splice"))
 ```
 
 This is a conservative approach, addressing the question: "given the number of variants in our dataset, do we see more genes with >1 variant than expected?"
 
-An alternative approach simply asks whether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `expectedDNMs="expected"`.
+An alternative approach simply asks whether there are more genes with >1 variant than our de novo model predicts.  This is accessed by setting `nVars="expected"`.
 
 ``` {r}
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    expectedDNMs="expected")
+                    nVars="expected")
 ```
 
 #### Do any individual genes contain more *de novos* than expected

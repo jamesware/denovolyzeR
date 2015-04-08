@@ -36,7 +36,7 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
-                    expectedDNMs="expected")
+                    nVars="expected")
 
 ## ------------------------------------------------------------------------
 head(

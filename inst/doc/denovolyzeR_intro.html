@@ -116,11 +116,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
-## syn    3     3.3      7   0.68   254
+## syn    3     3.5      9   0.69   254
 ## mis   31    20.2     30   0.00   655
-## lof    5     1.1      4   0.00   131
-## prot  43    28.2     40   0.00   786
-## all   66    47.8     63   0.00  1040</code></pre>
+## lof    5     1.0      4   0.00   131
+## prot  43    28.0     40   0.00   786
+## all   66    48.1     63   0.00  1040</code></pre>
 <p>ObsGenes = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />TotalObsDNM = the total number of <em>de novo</em> variants in each class<br />AvgExpGenes = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />MaxExpGenes = the maximum number of genes containin &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />Empirical.P = an empirical p value<br />Note that the number of observed genes with &gt;1 protein-altering variant does <strong>not</strong> equal the number of genes with &gt;1 lof + number of genes with &gt;1 missense, as genes containing 1 lof + 1 missense will only be counted as “multihits” in the combined analysis.</p>
 <p>Here it looks like there may be an excess of genes with &gt;1 lof variant, &gt;1 missense, and &gt;1 protein-altering variant. We will want to increase the number if permutations here to get a handle on our level of significance.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
@@ -128,27 +128,27 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
-## syn    3     3.3     10  0.654   254
-## mis   31    20.0     35  0.007   655
-## lof    5     1.0      5  0.001   131
-## prot  43    28.1     44  0.002   786
-## all   66    47.4     69  0.004  1040</code></pre>
-<p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 131 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>expectedDNMs=&quot;actual&quot;</code></p>
+## syn    3     3.2     11  0.605   254
+## mis   31    20.0     35  0.008   655
+## lof    5     1.0      5  0.005   131
+## prot  43    28.2     45  0.006   786
+## all   66    47.6     66  0.001  1040</code></pre>
+<p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 131 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>nVars=&quot;actual&quot;</code></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$class %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
 <pre><code>## [1] 131</code></pre>
 <p>This is a conservative approach, addressing the question: “given the number of variants in our dataset, do we see more genes with &gt;1 variant than expected?”</p>
-<p>An alternative approach simply asks whether there are more genes with &gt;1 variant than our de novo model predicts. This is accessed by setting <code>expectedDNMs=&quot;expected&quot;</code>.</p>
+<p>An alternative approach simply asks whether there are more genes with &gt;1 variant than our de novo model predicts. This is accessed by setting <code>nVars=&quot;expected&quot;</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
                     <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
-                    <span class="dt">expectedDNMs=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
+                    <span class="dt">nVars=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue      nVars
-## syn    3     4.5     12  0.849  302.27646
-## mis   31    21.5     36  0.016  678.98816
-## lof    5     0.5      3  0.000   94.26139
-## prot  43    27.1     42  0.000  773.24955
-## all   66    50.5     70  0.004 1075.52601</code></pre>
+## syn    3     4.5     11  0.851  302.27646
+## mis   31    21.5     37  0.026  678.98816
+## lof    5     0.5      4  0.000   94.26139
+## prot  43    27.3     43  0.001  773.24955
+## all   66    50.6     70  0.010 1075.52601</code></pre>
 </div>
 <div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
 <h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
@@ -201,10 +201,10 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ## inclusion. These will not be analysed.</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
 ## syn    0     0.6      4  1.000    28
-## mis    9     5.2     13  0.053    83
-## lof    3     0.9      4  0.055    32
-## prot  15     9.7     18  0.025   115
-## all   20    14.1     23  0.038   143</code></pre>
+## mis    9     5.2     13  0.064    83
+## lof    3     1.0      4  0.075    32
+## prot  15     9.5     18  0.031   115
+## all   20    14.3     24  0.045   143</code></pre>
 </div>
 </div>
 <div id="other-functions" class="section level2">
