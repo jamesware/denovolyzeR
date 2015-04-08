@@ -1,9 +1,20 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
-
-**denovolyzeR**: an `R` package for the statistical analysis of *de novo* variants
-==================================================================================
+#**denovolyzeR**: an `R` package for the statistical analysis of *de novo* variants
 
 This repository is the home of **denovolyzeR**, an `R` implementation of a statistical framework for the analysis of *de novo* genetic variants.
 
@@ -13,13 +24,13 @@ The functions in this package calculate whether a study population carry more *d
 
 The latest released version can be installed from CRAN with
 
-``` {.r}
+```{r, eval=F}
 install.packages("denovolyzeR")
 ```
 
 The latest development version can be installed from GitHub using devtools:
 
-``` {.r}
+```{r, eval=FALSE}
 ## Check whether devtools is installed
 "devtools" %in% installed.packages()
 
@@ -31,6 +42,9 @@ library(devtools)
 install_github("jamesware/denovolyzeR")
 ```
 
+
 Alternative mutational probability tables that can be downloaded for use with **denovolyzeR** can be found [here](/alternativeProbabilityTables/probTable_Samocha2014.rda)
 
+
 [![Travis-CI Build Status](https://travis-ci.org/jamesware/denovolyzeR.png?branch=master)](https://travis-ci.org/jamesware/denovolyzeR)
+
