@@ -19,3 +19,6 @@ install.packages("devtools")
 library(devtools)
 install_github("jamesware/denovolyzeR")
 ```
+
+
+Alternative mutational probability tables that can be downloaded for use with **denovolyzeR** can be found [here](/blob/master/alternativeProbabilityTables/probTable_Samocha2014.rda)
