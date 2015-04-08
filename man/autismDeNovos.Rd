@@ -21,7 +21,7 @@ de novo variants found in 1,078 autism trios, published in Nature Genetics(http:
 James Ware
 }
 \references{
-\url{http://dx.doi.org/10.1038/ng.3050}
+\url{http://www.nature.com/ng/journal/v46/n9/full/ng.3050.html}
 }
 \keyword{datasets}
 

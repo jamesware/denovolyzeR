@@ -31,6 +31,6 @@ library(devtools)
 install_github("jamesware/denovolyzeR")
 ```
 
-Alternative mutational probability tables that can be downloaded for use with **denovolyzeR** can be found [here](/alternativeProbabilityTables/probTable_Samocha2014.rda)
+Alternative mutational probability tables that can be downloaded for use with **denovolyzeR** can be found [here](/alternativeProbabilityTables/)
 
 [![Travis-CI Build Status](https://travis-ci.org/jamesware/denovolyzeR.png?branch=master)](https://travis-ci.org/jamesware/denovolyzeR)
