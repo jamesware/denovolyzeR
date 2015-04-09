@@ -1,3 +1,12 @@
+## Resubmission
+This is a resubmission. In this version I have:
+* replaced 2 URLs that failed "curl" check.  
+  "Found the following (possibly) invalid URLs:
+  [...]
+  Status: 401
+  Message: Unauthorized""
+While these were valid URLs, the Nature website requests authentication. I have therefore replaced with links to the same article hosted on Pubmed Central.
+
 ## Test environments
 * local OS X install, R 3.1.3
 * ubuntu 12.04 (on travis-ci), R 3.1.3
