@@ -5,7 +5,7 @@ This is a resubmission. In this version I have:
   [...]
   Status: 401
   Message: Unauthorized""
-While these were valid URLs, the Nature website requests authentication. I have therefore replaced with links to the same article hosted on Pubmed Central.
+* updated the Description to be both comprehensive and intelligible.
 
 ## Test environments
 * local OS X install, R 3.1.3
