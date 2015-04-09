@@ -5,7 +5,7 @@
 #' @name autismDeNovos
 #' @docType data
 #' @author James Ware
-#' @references \url{http://www.nature.com/ng/journal/v46/n9/full/ng.3050.html}
+#' @references \url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/}
 #' @keywords datasets
 #' @format A data frame with 1096 obs of 2 variables:
 #' \describe{

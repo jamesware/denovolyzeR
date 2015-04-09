@@ -62,7 +62,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <h2>Statistics for <em>de novo</em> variant analysis</h2>
 <div id="introduction" class="section level4">
 <h4>Introduction</h4>
-<p>This package provides functions to analyse <em>de novo</em> genetic variants using the statistical framework described in <a href="http://www.nature.com/doifinder/10.1038/ng.3050">Samocha <em>et al</em> (2014) Nature Genetics 10.1038/ng.3050</a>.</p>
+<p>This package provides functions to analyse <em>de novo</em> genetic variants using the statistical framework described in <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/">Samocha <em>et al</em> (2014) Nature Genetics 10.1038/ng.3050</a>.</p>
 <p>This vignette demonstrates the usage of the <code>denovolyzeR</code> package to recapitulate the analyses dectribed in this paper.</p>
 <ol style="list-style-type: decimal">
 <li>What is the overall burden of <em>de novo</em> variation in the study cohort: are there more <em>de novos</em> than expected? As well as looking at the total burden of <em>de novos</em>, results are returned for different classes of variant, such as loss-of-function (lof), missense (mis) and synonymous (syn).</li>
@@ -116,11 +116,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
-## syn    3     3.1      9   0.52   254
-## mis   31    19.9     29   0.00   655
-## lof    5     1.2      4   0.00   131
-## prot  43    28.3     40   0.00   786
-## all   66    47.6     62   0.00  1040</code></pre>
+## syn    3     3.0      9   0.61   254
+## mis   31    19.5     32   0.02   655
+## lof    5     1.2      5   0.01   131
+## prot  43    27.9     40   0.00   786
+## all   66    47.0     61   0.00  1040</code></pre>
 <p>ObsGenes = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />TotalObsDNM = the total number of <em>de novo</em> variants in each class<br />AvgExpGenes = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />MaxExpGenes = the maximum number of genes containin &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />Empirical.P = an empirical p value<br />Note that the number of observed genes with &gt;1 protein-altering variant does <strong>not</strong> equal the number of genes with &gt;1 lof + number of genes with &gt;1 missense, as genes containing 1 lof + 1 missense will only be counted as “multihits” in the combined analysis.</p>
 <p>Here it looks like there may be an excess of genes with &gt;1 lof variant, &gt;1 missense, and &gt;1 protein-altering variant. We will want to increase the number if permutations here to get a handle on our level of significance.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">denovolyzeMultiHits</span>(<span class="dt">genes=</span>autismDeNovos$gene,
@@ -128,11 +128,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
-## syn    3     3.3     11  0.657   254
-## mis   31    20.1     36  0.009   655
-## lof    5     1.0      6  0.003   131
-## prot  43    28.2     47  0.005   786
-## all   66    47.7     73  0.006  1040</code></pre>
+## syn    3     3.3     10  0.647   254
+## mis   31    20.5     34  0.012   655
+## lof    5     1.0      4  0.000   131
+## prot  43    28.2     45  0.004   786
+## all   66    47.8     68  0.003  1040</code></pre>
 <p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 131 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>nVars=&quot;actual&quot;</code></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$class %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre>
 <pre><code>## [1] 131</code></pre>
@@ -144,11 +144,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">nVars=</span><span class="st">&quot;expected&quot;</span>)</code></pre>
 <pre><code>##      obs expMean expMax pValue      nVars
-## syn    3     4.7     13  0.863  302.27646
-## mis   31    21.6     36  0.022  678.98816
+## syn    3     4.6     12  0.855  302.27646
+## mis   31    21.6     35  0.018  678.98816
 ## lof    5     0.5      4  0.000   94.26139
-## prot  43    27.2     44  0.001  773.24955
-## all   66    50.6     69  0.009 1075.52601</code></pre>
+## prot  43    27.4     45  0.001  773.24955
+## all   66    50.7     73  0.010 1075.52601</code></pre>
 </div>
 <div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
 <h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
@@ -200,11 +200,11 @@ code > span.er { color: #ff0000; font-weight: bold; }
 ## autismDeNovos$class, : De novo list includes 897 genes not specified for
 ## inclusion. These will not be analysed.</code></pre>
 <pre><code>##      obs expMean expMax pValue nVars
-## syn    0     0.6      4  1.000    28
-## mis    9     5.2     11  0.054    83
-## lof    3     1.0      4  0.058    32
-## prot  15     9.5     18  0.031   115
-## all   20    14.0     23  0.029   143</code></pre>
+## syn    0     0.6      3  1.000    28
+## mis    9     5.1     14  0.042    83
+## lof    3     1.0      4  0.070    32
+## prot  15     9.5     20  0.038   115
+## all   20    14.0     25  0.035   143</code></pre>
 </div>
 </div>
 <div id="other-functions" class="section level2">

@@ -13,7 +13,7 @@ vignette: >
 
 #### Introduction
 
-This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.nature.com/doifinder/10.1038/ng.3050).
+This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/).
 
 This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses dectribed in this paper.
 

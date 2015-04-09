@@ -12,7 +12,7 @@
 James Ware
 }
 \references{
-\url{http://www.nature.com/ng/journal/v46/n9/full/ng.3050.html}
+\url{http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/}
 
 \url{http://dx.doi.org/10.1016/j.cell.2011.06.013}
 }
