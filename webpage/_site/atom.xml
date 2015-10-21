@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>denovolyzeR</title>
+ <link href="http://denovolyzer.org/atom.xml" rel="self"/>
+ <link href="http://denovolyzer.org/"/>
+ <updated>2015-10-21T14:41:54+01:00</updated>
+ <id>http://denovolyzer.org</id>
+ <author>
+   <name>James Ware</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>denovolyzeR</title>
+   <link href="http://denovolyzer.org/2015/10/10/introducing-denovolyzeR/"/>
+   <updated>2015-10-10T00:00:00+01:00</updated>
+   <id>http://denovolyzer.org/2015/10/10/introducing-denovolyzeR</id>
+   <content type="html">&lt;p&gt;&lt;strong&gt;denovolyzeR&lt;/strong&gt;: an &lt;code&gt;R&lt;/code&gt; package for the statistical analysis of &lt;em&gt;de novo&lt;/em&gt; variants.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://travis-ci.org/jamesware/denovolyzeR&quot;&gt;&lt;img src=&quot;https://travis-ci.org/jamesware/denovolyzeR.png?branch=master&quot; alt=&quot;Travis-CI Build Status&quot;&gt;&lt;/a&gt;
+&lt;a href=&quot;http://cran.r-project.org/package=denovolyzeR&quot;&gt;&lt;img src=&quot;http://www.r-pkg.org/badges/version/denovolyzeR&quot; alt=&quot;CRAN_Status_Badge&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The statistical framework is published in &lt;a href=&quot;http://www.nature.com/doifinder/10.1038/ng.3050&quot;&gt;Nature Genetics&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The functions in this package calculate whether a study population carry more &lt;em&gt;de novo&lt;/em&gt; variants than expected.&lt;/p&gt;
+
+&lt;h3&gt;Installation&lt;/h3&gt;
+
+&lt;p&gt;The latest released version can be installed from CRAN with&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;install.packages(&amp;quot;denovolyzeR&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The latest development version can be installed from GitHub using devtools:&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## Install devtools if not already installed
+if(!&amp;quot;devtools&amp;quot; %in% installed.packages()){
+    install.packages(&amp;quot;devtools&amp;quot;)
+}
+
+## install denovolyzeR
+devtools::install_github(&amp;quot;jamesware/denovolyzeR&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Alternative mutational probability tables that can be downloaded for use with &lt;strong&gt;denovolyzeR&lt;/strong&gt; can be found &lt;a href=&quot;/alternativeProbabilityTables/&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3&gt;Download&lt;/h3&gt;
+
+&lt;p&gt;Hyde is developed on and hosted with GitHub. Head to the &lt;a href=&quot;https://github.com/poole/hyde&quot;&gt;GitHub repository&lt;/a&gt; for downloads, bug reports, and features requests.&lt;/p&gt;
+
+&lt;p&gt;Thanks!&lt;/p&gt;
+
+&lt;p&gt;This website is built using &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll&lt;/a&gt; and &lt;a href=&quot;http://hyde.getpoole.com&quot;&gt;Hyde&lt;/a&gt;.&lt;/p&gt;
+</content>
+ </entry>
+ 
+
+</feed>
