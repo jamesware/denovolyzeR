@@ -12,4 +12,5 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^NEWS\.md$
+^inst/doc/$
 ^webpage$
