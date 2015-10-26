@@ -34,3 +34,4 @@ install_github("jamesware/denovolyzeR")
 Alternative mutational probability tables that can be downloaded for use with **denovolyzeR** can be found [here](/alternativeProbabilityTables/)
 
 [![Travis-CI Build Status](https://travis-ci.org/jamesware/denovolyzeR.png?branch=master)](https://travis-ci.org/jamesware/denovolyzeR)
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/denovolyzeR)](http://cran.r-project.org/package=denovolyzeR)
