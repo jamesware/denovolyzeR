@@ -25,10 +25,13 @@ This vignette demonstrates the usage of the `denovolyzeR` package to recapitulat
 ## Installation
 ``` {r}
 # Install the package if you haven't already.
-# OPTION 1 - download binary, and install:
-# install.packages("LOCAL/PATH/TO/denovolyzeR.tgz",repos=NULL)  
+# OPTION 1 - install the latest release from CRAN:
+# install.packages("denovolyzeR")  
 
-# OPTION 2 - install from source.  Either download and install, or use devtools:
+# OPTION 2 - install the latest development version from GitHub.  Either download and install, or use devtools:
+# if(!"devtools" %in% installed.packages()){
+#     install.packages("devtools")
+# }
 # devtools::install_github("jamesware/denovolyzeR")
 ```
 
@@ -66,11 +69,11 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
                     nsamples=1078)
 ```
 
-ObsGenes = the number of genes in our dataset with >1 *de novo* variant  
-TotalObsDNM = the total number of *de novo* variants in each class  
-AvgExpGenes = the expected number of genes containing >1 *de novo*: an average obtained by permutation  
-MaxExpGenes = the maximum number of genes containin >1 *de novo* in `nperms` permutations (default `nperms=100`)  
-Empirical.P = an empirical p value  
+obs = the number of genes in our dataset with >1 *de novo* variant  
+expMean = the expected number of genes containing >1 *de novo*: an average obtained by permutation  
+expMax = the maximum number of genes containin >1 *de novo* in `nperms` permutations (default `nperms=100`)  
+pValue = an empirical p value  
+nvars = the total number of *de novo* variants in each class  
 Note that the number of observed genes with >1 protein-altering variant does **not** equal the number of genes with >1 lof + number of genes with >1 missense, as genes containing 1 lof + 1 missense will only be counted as "multihits" in the combined analysis.
 
 Here it looks like there may be an excess of genes with >1 lof variant, >1 missense, and >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
@@ -113,13 +116,13 @@ denovolyzeByGene(genes=autismDeNovos$gene,
   )
 ```
 
-Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneID))),2)`
+Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneID))),2)`.
 
 #### Geneset analysis
 
 The analyses presented so far have been exome-wide.  It may be appropriate to restrict analyses to a geneset of interest - for example, it may be relevant to examine the burden of *de novo* variation in a pathway of interest, or initial variant detection may have been restricted to a set of candidate genes (rather than whole exome sequencing).  All of the above funtions can be targeted to a subset of genes using the `includeGenes` argument.
 
-The package includes as an example a list of `nrow(fmrpGenes)` genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
+The package includes as an example a list of `r nrow(fmrpGenes)` genes that interact with the fragile X mental retardation protein (FMRP).  Is this geneset enriched for *de novos*, and recurrent *de novos*, in our autism trios?
 
 ```{r geneset}
 nrow(fmrpGenes); head(fmrpGenes)
