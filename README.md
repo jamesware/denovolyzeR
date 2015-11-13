@@ -7,7 +7,9 @@
 
 This repository is the home of **denovolyzeR**, an `R` implementation of a statistical framework for the analysis of *de novo* genetic variants.
 
-The statistical framework is published in [Nature Genetics](http://www.nature.com/doifinder/10.1038/ng.3050)
+The statistical framework is published in [Nature Genetics](http://www.nature.com/doifinder/10.1038/ng.3050).
+To cite the R package, please cite our manuscript in [Current Protocols in Human Genetics](http://onlinelibrary.wiley.com/doi/10.1002/0471142905.hg0725s87/abstract), also available on [PubMed Central](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4606471/), as follows:
+\> Ware, J.S., Samocha, K.E., Homsy, J., and Daly, M.J. 2015. Interpreting de novo variation in human disease using denovolyzeR. Curr. Protoc. Hum. Genet. 87:7.25.1-7.25.15. doi: 10.1002/0471142905.hg0725s87
 
 The functions in this package calculate whether a study population carry more *de novo* variants than expected.
 
