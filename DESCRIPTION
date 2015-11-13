@@ -1,6 +1,6 @@
 Package: denovolyzeR
 Title: Statistical Analyses of De Novo Genetic Variants
-Version: 0.1.1.9000
+Version: 0.1.1
 Date: 2015-04-01
 Authors@R:
     c(
@@ -19,5 +19,5 @@ LazyData: true
 Suggests:
     knitr
 VignetteBuilder: knitr
-URL: http://jamesware.github.io/denovolyzeR
+URL: http://denovolyzeR.org
 BugReports: http://github.com/jamesware/denovolyzeR/issues
