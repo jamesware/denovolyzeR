@@ -190,14 +190,14 @@ denovolyze <- function(genes,classes,nsamples,
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        obs = n()
+        observed = n()
       )
 
     exp <- probTable %>%
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(gene,class) %>%
       summarise(
-        exp = 2*sum(value, na.rm=T)*nsamples
+        expected = 2*sum(value, na.rm=T)*nsamples
       )
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
@@ -205,8 +205,8 @@ denovolyze <- function(genes,classes,nsamples,
 
   # calculate poisson stats and enrichments ____________________
   output[is.na(output)] <- 0
-  output$enrichment <- signif(output$obs/output$exp,signifP)
-  output$pValue <- signif(ppois(output$obs-1,lambda=output$exp,lower.tail=F),signifP)
+  output$enrichment <- signif(output$observed/output$expected,signifP)
+  output$pValue <- signif(ppois(output$observed-1,lambda=output$expected,lower.tail=F),signifP)
   if("exp" %in% names(output)){
     output$exp <- round(output$exp,roundExpected)
   } else if ("expected" %in% names(output)){
