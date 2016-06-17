@@ -1,8 +1,9 @@
 # Release Notes  
 
 # denovolyzeR 0.1.1  
-Corrected minor errors in vignette  
-Provided citation  
+Correct minor errors in vignette  
+Provide citation  
+Address compatibility with updated dplyr 0.5.0
 
 # denovolyzeR 0.1.0  
 This is the first release of denovolyzeR to CRAN  

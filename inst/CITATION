@@ -1,0 +1,20 @@
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "article",
+         author = c(person("James S", "Ware"),
+                    person("Kaitlin E", "Samocha"),
+                    person("J", "Homsy"),
+                    person("Mark J", "Daly")
+                    ),
+         year = 2015,
+         title = "Interpreting de novo variation in human disease using denovolyzeR.",
+         journal = "Curr. Protoc. Hum. Genet.",
+         volume = 87,
+         number = 7,
+         chapter = 25,
+         pages = c(1,15),
+         doi = "10.1002/0471142905.hg0725s87",
+         note = note,
+         url = "http://denovolyzeR.org")
+
+textVersion = ("Ware, J.S., Samocha, K.E., Homsy, J., and Daly, M.J. 2015. Interpreting de novo variation in human disease using denovolyzeR. Curr. Protoc. Hum. Genet. 87:7.25.1-7.25.15. doi: 10.1002/0471142905.hg0725s87")
