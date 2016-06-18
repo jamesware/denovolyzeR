@@ -1,3 +1,9 @@
+## Resubmission
+This is a resubmission.
+About 30 minutes ago I made a submission containing an error.
+I stated that there were no notes, but in fact there was a note about the vignette index that I missed.  This is resolved here.
+There remains a note about possible miss-spellings in one test environment only.
+
 ## Updated version
 This is a minor release
 
