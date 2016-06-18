@@ -1,26 +1,28 @@
-## Resubmission
-This is a resubmission. In this version I have:
-* replaced 2 URLs that failed "curl" check.  
-  "Found the following (possibly) invalid URLs:
-  [...]
-  Status: 401
-  Message: Unauthorized""
-* updated the Description to be both comprehensive and intelligible.
+## Updated version
+This is a minor release
 
 ## Test environments
 * local OS X install, R 3.1.3
-* ubuntu 12.04 (on travis-ci), R 3.1.3
+* ubuntu 12.04 (on travis-ci), R 3.3.0
 * win-builder (devel and release)
 
 ## R CMD check results
-There were no ERRORs or WARNINGs.
+There were no ERRORs, WARNINGs, or NOTEs on my local install, nor on ubuntu.
 
-There is 1 NOTE: this is my first submission to CRAN.
+On win-builder there is one note:
 
-On ubuntu (travis-ci) there is a second note:
-"checking package dependencies ... NOTE
-  No repository set, so cyclic dependency check skipped"
-I believe this is because not repo is set on the travis-ci virtual machine.  This NOTE is not present on other platforms.
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'James Ware <j.ware@imperial.ac.uk>'
 
+Possibly mis-spelled words in DESCRIPTION:
+  De (2:32)
+  Novo (2:35)
+  de (10:56, 12:36, 13:59, 16:59)
+  denovolyzeR (11:32, 15:41)
+  novo (10:59, 12:39, 13:62, 16:62)
+  toolset (10:28)
+  
+These spellings are all as intended, and this part of the DESCRIPTION is unchanged relative to the previous release.
+  
 ## Downstream dependencies
 There are no downstream dependencies
