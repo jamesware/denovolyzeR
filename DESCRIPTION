@@ -1,7 +1,7 @@
 Package: denovolyzeR
 Title: Statistical Analyses of De Novo Genetic Variants
 Version: 0.1.1
-Date: 2015-04-01
+Date: 2016-06-18
 Authors@R: c(
     person("James","Ware",email="j.ware@imperial.ac.uk",role=c("aut","cre")),
     person("Jason","Homsy",role="ctb"),
@@ -23,8 +23,8 @@ Imports:
 License: GPL-3
 LazyData: true
 Suggests:
-    knitr
-VignetteBuilder: knitr
+    rmarkdown
+VignetteBuilder: rmarkdown
 URL: http://denovolyzeR.org
 BugReports: http://github.com/jamesware/denovolyzeR/issues
 RoxygenNote: 5.0.1
