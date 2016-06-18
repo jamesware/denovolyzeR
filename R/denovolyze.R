@@ -48,6 +48,7 @@
 #' @export denovolyze denovolyzeByClass denovolyzeByGene
 #'
 #' @import dplyr
+#' @importFrom stats ppois
 #'
 #' @examples
 #'
