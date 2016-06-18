@@ -71,9 +71,9 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
 
 obs = the number of genes in our dataset with >1 *de novo* variant  
 expMean = the expected number of genes containing >1 *de novo*: an average obtained by permutation  
-expMax = the maximum number of genes containin >1 *de novo* in `nperms` permutations (default `nperms=100`)  
+expMax = the maximum number of genes containing >1 *de novo* in `nperms` permutations (default `nperms=100`)  
 pValue = an empirical p value  
-nvars = the total number of *de novo* variants in each class  
+nVars = the total number of *de novo* variants in each class  
 Note that the number of observed genes with >1 protein-altering variant does **not** equal the number of genes with >1 lof + number of genes with >1 missense, as genes containing 1 lof + 1 missense will only be counted as "multihits" in the combined analysis.
 
 Here it looks like there may be an excess of genes with >1 lof variant, >1 missense, and >1 protein-altering variant.  We will want to increase the number if permutations here to get a handle on our level of significance.
