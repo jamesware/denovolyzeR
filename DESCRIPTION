@@ -23,8 +23,9 @@ Imports:
 License: GPL-3
 LazyData: true
 Suggests:
+    knitr
     rmarkdown
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
 URL: http://denovolyzeR.org
 BugReports: http://github.com/jamesware/denovolyzeR/issues
 RoxygenNote: 5.0.1
