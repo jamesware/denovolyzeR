@@ -6,5 +6,6 @@ sudo: required
 
 notifications:
   email:
+    - j.ware@imperial.ac.uk
     on_success: change
     on_failure: change
