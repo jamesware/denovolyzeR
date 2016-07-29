@@ -214,43 +214,47 @@ denovolyze <- function(genes,classes,nsamples,
     output$expected <- round(output$expected,roundExpected)
   }
 
-  # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
-  #  --------------------------
-  if(groupBy=="gene"){
+  # # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
+  # # This chunk was creating bug reported 29/7/16
+  # # replaced with much more elegant solution from reshape2 package
+  # #  --------------------------
+  # if(groupBy=="gene"){
+  #
+  #   #For single gene, format 1 row per class.  Else 1 row per gene.
+  #   if(length(includeGenes)==1){
+  #     output <-  dplyr::select(output,-enrichment)
+  #   } else {
+  #     output <- output %>%
+  #       dplyr::select(-enrichment) %>%
+  #       reshape::recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
+  #
+  #     classNotRepresented <- includeClasses[!includeClasses %in% dimnames(output)$class]
+  #     if (length(classNotRepresented)!=0){
+  #        classNotRepresented <- paste(classNotRepresented,collapse=", ")
+  #        warning(paste("The following classes are not found in the data: ",classNotRepresented))
+  #        includeClasses[includeClasses %in% unique(output$class)]
+  #     }
+  #
+  #     output2 <- list()
+  #     for (i in seq(along=includeClasses)){   ### THIS LINE IS THE CULPRIT.  LOOPING THROUGH includeClasses, instead of actual classes represented in data
+  #       output2[[i]] <- as.data.frame(output[,,i])
+  #       names(output2[[i]]) <- paste(includeClasses[i],names(output2[[i]]),sep=".")
+  #     }
+  #
+  #     output3 <- output2[[1]]
+  #     for (i in seq(along=includeClasses)[-1]){
+  #       output3 <- merge(output3,output2[[i]],by="row.names",all=T)
+  #       rownames(output3) <- output3$Row.names
+  #       output3 <- dplyr::select(output3,-Row.names)
+  #     }
+  #
+  #     myIndex <- output3 %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+  #
+  #     output <- output3[myIndex,]
+  #   }
+  # }
+  # # --------------------------
 
-    #For single gene, format 1 row per class.  Else 1 row per gene.
-    if(length(includeGenes)==1){
-      output <-  dplyr::select(output,-enrichment)
-    } else {
-      output <- output %>%
-        dplyr::select(-enrichment) %>%
-        reshape::recast(id.var=c("gene","class"), formula = gene ~ variable ~ class)
-
-      classNotRepresented <- includeClasses[!includeClasses %in% dimnames(output)$class]
-      if (length(classNotRepresented)!=0){
-        warning(paste(classNotRepresented,"is not found in data"))
-        includeClasses[includeClasses %in% unique(output$class)]
-      }
-
-      output2 <- list()
-      for (i in seq(along=includeClasses)){
-        output2[[i]] <- as.data.frame(output[,,i])
-        names(output2[[i]]) <- paste(includeClasses[i],names(output2[[i]]),sep=".")
-      }
-
-      output3 <- output2[[1]]
-      for (i in seq(along=includeClasses)[-1]){
-        output3 <- merge(output3,output2[[i]],by="row.names",all=T)
-        rownames(output3) <- output3$Row.names
-        output3 <- dplyr::select(output3,-Row.names)
-      }
-
-      myIndex <- output3 %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
-
-      output <- output3[myIndex,]
-    }
-  }
-  # --------------------------
   class(output) <- "data.frame"
   return(output)
 }
