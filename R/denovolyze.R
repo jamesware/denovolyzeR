@@ -151,7 +151,7 @@ denovolyze <- function(genes,classes,nsamples,
                                    "lof","misD")] <- "protD"
   input$class.5 <- "all"
 
-  input <- reshape::melt.data.frame(input,id.vars="gene") %>%
+  input <- reshape2::melt(input,id.vars="gene") %>%
     dplyr::select(gene, class = value)  %>%
     filter(!is.na(class)) %>%
     filter(class!="mis_notFilter")
