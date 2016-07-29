@@ -78,19 +78,6 @@ parseInput <- function(genes=genes,
   }
   # match to SO? - not implemented
 
-  # ## Currently classes are converted to factors in a fixed order in denovolyze, to standardize output.
-  # # Thought about moving that code here, but function does not play nicely with factorized input, so need to leave as is...
-  # # start with standard list of classes in preferred order
-  # standardClassLevels <- c("syn","misD","mis",
-  #                    "non","stoploss","startloss",
-  #                    "splice","frameshift","lof","prot","protD","all")
-  # # append any classes in probTable that are not already in this list
-  # extraClassLevels <- validClasses[!validClasses %in% standardClassLevels]
-  # myClassLevels <- c(standardClassLevels,
-  #                    extraClassLevels)
-  # # factorise & drop redundant levels
-  # classes <- factor(classes, levels=myClassLevels) %>% droplevels
-
   assign("classes",classes,pos=sys.frame(sys.parent()))
 
   ## checks on nsamples --------------------
