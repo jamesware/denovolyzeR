@@ -118,13 +118,6 @@ parseInput <- function(genes=genes,
     stop(paste("The following are not recognised variant classes:",noMatchClasses))
   }
 
-  #warn if includeClasses includes variant classes not found in the data
-  extraClasses <- includeClasses[!includeClasses %in% classes]
-  if(length(extraClasses)>0){
-    extraClasses <- paste(extraClasses,collapse=", ")
-    warning(paste("The following variant classes specified in includeClasses are not represented in the data:",extraClasses))
-  }
-
   ## checks on roundExpected --------------------
   # is integer
   if(!is.wholenumber(roundExpected)){
