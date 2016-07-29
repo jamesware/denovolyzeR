@@ -19,7 +19,7 @@ Depends:
     R (>= 3.1.0)
 Imports:
     dplyr (>= 0.3),
-    reshape (>= 0.8)
+    reshape2 (>= 1.4)
 License: GPL-3
 LazyData: true
 Suggests:
