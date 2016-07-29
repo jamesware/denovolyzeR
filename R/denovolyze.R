@@ -49,6 +49,8 @@
 #'
 #' @import dplyr
 #' @importFrom stats ppois
+#' @importFrom reshape2 melt
+#' @importFrom reshape2 dcast
 #'
 #' @examples
 #'
