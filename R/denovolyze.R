@@ -166,10 +166,12 @@ denovolyze <- function(genes,classes,nsamples,
       summarise(
         observed = n()
       )
-    observed$class <- factor(observed$class, levels=c(c("syn","misD","mis",
-                                                        "non","stoploss","startloss",
-                                                        "splice","frameshift","lof","prot","protD","all")))
-    observed <- observed[order(observed$class),]
+
+    # this is potentially dangerous, as user=specified prob table, and user-specified input data could include classes not in this list:
+    # observed$class <- factor(observed$class, levels=c(c("syn","misD","mis",
+    #                                                     "non","stoploss","startloss",
+    #                                                     "splice","frameshift","lof","prot","protD","all")))
+    # observed <- observed[order(observed$class),]
 
 
     expected <- probTable %>%
@@ -178,9 +180,10 @@ denovolyze <- function(genes,classes,nsamples,
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
-    expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
-                                                        "non","stoploss","startloss",
-                                                        "splice","frameshift","lof","prot","protD","all")))
+
+    # expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
+    #                                                     "non","stoploss","startloss",
+    #                                                     "splice","frameshift","lof","prot","protD","all")))
 
 
     output <- left_join(observed,expected,by=c("class"))
@@ -203,6 +206,28 @@ denovolyze <- function(genes,classes,nsamples,
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
   }
+
+  #warn if includeClasses includes variant classes not found in the data
+  extraClasses <- includeClasses[!includeClasses %in% output$classes]
+  if(length(extraClasses)>0){
+    extraClasses <- paste(extraClasses,collapse=", ")
+    warning(paste("The following variant classes specified in includeClasses are not represented in the data:",extraClasses))
+  }
+
+  # impose a standard order on the variant classes for uniform output
+  # --------------------------
+  # start with standard list of classes in preferred order
+  standardClassLevels <- c("syn","misD","mis",
+                     "non","stoploss","startloss",
+                     "splice","frameshift","lof","prot","protD","all")
+  # append any classes in probTable that are not already in this list
+  inUseClasses <- as.character(unique(probTable$class))
+  extraClassLevels <- inUseClasses[!inUseClasses %in% standardClassLevels]
+  myClassLevels <- c(standardClassLevels,
+                     extraClassLevels)
+  # factorise classes & drop redundant levels
+  output$class <- factor(output$class, levels=myClassLevels) %>% droplevels
+
 
   # calculate poisson stats and enrichments ____________________
   output[is.na(output)] <- 0
