@@ -1,0 +1,103 @@
+---
+title: "test denovolyzeR reported bug"
+author: "J Ware"
+date: "29 July 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#install.packages("denovolyzeR")
+#library("denovolyzeR")
+library("dplyr")
+
+```
+
+Create a simple test data set:
+```{r}
+testData <- data_frame(
+  gene=c(rep("KCNQ1",10),rep("GLRA2",6)),
+  class=c(rep("lof",3),rep("mis",5),rep("syn",2),
+          rep("lof",1),rep("mis",2),rep("syn",3))
+         )
+```
+
+Summarise n of variants per gene:
+```{r}
+testData %>%
+  group_by(gene,class) %>%
+  summarise(n())
+```
+
+Run native functions - denovolyzeByClass:
+```{r}
+denovolyzeByClass(genes=testData$gene,
+                  classes = testData$class,
+                  nsamples = 100)
+
+```
+Default output corresponds to summary above as hoped.
+
+Run native functions - denovolyzeByGene:
+```{r}
+geneResults <- denovolyzeByGene(genes=testData$gene,
+                  classes = testData$class,
+                  nsamples = 100)
+
+geneResults
+```
+Default output corresponds to summary above as hoped.
+
+## Test reported bugs:
+
+### Bug 1
+
+> First of all, despite the fact that gene name is column 1, the column headers never spit out that column name. The column headers are always shifted by 1.
+
+The gene names are not held in a column - they are rownames.  The data structure appears correct:
+
+```{r}
+ncol(geneResults)
+names(geneResults)
+rownames(geneResults)
+
+```
+
+### Bug 2
+
+> But the second bug is much more dangerous, and seriously needs to be fixed. When you use includeClasses=c("non","splice","syn","lof","mis") option for denovolyzeByGene (and possibly for other protocols), the column orders do NOT come out in the specified format for the data, even though it is labeled as much.
+
+```{r}
+denovolyzeByGene(genes=testData$gene,
+                  classes = testData$class,
+                  nsamples = 100,
+                 includeClasses=c("non","splice","syn","lof","mis")
+                 )
+```
+
+CyborgPrat is correct.
+
+> The columns come out in the order that are empirically encountered in the input data from top to bottom of the input file. For instance, if "syn" is encountered first, the first three columns will actually be "syn" even though in this example, the user thinks they are getting "non" columns. They will be deceptively labeled as "non," even though are syn.
+
+This doesn't quite explain it, as in the example data was ordered "lof", "mis", "syn", and results are "lof","syn","mis".  Nonetheless - needs fixing.
+
+```{r}
+denovolyzeByClass(genes=testData$gene,
+                  classes = testData$class,
+                  includeClasses = c("non","mis"),
+                  nsamples = 100)
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
+
+
+
+
