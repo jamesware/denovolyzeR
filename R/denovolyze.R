@@ -214,6 +214,16 @@ denovolyze <- function(genes,classes,nsamples,
     output$expected <- round(output$expected,roundExpected)
   }
 
+  # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
+  # only applied if >1 gene, so that for a single gene format 1 row per class.  Otherwise 1 row per gene.)
+  #  --------------------------
+  if(groupBy=="gene" & length(includeGenes)>1){
+   output <- output %>%
+    dplyr::select(-enrichment) %>%
+    reshape2::melt(id.vars=c("gene","class")) %>%
+    reshape2::dcast(formula = gene ~ class + variable)
+  }
+
   class(output) <- "data.frame"
   return(output)
 }
