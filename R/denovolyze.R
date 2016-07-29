@@ -226,16 +226,19 @@ denovolyze <- function(genes,classes,nsamples,
                      extraClassLevels)
   # factorise classes & drop redundant levels
   output$class <- factor(output$class, levels=myClassLevels) %>% droplevels
-  output %>% arrange(class)
+  output <- output %>% arrange(class)
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   # only applied if >1 gene, so that for a single gene format 1 row per class.  Otherwise 1 row per gene.)
   #  --------------------------
   if(groupBy=="gene" & length(includeGenes)>1){
-   output <- output %>%
-    dplyr::select(-enrichment) %>%
-    reshape2::melt(id.vars=c("gene","class")) %>%
-    reshape2::dcast(formula = gene ~ class + variable)
+    output <- output %>%
+      dplyr::select(-enrichment) %>%
+      reshape2::melt(id.vars=c("gene","class")) %>%
+      reshape2::dcast(formula = gene ~ class + variable)
+    #order by p-value
+    myIndex <- output %>% dplyr::select(ends_with("pValue")) %>% apply(MARGIN=1,min, na.rm=T) %>% order()
+    output <- output[myIndex,]
   }
 
   class(output) <- "data.frame"
