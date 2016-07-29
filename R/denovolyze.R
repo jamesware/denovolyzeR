@@ -167,24 +167,12 @@ denovolyze <- function(genes,classes,nsamples,
         observed = n()
       )
 
-    # this is potentially dangerous, as user=specified prob table, and user-specified input data could include classes not in this list:
-    # observed$class <- factor(observed$class, levels=c(c("syn","misD","mis",
-    #                                                     "non","stoploss","startloss",
-    #                                                     "splice","frameshift","lof","prot","protD","all")))
-    # observed <- observed[order(observed$class),]
-
-
     expected <- probTable %>%
       filter(gene %in% includeGenes, class %in% includeClasses) %>%
       group_by(class) %>%
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
-
-    # expected$class <- factor(expected$class, levels=c(c("syn","misD","mis",
-    #                                                     "non","stoploss","startloss",
-    #                                                     "splice","frameshift","lof","prot","protD","all")))
-
 
     output <- left_join(observed,expected,by=c("class"))
 
