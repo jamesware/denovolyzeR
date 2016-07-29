@@ -15,3 +15,13 @@ viewProbabilityTable <- function(format="wide"){
       )
   }
 }
+
+# test1 <- reshape::cast(pDNM, hgncID + hgncSymbol + enstID + ensgID + geneName ~ class) %>% arrange(enstID)
+# test2 <- reshape2::dcast(pDNM, hgncID + hgncSymbol + enstID + ensgID + geneName ~ class) %>% arrange(enstID)
+# head(test1)
+# head(test2)
+#
+# all.equal(test1,test2)
+# str(test1)
+# str(test2)
+# only difference between the 2 functions is loss of "attributes" that do not seem to be relevant
