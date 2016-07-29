@@ -1,15 +1,4 @@
 ## ------------------------------------------------------------------------
-# Install the package if you haven't already.
-# OPTION 1 - install the latest release from CRAN:
-# install.packages("denovolyzeR")  
-
-# OPTION 2 - install the latest development version from GitHub.  Either download and install, or use devtools:
-# if(!"devtools" %in% installed.packages()){
-#     install.packages("devtools")
-# }
-# devtools::install_github("jamesware/denovolyzeR")
-
-## ------------------------------------------------------------------------
 library(denovolyzeR)
 # have a look at the example data:
 dim(autismDeNovos)
@@ -46,6 +35,15 @@ head(
 denovolyzeByGene(genes=autismDeNovos$gene,
                  classes=autismDeNovos$class,
                  nsamples=1078)
+  )
+
+## ------------------------------------------------------------------------
+head(
+denovolyzeByGene(genes=autismDeNovos$gene,
+                 classes=autismDeNovos$class,
+                 nsamples=1078,
+                 includeClasses=c("non","splice","syn","lof","mis")
+                 )
   )
 
 ## ----geneset-------------------------------------------------------------

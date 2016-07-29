@@ -13,26 +13,26 @@ vignette: >
 
 #### Introduction
 
-This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/).
-
-This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses dectribed in this paper.
+This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/). This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses described in this paper.  
 
 1. What is the overall burden of *de novo* variation in the study cohort: are there more *de novos* than expected?
   As well as looking at the total burden of *de novos*, results are returned for different classes of variant, such as loss-of-function (lof), missense (mis) and synonymous (syn).
 2. Do *de novo* variants cluster in specific genes: are there more genes containing multiple *de novos* than expected?
 3. Are there any individual genes that contain more *de novos* than expected?
 
+If using the package, please cite [Ware *et al* (2015) Curr Protoc Hum Genet. 10.1002/0471142905.hg0725s87](http://www.ncbi.nlm.nih.gov/pubmed/26439716).  
+
 ## Installation
-``` {r}
+```
 # Install the package if you haven't already.
 # OPTION 1 - install the latest release from CRAN:
-# install.packages("denovolyzeR")  
+install.packages("denovolyzeR")  
 
 # OPTION 2 - install the latest development version from GitHub.  Either download and install, or use devtools:
-# if(!"devtools" %in% installed.packages()){
-#     install.packages("devtools")
-# }
-# devtools::install_github("jamesware/denovolyzeR")
+if(!"devtools" %in% installed.packages()){
+  install.packages("devtools")
+}
+devtools::install_github("jamesware/denovolyzeR")
 ```
 
 ## Example analysis
@@ -104,7 +104,7 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
 
 #### Do any individual genes contain more *de novos* than expected
 
-We see 6 genes containing >1 *de novo* lof variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
+We see `r autismDeNovos %>% filter(class %in% c("frameshift","non","splice")) %>% group_by(gene) %>% summarize(n=n()) %>% filter(n>1) %>% nrow` genes containing >1 *de novo* lof variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
 
 By default this function compares the number of LOF variants against expectation for each gene, and then the total number of protein-altering variants (LOF + missense).  It can also be configured to return other classes if relevant.
 
@@ -116,7 +116,7 @@ denovolyzeByGene(genes=autismDeNovos$gene,
   )
 ```
 
-Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneID))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneID))),2)`.
+Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneName))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneName))),2)`.
 
 #### Geneset analysis
 
