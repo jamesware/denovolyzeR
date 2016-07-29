@@ -173,7 +173,7 @@ denovolyze <- function(genes,classes,nsamples,
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
-
+    expected$class <- as.character(expected$class)
     output <- left_join(observed,expected,by=c("class"))
 
   } else if(groupBy=="gene"){
@@ -191,12 +191,23 @@ denovolyze <- function(genes,classes,nsamples,
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
+    expected$class <- as.character(expected$class)
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
   }
 
+    # calculate poisson stats and enrichments ____________________
+  output[is.na(output)] <- 0
+  output$enrichment <- signif(output$observed/output$expected,signifP)
+  output$pValue <- signif(ppois(output$observed-1,lambda=output$expected,lower.tail=F),signifP)
+  if("exp" %in% names(output)){
+    output$exp <- round(output$exp,roundExpected)
+  } else if ("expected" %in% names(output)){
+    output$expected <- round(output$expected,roundExpected)
+  }
+
   #warn if includeClasses includes variant classes not found in the data
-  extraClasses <- includeClasses[!includeClasses %in% output$classes]
+  extraClasses <- includeClasses[!includeClasses %in% output$class]
   if(length(extraClasses)>0){
     extraClasses <- paste(extraClasses,collapse=", ")
     warning(paste("The following variant classes specified in includeClasses are not represented in the data:",extraClasses))
@@ -215,17 +226,7 @@ denovolyze <- function(genes,classes,nsamples,
                      extraClassLevels)
   # factorise classes & drop redundant levels
   output$class <- factor(output$class, levels=myClassLevels) %>% droplevels
-
-
-  # calculate poisson stats and enrichments ____________________
-  output[is.na(output)] <- 0
-  output$enrichment <- signif(output$observed/output$expected,signifP)
-  output$pValue <- signif(ppois(output$observed-1,lambda=output$expected,lower.tail=F),signifP)
-  if("exp" %in% names(output)){
-    output$exp <- round(output$exp,roundExpected)
-  } else if ("expected" %in% names(output)){
-    output$expected <- round(output$expected,roundExpected)
-  }
+  output %>% arrange(class)
 
   # when analysing by gene, apply additional formatting to arrange results for different variant classes side by side
   # only applied if >1 gene, so that for a single gene format 1 row per class.  Otherwise 1 row per gene.)
