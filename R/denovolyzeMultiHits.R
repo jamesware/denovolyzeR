@@ -109,6 +109,7 @@ denovolyzeMultiHits <- function(genes,classes,nsamples,
     data.frame %>%
     t %>%
     data.frame
+  output <- data.frame(class=rownames(output), output,row.names=NULL)
   output$expMean <- round(output$expMean,roundExpected)
   output$pValue <- signif(output$pValue,signifP)
   return(output)
