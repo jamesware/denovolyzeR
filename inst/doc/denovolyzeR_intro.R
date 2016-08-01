@@ -23,21 +23,21 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
 ## ------------------------------------------------------------------------
 sum(autismDeNovos$class %in% c("frameshift","non","splice"))
 
-## --------------------------------------------------------------------
+## ------------------------------------------------------------------------
 denovolyzeMultiHits(genes=autismDeNovos$gene,
                     classes=autismDeNovos$class,
                     nsamples=1078,
                     nperms=1000,
                     nVars="expected")
 
-## --------------------------------------------------------------------
+## ------------------------------------------------------------------------
 head(
 denovolyzeByGene(genes=autismDeNovos$gene,
                  classes=autismDeNovos$class,
                  nsamples=1078)
   )
 
-## ----geneset-----------------------------------------------------------------------------------------------------------------------------------
+## ----geneset-------------------------------------------------------------
 nrow(fmrpGenes); head(fmrpGenes)
 
 denovolyzeByClass(genes=autismDeNovos$gene,
@@ -51,7 +51,7 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
                     nperms=1000,
                     includeGenes=fmrpGenes$geneName)
 
-## ----viewProbabilityTable----------------------------------------------------------------------------------------------------------------------
+## ----viewProbabilityTable------------------------------------------------
 head(
   viewProbabilityTable()
   )

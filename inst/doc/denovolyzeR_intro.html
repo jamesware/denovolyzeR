@@ -135,11 +135,11 @@ devtools::install_github(&quot;jamesware/denovolyzeR&quot;)</code></pre>
                     <span class="dt">classes=</span>autismDeNovos$class,
                     <span class="dt">nsamples=</span><span class="dv">1078</span>)</code></pre></div>
 <pre><code>##   class obs expMean expMax pValue nVars
-## 1   syn   3     3.2      8   0.66   254
-## 2   mis  31    18.8     29   0.00   655
-## 3   lof   5     1.0      5   0.01   131
-## 4  prot  43    28.7     43   0.01   786
-## 5   all  66    47.6     66   0.01  1040</code></pre>
+## 1   syn   3     3.2      9   0.66   254
+## 2   mis  31    20.5     30   0.00   655
+## 3   lof   5     0.9      4   0.00   131
+## 4  prot  43    27.7     43   0.01   786
+## 5   all  66    47.9     65   0.00  1040</code></pre>
 <p>obs = the number of genes in our dataset with &gt;1 <em>de novo</em> variant<br />
 expMean = the expected number of genes containing &gt;1 <em>de novo</em>: an average obtained by permutation<br />
 expMax = the maximum number of genes containing &gt;1 <em>de novo</em> in <code>nperms</code> permutations (default <code>nperms=100</code>)<br />
@@ -152,11 +152,11 @@ Note that the number of observed genes with &gt;1 protein-altering variant does 
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>)</code></pre></div>
 <pre><code>##   class obs expMean expMax pValue nVars
-## 1   syn   3     3.2     10  0.627   254
-## 2   mis  31    20.2     34  0.009   655
-## 3   lof   5     1.1      6  0.003   131
-## 4  prot  43    27.9     45  0.004   786
-## 5   all  66    48.2     68  0.002  1040</code></pre>
+## 1   syn   3     3.3     10  0.646   254
+## 2   mis  31    20.1     33  0.011   655
+## 3   lof   5     1.1      6  0.006   131
+## 4  prot  43    28.2     45  0.002   786
+## 5   all  66    47.5     73  0.006  1040</code></pre>
 <p>There is another important option here. The expected number of genes containing &gt;1 hit is obtained by permutation: Given n <em>de novo</em> variants, how many genes contain &gt;1 de novo? There are two options for selecting n: by default it is derived from your data: e.g. in the example above autismDeNovos contains 131 lof variants, so this is the number used in the permutation. This is controlled by the default parameter <code>nVars=&quot;actual&quot;</code></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(autismDeNovos$class %in%<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;frameshift&quot;</span>,<span class="st">&quot;non&quot;</span>,<span class="st">&quot;splice&quot;</span>))</code></pre></div>
 <pre><code>## [1] 131</code></pre>
@@ -168,11 +168,11 @@ Note that the number of observed genes with &gt;1 protein-altering variant does 
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">nVars=</span><span class="st">&quot;expected&quot;</span>)</code></pre></div>
 <pre><code>##   class obs expMean expMax pValue      nVars
-## 1   syn   3     4.6     12  0.847  302.27646
-## 2   mis  31    21.5     37  0.022  678.98816
-## 3   lof   5     0.6      5  0.001   94.26139
-## 4  prot  43    27.5     44  0.001  773.24955
-## 5   all  66    50.8     71  0.009 1075.52601</code></pre>
+## 1   syn   3     4.5     12  0.848  302.27646
+## 2   mis  31    21.3     35  0.020  678.98816
+## 3   lof   5     0.5      4  0.000   94.26139
+## 4  prot  43    27.1     44  0.002  773.24955
+## 5   all  66    50.6     73  0.011 1075.52601</code></pre>
 </div>
 <div id="do-any-individual-genes-contain-more-de-novos-than-expected" class="section level4">
 <h4>Do any individual genes contain more <em>de novos</em> than expected</h4>
@@ -227,14 +227,15 @@ Note that the number of observed genes with &gt;1 protein-altering variant does 
                     <span class="dt">nsamples=</span><span class="dv">1078</span>,
                     <span class="dt">nperms=</span><span class="dv">1000</span>,
                     <span class="dt">includeGenes=</span>fmrpGenes$geneName)</code></pre></div>
-<pre><code>## Warning in denovolyzeMultiHits(genes = autismDeNovos$gene, classes = autismDeNovos$class, : De novo list includes 897 genes not specified for
+<pre><code>## Warning in denovolyzeMultiHits(genes = autismDeNovos$gene, classes =
+## autismDeNovos$class, : De novo list includes 897 genes not specified for
 ## inclusion. These will not be analysed.</code></pre>
 <pre><code>##   class obs expMean expMax pValue nVars
 ## 1   syn   0     0.6      4  1.000    28
-## 2   mis   9     5.2     12  0.048    83
-## 3   lof   3     1.0      5  0.054    32
-## 4  prot  15     9.4     19  0.025   115
-## 5   all  20    14.1     24  0.049   143</code></pre>
+## 2   mis   9     5.1     11  0.061    83
+## 3   lof   3     1.0      6  0.061    32
+## 4  prot  15     9.4     18  0.028   115
+## 5   all  20    14.3     25  0.045   143</code></pre>
 </div>
 </div>
 <div id="other-functions" class="section level2">
@@ -243,13 +244,20 @@ Note that the number of observed genes with &gt;1 protein-altering variant does 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewProbabilityTable</span>()
   )</code></pre></div>
-<pre><code>##   hgncID hgncSymbol          enstID          ensgID geneName          syn          mis          non       splice   frameshift          lof
-## 1    658       ARF5 ENST00000000233 ENSG00000004059     ARF5 2.704295e-06 6.234164e-06 2.016875e-07 2.207269e-07 1.059040e-06 1.481454e-06
-## 2   6752       M6PR ENST00000000412 ENSG00000003056     M6PR 2.877349e-06 7.767629e-06 5.370605e-07 3.469603e-07 7.571830e-08 9.597391e-07
-## 3   3720      FKBP4 ENST00000001008 ENSG00000004478    FKBP4 5.608786e-06 1.346427e-05 7.503486e-07 3.996519e-07 4.035024e-08 1.190351e-06
-## 4  20581    CYP26B1 ENST00000001146 ENSG00000003137  CYP26B1 1.013847e-05 2.091603e-05 4.151766e-07 2.143277e-07 6.023546e-07 1.231859e-06
-## 5  28816    NDUFAF7 ENST00000002125 ENSG00000003509  NDUFAF7 5.079037e-06 1.208114e-05 7.784025e-07 3.826662e-07 5.197949e-07 1.680864e-06
-## 6   4008      FUCA2 ENST00000002165 ENSG00000001036    FUCA2 5.445799e-06 1.222216e-05 8.668046e-07 2.605275e-07 1.396694e-06 2.524026e-06
+<pre><code>##   hgncID hgncSymbol          enstID          ensgID geneName          syn
+## 1    658       ARF5 ENST00000000233 ENSG00000004059     ARF5 2.704295e-06
+## 2   6752       M6PR ENST00000000412 ENSG00000003056     M6PR 2.877349e-06
+## 3   3720      FKBP4 ENST00000001008 ENSG00000004478    FKBP4 5.608786e-06
+## 4  20581    CYP26B1 ENST00000001146 ENSG00000003137  CYP26B1 1.013847e-05
+## 5  28816    NDUFAF7 ENST00000002125 ENSG00000003509  NDUFAF7 5.079037e-06
+## 6   4008      FUCA2 ENST00000002165 ENSG00000001036    FUCA2 5.445799e-06
+##            mis          non       splice   frameshift          lof
+## 1 6.234164e-06 2.016875e-07 2.207269e-07 1.059040e-06 1.481454e-06
+## 2 7.767629e-06 5.370605e-07 3.469603e-07 7.571830e-08 9.597391e-07
+## 3 1.346427e-05 7.503486e-07 3.996519e-07 4.035024e-08 1.190351e-06
+## 4 2.091603e-05 4.151766e-07 2.143277e-07 6.023546e-07 1.231859e-06
+## 5 1.208114e-05 7.784025e-07 3.826662e-07 5.197949e-07 1.680864e-06
+## 6 1.222216e-05 8.668046e-07 2.605275e-07 1.396694e-06 2.524026e-06
 ##           prot          all
 ## 1 7.715618e-06 1.041991e-05
 ## 2 8.727368e-06 1.160472e-05
@@ -260,13 +268,20 @@ Note that the number of observed genes with &gt;1 protein-altering variant does 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(
   <span class="kw">viewProbabilityTable</span>(<span class="dt">format=</span><span class="st">&quot;long&quot;</span>)
   )</code></pre></div>
-<pre><code>##   hgncID hgncSymbol          enstID          ensgID geneName class        value
-## 1    658       ARF5 ENST00000000233 ENSG00000004059     ARF5   syn 2.704295e-06
-## 2   6752       M6PR ENST00000000412 ENSG00000003056     M6PR   syn 2.877349e-06
-## 3   3720      FKBP4 ENST00000001008 ENSG00000004478    FKBP4   syn 5.608786e-06
-## 4  20581    CYP26B1 ENST00000001146 ENSG00000003137  CYP26B1   syn 1.013847e-05
-## 5  28816    NDUFAF7 ENST00000002125 ENSG00000003509  NDUFAF7   syn 5.079037e-06
-## 6   4008      FUCA2 ENST00000002165 ENSG00000001036    FUCA2   syn 5.445799e-06</code></pre>
+<pre><code>##   hgncID hgncSymbol          enstID          ensgID geneName class
+## 1    658       ARF5 ENST00000000233 ENSG00000004059     ARF5   syn
+## 2   6752       M6PR ENST00000000412 ENSG00000003056     M6PR   syn
+## 3   3720      FKBP4 ENST00000001008 ENSG00000004478    FKBP4   syn
+## 4  20581    CYP26B1 ENST00000001146 ENSG00000003137  CYP26B1   syn
+## 5  28816    NDUFAF7 ENST00000002125 ENSG00000003509  NDUFAF7   syn
+## 6   4008      FUCA2 ENST00000002165 ENSG00000001036    FUCA2   syn
+##          value
+## 1 2.704295e-06
+## 2 2.877349e-06
+## 3 5.608786e-06
+## 4 1.013847e-05
+## 5 5.079037e-06
+## 6 5.445799e-06</code></pre>
 <p>Most of the core functionality of this package is contained in the <code>denovolyze</code> function. The <code>denovolyzeByClass</code> and <code>denovolyzeByGene</code> functions used in this vignette are convenience functions that set defaults appropriate to the most common usages of this function. Full details of additional options and default behaviours are available using <code>?denovolyze</code>.</p>
 </div>
 
