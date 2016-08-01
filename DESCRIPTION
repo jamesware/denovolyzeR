@@ -1,7 +1,7 @@
 Package: denovolyzeR
 Title: Statistical Analyses of De Novo Genetic Variants
 Version: 0.2.0
-Date: 2016-06-18
+Date: 2016-08-01
 Authors@R: c(
     person("James","Ware",email="j.ware@imperial.ac.uk",role=c("aut","cre")),
     person("Jason","Homsy",role="ctb"),

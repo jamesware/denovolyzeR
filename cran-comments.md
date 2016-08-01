@@ -1,15 +1,9 @@
-## Resubmission
-This is a resubmission.
-About 30 minutes ago I made a submission containing an error.
-I stated that there were no notes, but in fact there was a note about the vignette index that I missed.  This is resolved here.
-There remains a note about possible mis-spellings in one test environment only.
-
 ## Updated version
-This is a minor release
+This is a major release -  addresses a bug whereby data columns were incorrectly labelled under some circumstances if user overrode default parameters 
 
 ## Test environments
-* local OS X install, R 3.1.3
-* ubuntu 12.04 (on travis-ci), R 3.3.0
+* local OS X install, R 3.3.1
+* ubuntu 12.04 (on travis-ci), R 3.3.1
 * win-builder (devel and release)
 
 ## R CMD check results

@@ -3,6 +3,7 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^README.md$
+
 ^LICENSE.md$
 ^updateArgumentNames.sh$
 ^alternativeProbabilityTables$
