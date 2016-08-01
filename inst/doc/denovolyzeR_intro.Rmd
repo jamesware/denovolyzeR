@@ -13,7 +13,7 @@ vignette: >
 
 #### Introduction
 
-This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/). This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses described in this paper.  
+This package provides functions to analyse *de novo* genetic variants using the statistical framework described in [Samocha *et al* (2014) Nature Genetics 10.1038/ng.3050](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4222185/). This vignette demonstrates the usage of the `denovolyzeR` package to recapitulate the analyses described in this paper:  
 
 1. What is the overall burden of *de novo* variation in the study cohort: are there more *de novos* than expected?
   As well as looking at the total burden of *de novos*, results are returned for different classes of variant, such as loss-of-function (lof), missense (mis) and synonymous (syn).
@@ -104,7 +104,7 @@ denovolyzeMultiHits(genes=autismDeNovos$gene,
 
 #### Do any individual genes contain more *de novos* than expected
 
-We see `r autismDeNovos %>% filter(class %in% c("frameshift","non","splice")) %>% group_by(gene) %>% summarize(n=n()) %>% filter(n>1) %>% nrow` genes containing >1 *de novo* lof variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
+We see `r library(dplyr); autismDeNovos %>% filter(class %in% c("frameshift","non","splice")) %>% group_by(gene) %>% summarize(n=n()) %>% filter(n>1) %>% nrow` genes containing >1 *de novo* lof variant.  This is more than expected, but are any of these genes individually significant?  We can `denovolyzeByGene()` to find out.
 
 By default this function compares the number of LOF variants against expectation for each gene, and then the total number of protein-altering variants (LOF + missense).  It can also be configured to return other classes if relevant.
 
@@ -116,18 +116,7 @@ denovolyzeByGene(genes=autismDeNovos$gene,
   )
 ```
 
-Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneName))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be `r signif(0.05*0.5*(1/length(unique(pDNM$geneName))),2)`.
-
-#### Testing that bug ironed out
-``` {r}
-head(
-denovolyzeByGene(genes=autismDeNovos$gene,
-                 classes=autismDeNovos$class,
-                 nsamples=1078,
-                 includeClasses=c("non","splice","syn","lof","mis")
-                 )
-  )
-```
+Several genes meet statistical significance after correcting for multiple testing.  Default options apply two tests across `r load("../R/sysdata.rda"); length(unique(pDNM$geneName))` genes, so a Bonferroni corrected p-value threshold at $\alpha$ = 0.05 would be $`r signif(0.05*0.5*(1/length(unique(pDNM$geneName))),2)`$.
 
 #### Geneset analysis
 
