@@ -193,7 +193,7 @@ denovolyze <- function(genes,classes,nsamples,
       summarise(
         expected = 2*sum(value, na.rm=T)*nsamples
       )
-    expected$class <- as.character(expected$class)
+    exp$class <- as.character(exp$class)
 
     output <- merge(obs,exp,by=c("gene","class"),all=T)
   }
