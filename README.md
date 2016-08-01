@@ -1,7 +1,4 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-
-
 **denovolyzeR**: an `R` package for the statistical analysis of *de novo* variants
 ==================================================================================
 
@@ -16,13 +13,13 @@ The functions in this package calculate whether a study population carry more *d
 
 The latest released version can be installed from CRAN with
 
-``` {.r}
+``` r
 install.packages("denovolyzeR")
 ```
 
 The latest development version can be installed from GitHub using devtools:
 
-``` {.r}
+``` r
 ## Check whether devtools is installed
 "devtools" %in% installed.packages()
 
